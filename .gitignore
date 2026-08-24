@@ -1,5 +1,13 @@
+# Repo-wide ignores only.
+#
+# The Expo app has its own app/.gitignore, shipped by the Expo template. Leave
+# that file as Expo ships it so an SDK upgrade diffs cleanly (ADR-0007) — and
+# note its /ios and /android entries are anchored to app/, so they cannot be
+# hoisted up here without silently changing what they match.
+#
+# Patterns below are unanchored, so they apply recursively and act as the
+# safety net for everything outside app/.
+
 node_modules/
-.expo/
-dist/
 *.log
 .DS_Store
