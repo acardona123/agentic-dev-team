@@ -1,0 +1,33 @@
+name: gate
+
+# The machine gate from method/definition-of-done.md.
+# Runs only when app code changes — the method is prose and has nothing to compile.
+on:
+  pull_request:
+    paths: ['app/**', '.github/workflows/gate.yml']
+  push:
+    branches: [main]
+    paths: ['app/**', '.github/workflows/gate.yml']
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      # Each step named so a red X on the PR tells you which gate failed
+      # without opening the log.
+      - name: typecheck
+        run: npm run typecheck
+      - name: test
+        run: npm test
+      - name: lint
+        run: npm run lint

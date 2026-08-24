@@ -23,7 +23,7 @@ yet, or when build/tooling config must change. You do **not** implement features
 - Keep the dependency count low. Every new dependency needs a line in the ADR
   saying what we'd do without it.
 
-## ADR format — `docs/adr/NNNN-slug.md`
+## ADR format — `method/adr/NNNN-slug.md`
 
 ```md
 # NNNN — <decision>

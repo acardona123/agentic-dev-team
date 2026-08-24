@@ -3,12 +3,14 @@
 A story is Done when **every** line below is true. No partial credit — "Done
 except..." means Doing.
 
-## Machine gate (dev proves this, QA re-runs it)
+## Machine gate (CI enforces this; dev runs it locally first)
 - [ ] `npm run typecheck` passes
 - [ ] `npm test` passes
 - [ ] `npm run lint` passes
 - [ ] Pure logic in `app/src/lib/` has unit tests covering the happy path and at
       least one edge case
+- [ ] The PR's CI check is green — this, not the dev agent's report, is the
+      authority
 
 ## Review gate (QA, read-only)
 - [ ] Every acceptance criterion has a verdict: PASS / FAIL / UNVERIFIABLE HERE
@@ -17,10 +19,17 @@ except..." means Doing.
 
 ## Human gate (Alex only)
 - [ ] Ran the demo on a real Android phone and saw it work
-- [ ] Any new technology decision has an ADR in `docs/adr/`
+- [ ] Any new technology decision has an ADR in `method/adr/`
 - [ ] Committed with the story ID in the message, e.g. `S2: live distance display`
+- [ ] PR merged by Alex (never by an agent)
+- [ ] `method/log/S<n>.md` written — especially the "method change" line
 
 ---
+
+**A green CI badge is not a passing story.** CI proves the code runs; it says
+nothing about whether it does the right thing. The phone demo stays mandatory,
+and the temptation to skip it *because* the badge is green is the specific trap
+to watch for.
 
 **Why the machine gate comes first:** it's free and it never gets bored. Your
 attention is the scarce resource — spend it on whether the thing is *right*,

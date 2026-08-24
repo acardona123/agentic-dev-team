@@ -24,6 +24,24 @@ Steps 3 and 7 are the job. Everything else is delegation.
 | 4 | `Use the architect agent to decide <question> for story S<n>.` |
 | 5 | `Use the dev agent to implement S<n>.` |
 | 6 | `Use the qa agent to review S<n>.` |
+| 7 | `gh pr merge --squash` — after you've seen it on the phone |
+
+## Git, per story
+
+```bash
+git switch main && git pull                 # start from current main
+git switch -c story/S2-live-position        # dev agent works here
+# ... dev implements, commits as "S2: ..."
+gh pr create --fill                         # CI starts on push
+# ... qa reviews; paste its verdict into the PR:
+gh pr comment --body-file qa-report.md
+# YOU demo on the phone, then:
+gh pr merge --squash --delete-branch
+```
+
+The PR is where the review becomes permanent. A QA verdict in a terminal
+scrolls away; a QA verdict on a diff is still there in six months when you're
+writing this project up.
 
 ## Sharpening acceptance criteria — the highest-leverage skill
 
@@ -52,6 +70,7 @@ When the PO hands you a story, attack it with these:
 | QA always passes everything | AC are too vague to fail | Add ugly-input AC |
 | You're editing code yourself | The loop broke upstream | Write the story you actually wanted |
 | "It works" but you haven't seen it | You trusted a claim | Demo, every time |
+| You merged because CI was green | CI proves it runs, not that it's right | Demo, every time |
 | Agent asks you a design question mid-implementation | Story was ambiguous | Answer, then fix the AC |
 
 ## What transfers to your real job
@@ -62,3 +81,4 @@ The stack is disposable. These are not:
 3. The reviewer is not the author.
 4. A machine gate runs before human attention is spent.
 5. Decisions are written down where the next session will find them.
+6. The scope of a change is bounded and visible before anyone reviews it.
