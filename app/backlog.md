@@ -60,10 +60,8 @@ _(empty)_
 ## Spotted
 _Things agents noticed but were not allowed to fix. Triage these yourself._
 
-- `expo start` in WSL2 prints `ERROR ... react-native-devtools: libasound.so.2: cannot
-  open shared object file`. Metro and the tunnel start fine; only the desktop debugger
-  UI is unavailable. Fixable with `sudo apt install libasound2` or by ignoring it.
-- `npm install` on the fresh Expo 57 template reports 10 moderate-severity advisories,
-  all transitive. Not touched under S0 scope.
+- `npm install` on Expo SDK 54 reports 18 advisories (9 moderate, 9 high), all
+  transitive through the SDK's own tree. `npx expo-doctor` is clean. Not touched
+  under S0 scope, but worth a decision before a store build.
 - `.gitignore` now exists at both the repo root and in `app/`, with overlapping rules.
   Harmless, but worth collapsing to one file at some point.
