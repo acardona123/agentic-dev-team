@@ -50,7 +50,7 @@ budget. This compounds — it's the only lever here that gets *cheaper* over tim
 | `po` | sonnet | Prose against a fixed template. Small input, small output. |
 | `architect` | opus | Rare, high-stakes, and a wrong decision is expensive for months. |
 | `dev` | opus | The genuinely hard part. Cheaping out here creates rework, which costs more than the saving. |
-| `qa` | *your call* | Small input (one diff), small output (a verdict), but it's your only independent signal. |
+| `qa` | opus | Small input (one diff), small output (a verdict) — so opus is cheap here in absolute terms, and it's the only independent signal there is. |
 
 Note the asymmetry people get wrong: **a strong model on a small context is
 cheaper than a weak model on a huge one.** Opus reviewing a 200-line diff is a
