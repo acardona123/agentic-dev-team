@@ -31,15 +31,19 @@ _(empty)_
 
 ## Review
 
+_(empty)_
+
+## Done
+
 ### S0 — Walking skeleton on the phone
-**Status:** Review
+**Status:** Done · demoed on Alex's phone 2026-08-25 · merged in [PR #1](https://github.com/acardona123/agentic-dev-team/pull/1)
 **Intent:** "I want to see a blank app running on my own phone before we build anything."
 
 **Acceptance criteria**
-- [ ] AC1 — Given an empty repo, when the app is created, then `app/` holds an Expo + TypeScript project with strict mode on
-- [ ] AC2 — Given the dev server is started with `npx expo start --tunnel`, when Alex scans the QR code with Expo Go on his Android phone, then a screen showing "Almost There" appears on the phone
-- [ ] AC3 — Given the project, when `npm run typecheck && npm test && npm run lint` is run, then all three pass (a placeholder test is fine)
-- [ ] AC4 — Given a code change to the visible text, when it is saved, then the phone updates without a manual restart
+- [x] AC1 — Given an empty repo, when the app is created, then `app/` holds an Expo + TypeScript project with strict mode on
+- [x] AC2 — Given the dev server is started with `npx expo start --tunnel`, when Alex scans the QR code with Expo Go on his Android phone, then a screen showing "Almost There" appears on the phone
+- [x] AC3 — Given the project, when `npm run typecheck && npm test && npm run lint` is run, then all three pass (a placeholder test is fine)
+- [x] AC4 — Given a code change to the visible text, when it is saved, then the phone updates without a manual restart
 
 **Not in scope**
 - Any location, map, address or alarm code whatsoever
@@ -51,9 +55,12 @@ text, he watches it change on the phone.
 *Why this is first: the riskiest link in the chain is WSL2 reaching your phone.
 We prove it in an hour instead of discovering it after three days of features.*
 
-## Done
-
-_(empty)_
+**What it cost, and why that was the point:** two blocking defects surfaced that had
+nothing to do with the feature and everything to do with the toolchain —
+Expo Go on the phone is SDK 54 while the scaffold defaulted to SDK 57 ([ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md)),
+and the repo sat on `/mnt/c`, where 9p delivers no inotify events, so Metro never
+saw a save and Fast Refresh never fired ([ADR-0008](../method/adr/0008-repo-lives-on-wsl-ext4.md)).
+Both would have been attributed to feature code had they first appeared during S1.
 
 ---
 
