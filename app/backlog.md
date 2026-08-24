@@ -7,13 +7,44 @@ Only Alex moves a story to **Done**, and only after seeing it work on his phone.
 
 ## Ready
 
-_(empty)_
+### S1 — Address search
+**Status:** Ready
+**Intent:** "I want to type an address, see matching results, pick one, and have the app hold on to its coordinates."
+
+**Acceptance criteria**
+- [ ] AC1 — Given the app is open, when Alex types an address (e.g. "10 Downing Street London") and submits it, then a list of matching results is shown on screen, each with a human-readable label, and the text "© OpenStreetMap contributors" is visible on the same screen (geocoding provider and its licensing obligation: [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md))
+- [ ] AC2 — Given a list of results is shown, when Alex taps one, then the list closes and the app shows the chosen address's label on screen, confirming it is now the selected target
+- [ ] AC3 — Given Alex types but does not submit, when he changes characters, then no request is fired per keystroke — a request is only made on an explicit submit action (e.g. tapping search / pressing done). Given Alex submits the exact same query text a second time without changing it, when he submits, then no new network request is made and the previous results are shown again. (Both are usage-policy obligations, not a performance nicety — see [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md).)
+- [ ] AC4 — Given Alex submits a query that matches nothing, when the response comes back, then the app shows a plain "no results found" message instead of an empty or broken list
+- [ ] AC5 — Given Alex submits a query while the phone has no network, or the geocoding service responds with a rate-limit or server error, when the request fails, then the app shows the same plain error message instead of crashing or hanging silently
+- [ ] AC6 — Given the module that builds the geocoding request and turns its response into "candidate" objects (label + lat/lon), when it is unit tested in `app/src/lib/`, then tests verify: the outgoing request carries an identifying `User-Agent` header rather than a library default, a successful response maps to a list of candidates, and an empty response maps to no candidates — with no React or Expo imports in that module
+- [ ] AC7 — Given the project, when `npm run typecheck && npm test && npm run lint` is run, then all three pass
+
+**Not in scope**
+- Distance or bearing calculation to the selected address
+- Live/streaming location, GPS, or any position tracking
+- A map view
+- Alarm arming, radius selection, or alarm firing
+- Persisting the selected address across an app restart — holding it in in-memory state for the current session is enough
+- Debouncing/throttling logic beyond "don't fire on every keystroke" (no autocomplete-as-you-type)
+- Styling polish beyond legible, usable text and tappable rows
+
+**Demo:** Alex opens the app, types a real address into a text field, taps
+search, sees a list of matching places appear with the OpenStreetMap
+attribution line beneath them, taps one, and sees the screen now display the
+address he picked as the held selection.
+
+*Why this shape: the riskiest assumption isn't in these ACs at all — it's
+whether Nominatim's literal, structured matching ("10 Downing Street London")
+is good enough for the addresses Alex actually types on a bus. It is not a
+fuzzy intent matcher ([ADR-0009](../method/adr/0009-geocoding-via-nominatim.md)).
+We find that out from real use after this story ships, not by building smarter
+matching in advance.*
 
 ---
 
 ## Backlog (not yet refined — the PO turns these into stories, one at a time)
 
-- **S1 — Address search.** Type an address, get results from Nominatim, pick one, coords held in state.
 - **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
 - **S3 — Arm/disarm + radius.** Choose 200/500/1000 m, arm the alarm, armed state is unmistakable.
 - **S4 — Alarm fires.** Inside the radius → sound + vibration + unmissable screen + dismiss.
@@ -78,5 +109,20 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
   moderate. `npx expo-doctor` is clean.
   **Re-open when:** a store build is cut. That build is not Expo Go, so the SDK
   pin dissolves and this list should be re-run against whatever SDK we move to.
-- `.gitignore` now exists at both the repo root and in `app/`, with overlapping rules.
-  Harmless, but worth collapsing to one file at some point.
+- ~~`.gitignore` now exists at both the repo root and in `app/`, with overlapping rules.
+  Harmless, but worth collapsing to one file at some point.~~
+  **Triaged 2026-08-25 — resolved, not as proposed (`b573729`).** The suggestion to
+  collapse to one file was wrong: `app/.gitignore`'s `/ios` and `/android` are
+  anchored to the directory holding the file. Hoisted to the repo root, those same
+  patterns would match root-level `/ios` and `/android` only, and would silently
+  stop matching `app/ios` and `app/android` — the generated native folders they
+  exist to exclude — with no error, just the folders quietly becoming tracked at
+  the next prebuild. Keeping two files also means `app/.gitignore` stays exactly
+  as the Expo template ships it, so an SDK upgrade diffs cleanly instead of
+  fighting our hand-edits ([ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md)).
+  What was done instead: the root file was reduced to repo-wide, unanchored
+  patterns only (`node_modules/`, `*.log`, `.DS_Store`), with `.expo/` and `dist/`
+  dropped as already-covered app concerns, and a comment noting `app/.gitignore`
+  is off-limits. Verified `app/node_modules`, `app/.expo`, `app/dist`, `app/ios`,
+  `app/android`, `*.log`, `.DS_Store` and `method/node_modules` all still resolve
+  as ignored, and nothing was mis-tracked.
