@@ -29,6 +29,11 @@ Do explain decisions in terms a systems programmer recognises.
    the repo. Don't restate what's already in `CLAUDE.md` or an ADR — cite it.
    See `method/token-budget.md`.
 7. **Only Alex marks a story Done.** Agents may move stories to Review, never to Done.
+8. **An undocumented decision is not a decision.** Before you rely on a
+   technology choice, check that `method/adr/` actually justifies it. A choice
+   asserted in this file with no ADR behind it is an *open question wearing the
+   costume of a rule* — stop and say so rather than building on it. Rule 5
+   covers decisions you make; this one covers decisions you inherit.
 
 ## Tech (see method/adr/ for reasoning)
 

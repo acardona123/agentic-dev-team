@@ -22,6 +22,16 @@ picking a library, say so and hand it to the architect.
 - Include a **Not in scope** list. This is what stops the dev agent gold-plating.
 - Prefer 3–6 acceptance criteria. More than that means the story is too big —
   split it and say so.
+- **Acceptance criteria describe what Alex can observe, never how it is built.**
+  Name a provider, library or protocol in an AC only if he could perceive the
+  difference on the phone. "a list of matching results" is checkable by anyone
+  holding the device; "a list of matching results *from Nominatim*" welds a
+  vendor into a pass/fail condition, and would be falsified by a swap that
+  changes nothing he sees. Cite the ADR for the choice; keep the AC behavioural.
+- **If the story rests on a technology choice with no ADR, stop** (`CLAUDE.md`
+  rule 8). You already make no technology choices — this is the same rule for
+  choices you inherit. Say which decision is undocumented and hand it to the
+  architect before writing the story.
 
 ## Story template
 
