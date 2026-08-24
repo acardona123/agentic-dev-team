@@ -49,6 +49,7 @@ Steps 3 and 7 are the job. The rest is delegation.
 | [.claude/agents/](.claude/agents/) | The team: `po`, `architect`, `dev`, `qa` |
 | [method/manager-playbook.md](method/manager-playbook.md) | What to actually type, and how to spot yourself managing badly |
 | [method/definition-of-done.md](method/definition-of-done.md) | Machine gate → review gate → human gate |
+| [method/token-budget.md](method/token-budget.md) | Where the money actually goes, and what not to economise on |
 | [method/adr/](method/adr/) | Why the choices were made, and what they cost |
 | [method/log/](method/log/) | Per-story notes: what was asked, what came back, what changed in the method |
 | [app/backlog.md](app/backlog.md) | The app's stories |

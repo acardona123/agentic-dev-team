@@ -25,7 +25,10 @@ Do explain decisions in terms a systems programmer recognises.
    phone. No "build the data layer" work.
 5. **Decisions get written down.** Anything a future session would have to
    re-derive goes in `method/adr/` as a numbered ADR.
-6. **Only Alex marks a story Done.** Agents may move stories to Review, never to Done.
+6. **Be economical with context.** Read the files you need by path; don't crawl
+   the repo. Don't restate what's already in `CLAUDE.md` or an ADR — cite it.
+   See `method/token-budget.md`.
+7. **Only Alex marks a story Done.** Agents may move stories to Review, never to Done.
 
 ## Tech (see method/adr/ for reasoning)
 
@@ -48,18 +51,31 @@ they are its executable form, which is why they sit at the root.
 
 ## Git workflow
 
-One story = one branch = one PR. Non-negotiable parts:
+The two long-lived branches carry the project's two gates. Do not blur them:
 
-- Branch name: `story/S<n>-<slug>`, cut from up-to-date `main`
+| Branch | Means | Who moves it |
+|---|---|---|
+| `main` | **Alex saw it work on a real phone.** | Alex only |
+| `develop` | **The machine believes it works** — CI green, QA passed. | merged PR |
+
+Supporting branches:
+
+- `story/S<n>-<slug>` — cut from `develop`, PR targets `develop`. One story, one branch.
+- `hotfix/<slug>` — cut from `main`, merged to **both** `main` and `develop`. Unused until there's a released build.
+- `release/vX.Y` — cut from `develop` when a store build is prepared. Unused for now.
+
+Rules:
+
 - Commit messages start with the story ID: `S2: stream position updates`
-- **Agents never push to `main` and never merge a PR.** Merging is Alex's Done gate.
+- **Agents never push to `main` or `develop`, and never merge a PR.** An agent
+  pushes its own `story/` branch and opens the PR. Merging is Alex's.
 - CI runs the machine gate on every PR touching `app/`. A red check means the
-  story is not finished, regardless of what any agent reports.
+  story is not finished, whatever any agent reports.
+- `main` is only ever fast-forwarded from `develop` after a phone demo.
 
-The scope boundary matters more than it looks: `git diff main...HEAD` is exactly
-the set of changes a story is allowed to contain. Anything in there that is not
-traceable to an acceptance criterion is scope creep, and QA is expected to
-call it out.
+`git diff develop...HEAD` is exactly the set of changes a story is permitted to
+contain. Anything in there not traceable to an acceptance criterion is scope
+creep, and QA is expected to name it.
 
 ## Code style
 

@@ -21,7 +21,8 @@ except..." means Doing.
 - [ ] Ran the demo on a real Android phone and saw it work
 - [ ] Any new technology decision has an ADR in `method/adr/`
 - [ ] Committed with the story ID in the message, e.g. `S2: live distance display`
-- [ ] PR merged by Alex (never by an agent)
+- [ ] PR merged into `develop` by Alex (never by an agent)
+- [ ] `main` fast-forwarded to `develop` — this is what "demoed" means in git
 - [ ] `method/log/S<n>.md` written — especially the "method change" line
 
 ---

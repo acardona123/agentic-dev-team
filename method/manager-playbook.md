@@ -29,15 +29,19 @@ Steps 3 and 7 are the job. Everything else is delegation.
 ## Git, per story
 
 ```bash
-git switch main && git pull                 # start from current main
-git switch -c story/S2-live-position        # dev agent works here
-# ... dev implements, commits as "S2: ..."
-gh pr create --fill                         # CI starts on push
-# ... qa reviews; paste its verdict into the PR:
-gh pr comment --body-file qa-report.md
-# YOU demo on the phone, then:
-gh pr merge --squash --delete-branch
+git switch develop && git pull
+git switch -c story/S2-live-position          # dev agent works here
+# ... dev implements, commits as "S2: ...", opens the PR against develop
+gh pr comment --body-file qa-report.md        # qa's verdict, permanently on the diff
+gh pr merge --squash --delete-branch          # into develop: "the machine believes it"
+
+# then YOU demo on the phone. Only after that:
+git switch main && git merge --ff-only develop && git push
 ```
+
+That last line is the one that matters. `main` means *you have held this in your
+hand*. If you ever find yourself merging it without a demo, the branch has
+stopped meaning anything and you should collapse back to trunk-based.
 
 The PR is where the review becomes permanent. A QA verdict in a terminal
 scrolls away; a QA verdict on a diff is still there in six months when you're
@@ -62,6 +66,12 @@ When the PO hands you a story, attack it with these:
 - QA found out-of-scope changes → make dev remove them. This one matters more
   than it looks: uncontrolled scope is what makes AI output impossible to review.
 
+## Before you start a story
+
+- `/clear` if the session covered a different story. See [token-budget.md](token-budget.md).
+- Have the story open. Point agents at files by path; never ask them to go looking.
+- Plan to finish in one sitting — cheaper, and it keeps the story small.
+
 ## Smells that mean you're managing badly
 
 | Smell | What it means | Fix |
@@ -71,6 +81,8 @@ When the PO hands you a story, attack it with these:
 | You're editing code yourself | The loop broke upstream | Write the story you actually wanted |
 | "It works" but you haven't seen it | You trusted a claim | Demo, every time |
 | You merged because CI was green | CI proves it runs, not that it's right | Demo, every time |
+| `main` is 3+ stories behind `develop` | "main = demoed" has become a fiction | Demo or drop the branch |
+| Session has covered two stories | Quadratic token cost | `/clear`, the repo holds the state |
 | Agent asks you a design question mid-implementation | Story was ambiguous | Answer, then fix the AC |
 
 ## What transfers to your real job
@@ -82,3 +94,4 @@ The stack is disposable. These are not:
 4. A machine gate runs before human attention is spent.
 5. Decisions are written down where the next session will find them.
 6. The scope of a change is bounded and visible before anyone reviews it.
+7. State lives in the repo, not in a conversation — so context is disposable.

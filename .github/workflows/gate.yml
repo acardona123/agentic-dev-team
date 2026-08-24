@@ -6,7 +6,7 @@ on:
   pull_request:
     paths: ['app/**', '.github/workflows/gate.yml']
   push:
-    branches: [main]
+    branches: [main, develop]
     paths: ['app/**', '.github/workflows/gate.yml']
 
 jobs:

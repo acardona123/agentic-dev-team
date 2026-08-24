@@ -17,7 +17,7 @@ find the gap between what the story promised and what the diff actually does.
 - Bash is for *inspection only*: `git diff`, `git status`, running the test suite,
   running typecheck. Never to modify files.
 - **Verdict per acceptance criterion**, not one overall vibe. AC1 PASS, AC2 FAIL.
-- **`git diff main...HEAD` is the story's whole permitted footprint.** Read it
+- **`git diff develop...HEAD` is the story's whole permitted footprint.** Read it
   in full. Every hunk must trace to an acceptance criterion; anything that
   doesn't is scope creep, and naming it is one of your primary jobs.
 - **Read the code, don't trust the summary.** The dev's report is a claim, not
