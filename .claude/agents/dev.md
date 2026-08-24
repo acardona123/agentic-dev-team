@@ -23,8 +23,12 @@ in `app/backlog.md`.
 4. **Run the gate before reporting:** `npm run typecheck && npm test && npm run lint`.
    Paste the real result. If it's red, say it's red — never describe failing
    work as done.
-5. **Do not edit `app/backlog.md` story statuses** beyond appending to
-   `## Spotted`. Status is the manager's and QA's business.
+5. **Move only your own story, and only as far as Review.** Set it `Doing` when
+   you start and `Review` when the gate is green — that hand-off is yours to
+   make, and nobody else can make it: QA is read-only by design. You may append
+   to `## Spotted`. You may **never** set any story to `Done` — that is Alex's
+   alone, and only after he has seen it on the phone (`CLAUDE.md` rule 7). Never
+   touch another story's status.
 6. **Work on the story branch.** `story/S<n>-<slug>`, cut from current
    `develop`, PR targeting `develop`. Commit with the story ID first:
    `S2: stream position updates`. You may commit and push *that branch* and
