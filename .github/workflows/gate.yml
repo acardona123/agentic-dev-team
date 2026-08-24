@@ -1,13 +1,16 @@
 name: gate
 
 # The machine gate from method/definition-of-done.md.
-# Runs only when app code changes — the method is prose and has nothing to compile.
+#
+# Only app *code* triggers this. Markdown under app/ (the backlog) is prose and
+# has nothing to compile — an early version watched all of `app/**` and so a
+# backlog edit started a build in a directory with no package.json.
 on:
   pull_request:
-    paths: ['app/**', '.github/workflows/gate.yml']
+    paths: ['app/**', '!app/**.md', '.github/workflows/gate.yml']
   push:
     branches: [main, develop]
-    paths: ['app/**', '.github/workflows/gate.yml']
+    paths: ['app/**', '!app/**.md', '.github/workflows/gate.yml']
 
 jobs:
   gate:
@@ -17,17 +20,31 @@ jobs:
         working-directory: app
     steps:
       - uses: actions/checkout@v4
+
+      # Belt and braces: until story S0 creates the Expo app there is nothing to
+      # gate, and a green "nothing to do" is honest where a red build is noise.
+      - id: app
+        working-directory: .
+        run: test -f app/package.json && echo "exists=true" >> "$GITHUB_OUTPUT" || echo "exists=false" >> "$GITHUB_OUTPUT"
+
       - uses: actions/setup-node@v4
+        if: steps.app.outputs.exists == 'true'
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: app/package-lock.json
-      - run: npm ci
-      # Each step named so a red X on the PR tells you which gate failed
-      # without opening the log.
+
+      - if: steps.app.outputs.exists == 'true'
+        run: npm ci
+
+      # Named separately so a red X on the PR says which gate failed without
+      # opening the log.
       - name: typecheck
+        if: steps.app.outputs.exists == 'true'
         run: npm run typecheck
       - name: test
+        if: steps.app.outputs.exists == 'true'
         run: npm test
       - name: lint
+        if: steps.app.outputs.exists == 'true'
         run: npm run lint
