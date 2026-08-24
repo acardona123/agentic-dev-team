@@ -67,8 +67,16 @@ Both would have been attributed to feature code had they first appeared during S
 ## Spotted
 _Things agents noticed but were not allowed to fix. Triage these yourself._
 
-- `npm install` on Expo SDK 54 reports 18 advisories (9 moderate, 9 high), all
-  transitive through the SDK's own tree. `npx expo-doctor` is clean. Not touched
-  under S0 scope, but worth a decision before a store build.
+- ~~`npm install` on Expo SDK 54 reports 18 advisories (9 moderate, 9 high).~~
+  **Triaged 2026-08-25 — accepted, no action.** All 18 are transitive through the
+  SDK's own tree, and 16 report `fixAvailable` only by upgrading `expo` itself,
+  which [ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md) forbids: the
+  SDK is pinned to what Expo Go on the phone speaks. Every *high* is build-time
+  tooling that never runs on the device (`metro*`, `@expo/cli`, `postcss`, `xcode`,
+  `image-size`, `prebuild-config`) — it processes our own source on our own
+  machine. Only `expo-asset`, `expo-constants` and `uuid` reach the phone, all
+  moderate. `npx expo-doctor` is clean.
+  **Re-open when:** a store build is cut. That build is not Expo Go, so the SDK
+  pin dissolves and this list should be re-run against whatever SDK we move to.
 - `.gitignore` now exists at both the repo root and in `app/`, with overlapping rules.
   Harmless, but worth collapsing to one file at some point.
