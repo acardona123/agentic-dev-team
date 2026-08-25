@@ -28,10 +28,19 @@ run in parallel, which is the case `develop` exists for.
 
 - [ ] Committed with the story ID in the message, e.g. `S2: live distance display`
 - [ ] Any new technology decision has an ADR in `method/adr/`
-- [ ] PR merged into `develop` by Alex (never by an agent)
+- [ ] PR merged into `develop` by Alex, or by an agent on Alex's explicit
+      instruction for that specific PR — never on an agent's own judgement
 - [ ] Ran the demo on a real Android phone and saw it work
 - [ ] `main` fast-forwarded to `develop` — this is what "demoed" means in git
 - [ ] `method/log/S<n>.md` written — especially the "method change" line
+
+**On that "unless Alex says otherwise":** the rule has two jobs. One is keeping
+the machine gate honest — an agent must never merge because *it* judged the work
+ready. That job is absolute and the clause does not touch it. The other is
+keeping Alex at each transition, and a one-line instruction from him satisfies
+that as well as his own `gh pr merge` does. The clause exists because the rule
+was first routed around silently (S1), and a rule you break without amending is
+worse than one with an honest exception written into it.
 
 ---
 

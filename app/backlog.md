@@ -17,6 +17,13 @@ _(empty)_
 - **S3 — Arm/disarm + radius.** Choose 200/500/1000 m, arm the alarm, armed state is unmistakable.
 - **S4 — Alarm fires.** Inside the radius → sound + vibration + unmissable screen + dismiss.
 - **S5 — Desk test harness.** Feed fake positions so the alarm can be tested without riding a bus.
+- **S6 — Recent searches.** Show previously found addresses as you type, so a
+  repeated journey is one tap instead of retyping. Raised by Alex after the S1
+  demo. **Note for whoever refines this:** offering *local* history on keystroke
+  is **not** a breach of [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md)
+  obligation 2 — nothing goes over the wire. The obvious implementation drifts
+  into live autocomplete, which the policy prohibits in as many words. The line
+  is the network call, not the dropdown.
 
 > S5 looks like a detour and is the most valuable item here. If you can't test it
 > from your desk, you can't manage it. Expect to want it around S2 — pulling it
@@ -32,16 +39,22 @@ _(empty)_
 
 ## Review
 
+_(empty)_
+
+---
+
+## Done
+
 ### S1 — Address search
-**Status:** Review · gate green on `story/S1-address-search` · not yet demoed on a phone
+**Status:** Done · demoed on Alex's phone 2026-08-25 · merged in [PR #2](https://github.com/acardona123/agentic-dev-team/pull/2)
 **Intent:** "I want to type an address, see matching results, pick one, and have the app hold on to its coordinates."
 
 **Acceptance criteria**
-- [ ] AC1 — Given the app is open, when Alex types an address (e.g. "10 Downing Street London") and submits it, then a list of matching results is shown on screen, each with a human-readable label, and the text "© OpenStreetMap contributors" is visible on the same screen (geocoding provider and its licensing obligation: [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md))
-- [ ] AC2 — Given a list of results is shown, when Alex taps one, then the list closes and the app shows the chosen address's label on screen, confirming it is now the selected target
-- [ ] AC3 — Given Alex types but does not submit, when he changes characters, then no request is fired per keystroke — a request is only made on an explicit submit action (e.g. tapping search / pressing done). Given Alex submits the exact same query text a second time without changing it, when he submits, then no new network request is made and the previous results are shown again. (Both are usage-policy obligations, not a performance nicety — see [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md).)
-- [ ] AC4 — Given Alex submits a query that matches nothing, when the response comes back, then the app shows a plain "no results found" message instead of an empty or broken list
-- [ ] AC5 — Given Alex submits a query while the phone has no network, or the geocoding service responds with a rate-limit or server error, when the request fails, then the app shows the same plain error message instead of crashing or hanging silently
+- [x] AC1 — Given the app is open, when Alex types an address (e.g. "10 Downing Street London") and submits it, then a list of matching results is shown on screen, each with a human-readable label, and the text "© OpenStreetMap contributors" is visible on the same screen (geocoding provider and its licensing obligation: [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md))
+- [x] AC2 — Given a list of results is shown, when Alex taps one, then the list closes and the app shows the chosen address's label on screen, confirming it is now the selected target
+- [x] AC3 — Given Alex types but does not submit, when he changes characters, then no request is fired per keystroke — a request is only made on an explicit submit action (e.g. tapping search / pressing done). Given Alex submits the exact same query text a second time without changing it, when he submits, then no new network request is made and the previous results are shown again. (Both are usage-policy obligations, not a performance nicety — see [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md).)
+- [x] AC4 — Given Alex submits a query that matches nothing, when the response comes back, then the app shows a plain "no results found" message instead of an empty or broken list
+- [x] AC5 — Given Alex submits a query while the phone has no network, or the geocoding service responds with a rate-limit or server error, when the request fails, then the app shows the same plain error message instead of crashing or hanging silently
 - [x] AC6 — Given the module that builds the geocoding request and turns its response into "candidate" objects (label + lat/lon), when it is unit tested in `app/src/lib/`, then tests verify: the outgoing request carries an identifying `User-Agent` header rather than a library default, a successful response maps to a list of candidates, and an empty response maps to no candidates — with no React or Expo imports in that module
 - [x] AC7 — Given the project, when `npm run typecheck && npm test && npm run lint` is run, then all three pass
 
@@ -66,9 +79,23 @@ fuzzy intent matcher ([ADR-0009](../method/adr/0009-geocoding-via-nominatim.md))
 We find that out from real use after this story ships, not by building smarter
 matching in advance.*
 
----
+**What it cost, and why that was the point:** QA failed the first pass on AC3 and
+was right to. Every outcome was cached, errors included, so a search that failed
+in a tunnel could never be retried for the rest of the session — the app told the
+user to try again and had already made trying again a no-op. It typechecked, it
+passed 21 tests, CI was green: an error path that fails *politely* is invisible to
+the machine gate by construction. The fix moved the rule into a pure module where
+`CachedOutcome = Exclude<SearchOutcome, {kind:'error'}>` makes "never cache a
+failure" a compile-time fact rather than a convention.
 
-## Done
+The more expensive defect was in the method, not the app. The dispatching session
+proposed the phone demo *before* QA had reviewed — an ordering already fixed in
+three places, none of which it had read. That produced `CLAUDE.md` rule 9, a
+widened rule 8, a reordered Human gate, and
+[ADR-0010](../method/adr/0010-no-orchestrator-agent.md). See
+[method/log/S1.md](../method/log/S1.md).
+
+---
 
 ### S0 — Walking skeleton on the phone
 **Status:** Done · demoed on Alex's phone 2026-08-25 · merged in [PR #1](https://github.com/acardona123/agentic-dev-team/pull/1)
@@ -155,9 +182,12 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
   "London", then type "Paris" without submitting, and the London rows stay under a
   field reading "Paris" — tapping one sets it as the selected target. Same shape
   mid-flight: edit while a request is in flight and the arriving results answer the
-  old text. AC2 is satisfied as written ("tap a shown result → it becomes the
-  target"), so this was out of S1's scope. S2 touches this screen and is the
-  natural place to deal with it.
+  old text. **Alex hit the other half on the phone demo:** the *selected target*
+  also survives — start typing a different address and the previously chosen one
+  is still displayed as the held target, which reads as though the app has already
+  accepted the new text. Same root cause, same fix site. AC2 is satisfied as
+  written ("tap a shown result → it becomes the target"), so this was out of S1's
+  scope. S2 touches this screen and is the natural place to deal with it.
 - `attribution: { flexShrink: 0 }` is a no-op — React Native already defaults
   `flexShrink` to 0, unlike CSS. The whole of the AC1 layout fix rests on
   `flexShrink: 1` on `list`. Recorded so a later reader does not mistake the
