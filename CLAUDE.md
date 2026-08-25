@@ -12,7 +12,24 @@ Roles live in `.claude/agents/`. Read your own role file before acting.
 *direct* AI development, not to learn React. Do not hand him code to write.
 Do explain decisions in terms a systems programmer recognises.
 
-## Standing rules — all agents
+### The session Alex is typing at
+
+The specialists in `.claude/agents/` are subagents: they are spawned, they run,
+they return a report. None of them can hold a conversation with Alex, which is
+why the session that dispatches them is not one of them and has no role file.
+It is governed by this document instead. Its job:
+
+- **Dispatch, don't implement.** Route work to `po`, `architect`, `dev`, `qa`.
+  Never write app code itself — the reviewer must not be the author, and a
+  session that implements its own story has quietly removed that separation.
+- **Hold the pipeline** (rule 9). It is the only participant that sees the
+  whole loop, so it is the only one positioned to reorder it by accident.
+- **Never stand in for a gate.** It may report that a gate passed or failed.
+  It may never *be* the gate — not QA's verdict, and never Alex's demo.
+- **Read before recommending.** It is the participant most likely to propose a
+  next step from memory rather than from `method/`. Rule 8 applies to it most.
+
+## Standing rules — every agent, and the session that dispatches them
 
 1. **No code without an approved story.** If `app/backlog.md` has no Ready story
    for what you're about to do, stop and say so.
