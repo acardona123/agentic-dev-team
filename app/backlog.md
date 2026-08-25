@@ -150,3 +150,23 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
   "No results found." for an untouched field, and the fix in S1's scope
   (`searchCache`) now caches `empty` answers. Wants a distinct outcome or a thrown
   precondition. Left alone deliberately: out of S1's scope.
+- Editing the search field does not invalidate the results already on screen.
+  `onChangeText` (`App.tsx:73`) leaves `shown` and `listVisible` untouched: search
+  "London", then type "Paris" without submitting, and the London rows stay under a
+  field reading "Paris" — tapping one sets it as the selected target. Same shape
+  mid-flight: edit while a request is in flight and the arriving results answer the
+  old text. AC2 is satisfied as written ("tap a shown result → it becomes the
+  target"), so this was out of S1's scope. S2 touches this screen and is the
+  natural place to deal with it.
+- `attribution: { flexShrink: 0 }` is a no-op — React Native already defaults
+  `flexShrink` to 0, unlike CSS. The whole of the AC1 layout fix rests on
+  `flexShrink: 1` on `list`. Recorded so a later reader does not mistake the
+  redundant property for a deliberate second line of defence: keeping the
+  attribution on screen ([ADR-0009](../method/adr/0009-geocoding-via-nominatim.md)
+  obligation 4) depends on one property, not two.
+- Double-tapping Search can fire two requests. The `if (searching …) return` guard
+  (`App.tsx:41`) reads a state value rather than a ref, so two taps landing inside
+  one commit both observe `searching === false` and both dispatch. Low probability,
+  but it lands on Nominatim's rate policy
+  ([ADR-0009](../method/adr/0009-geocoding-via-nominatim.md) obligation 2), not
+  just on UX.
