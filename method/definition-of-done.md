@@ -22,6 +22,13 @@ except..." means Doing.
 
 ## Human gate (Alex only)
 
+Most of this gate cannot be machine-checked — nothing can verify Alex held the
+phone, which is the whole point of it. The parts that leave artifacts in the repo
+are checked by CI ([ADR-0012](adr/0012-ci-check-for-story-closeout-artifacts.md)),
+and the rest arrives already drafted rather than remembered
+([closeout.md](closeout.md), `CLAUDE.md` rule 10). S0 was closed without its log
+because a self-attested list has no reviewer.
+
 **This list is a sequence, not a set.** The order below is the order it happens
 in; `develop` is where stories integrate before a demo, so the merge comes
 first ([ADR-0004](adr/0004-git-flow-branching.md)). Demoing a story branch
@@ -36,6 +43,8 @@ run in parallel, which is the case `develop` exists for.
 - [ ] Ran the demo on a real Android phone and saw it work
 - [ ] `main` fast-forwarded to `develop` — this is what "demoed" means in git
 - [ ] `method/log/S<n>.md` written — especially the "method change" line
+      (`node method/check-closeout.mjs` verifies this one, and CI runs it —
+      it is the only item on this gate that leaves an artifact a machine can see)
 
 **On that "unless Alex says otherwise":** the rule has two jobs. One is keeping
 the machine gate honest — an agent must never merge because *it* judged the work
