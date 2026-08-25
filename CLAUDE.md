@@ -127,4 +127,10 @@ creep, and QA is expected to name it.
 - TypeScript strict. No `any` without a comment saying why.
 - Business logic (distance maths, alarm trigger rules) goes in pure functions in
   `app/src/lib/`, unit tested, with **no** React or Expo imports. UI stays dumb.
+- **A device capability is a parameter, never something reached for.** Anything
+  the phone provides — the network, location, sensors, the clock — is passed into
+  the logic that uses it, so a test can pass a double instead. S1 did this with
+  `fetch` (`FetchLike` in `app/src/lib/geocode.ts`); the same shape is what will
+  make a fake-position harness cheap instead of a rewrite. The cost of ignoring
+  this is never paid in the story that ignores it.
 - Comments explain *why*, never *what*.

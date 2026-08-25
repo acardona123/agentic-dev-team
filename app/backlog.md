@@ -26,8 +26,20 @@ _(empty)_
   is the network call, not the dropdown.
 
 > S5 looks like a detour and is the most valuable item here. If you can't test it
-> from your desk, you can't manage it. Expect to want it around S2 — pulling it
-> forward then is the right call, not a failure of planning.
+> from your desk, you can't manage it.
+>
+> **Refined after S1 (2026-08-25).** The story that needs it is **S4**, not S2:
+> "show live distance" is demoable at a window, and S3 is UI state, but "alarm
+> fires within 200 m" means physically getting within 200 m of somewhere — once
+> per test, and again after every fix. It also cannot be built *before* S2, since
+> there is no position pipeline to feed until S2 defines one. So the order stands:
+> S2 → S3 → S5 → S4.
+>
+> What decides whether S5 is a two-hour story or a rewrite is **how S2 is
+> implemented**. If the position source is injected — the way S1 injected `fetch`
+> as `FetchLike` — faking it is nearly free. If `expo-location` is wired straight
+> into the component, S5 means gutting S2. Hence the code-style rule in
+> `CLAUDE.md`: a device capability is taken as a parameter, never reached for.
 
 ---
 
