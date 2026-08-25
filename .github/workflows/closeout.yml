@@ -1,0 +1,25 @@
+name: closeout
+
+# Not the machine gate. That is .github/workflows/gate.yml, and it watches app
+# code. This watches the *bookkeeping artifacts* of the human gate in
+# method/definition-of-done.md — the log file a Done story must leave behind —
+# so a red X here names a different kind of failure. See method/adr/0012.
+#
+# It cannot check the human gate itself: nothing in CI can know whether Alex
+# held the phone.
+on:
+  pull_request:
+    paths: ['app/backlog.md', 'method/log/**', 'method/check-closeout.mjs', '.github/workflows/closeout.yml']
+  push:
+    branches: [main, develop]
+    paths: ['app/backlog.md', 'method/log/**', 'method/check-closeout.mjs', '.github/workflows/closeout.yml']
+
+jobs:
+  closeout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # No setup-node, no npm ci: the script has no dependencies and runs on the
+      # node the runner already ships.
+      - name: story closeout artifacts
+        run: node method/check-closeout.mjs
