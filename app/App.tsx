@@ -12,13 +12,13 @@ import { StatusBar } from 'expo-status-bar';
 
 import { screenTitle } from './src/lib/appInfo';
 import {
-  isSameQuery,
   isSearchable,
   searchAddress,
   type Candidate,
   type FetchLike,
   type SearchOutcome,
 } from './src/lib/geocode';
+import { cachedOutcomeFor, rememberOutcome, type SearchCache } from './src/lib/searchCache';
 
 const NO_RESULTS_MESSAGE = 'No results found.';
 const ERROR_MESSAGE = 'Search failed. Check your connection and try again.';
@@ -30,13 +30,18 @@ export default function App() {
   const [searching, setSearching] = useState(false);
   const [listVisible, setListVisible] = useState(false);
   const [selected, setSelected] = useState<Candidate | null>(null);
-  // The last query we actually sent, with its outcome: re-submitting unchanged
-  // text must not hit the network again (ADR-0009 obligation 3 / AC3).
-  const [cached, setCached] = useState<{ query: string; outcome: SearchOutcome } | null>(null);
+  // What the geocoder answered for the last query we sent: re-submitting
+  // unchanged text must not hit the network again (ADR-0009 obligation 3 / AC3).
+  // Errors are deliberately not held here — see `searchCache`.
+  const [cache, setCache] = useState<SearchCache>(null);
+  // What is on screen, which unlike the cache does include a failure.
+  const [shown, setShown] = useState<SearchOutcome | undefined>(undefined);
 
   const onSubmit = useCallback(async () => {
     if (searching || !isSearchable(query)) return;
-    if (cached && isSameQuery(cached.query, query)) {
+    const hit = cachedOutcomeFor(cache, query);
+    if (hit !== undefined) {
+      setShown(hit);
       setListVisible(true);
       return;
     }
@@ -45,17 +50,18 @@ export default function App() {
     // Cast: RN's global `fetch` is typed against the DOM `RequestInit`, while the
     // lib module deliberately declares the narrow slice it uses so it stays free of
     // React/Expo and DOM types (CLAUDE.md code style).
-    const outcome = await searchAddress(query, fetch as unknown as FetchLike);
-    setCached({ query, outcome });
+    const result = await searchAddress(query, fetch as unknown as FetchLike);
+    setCache((current) => rememberOutcome(current, query, result));
+    setShown(result);
     setSearching(false);
-  }, [cached, query, searching]);
+  }, [cache, query, searching]);
 
   const onPick = useCallback((candidate: Candidate) => {
     setSelected(candidate);
     setListVisible(false);
   }, []);
 
-  const outcome = listVisible && !searching ? cached?.outcome : undefined;
+  const outcome = listVisible && !searching ? shown : undefined;
 
   return (
     <View style={styles.container}>
@@ -126,11 +132,20 @@ const styles = StyleSheet.create({
   buttonText: { color: '#fff', fontSize: 16 },
   spinner: { marginTop: 16 },
   message: { marginTop: 16, fontSize: 16 },
-  list: { marginTop: 16, flexGrow: 0 },
+  // Shrinks so the attribution below it always fits; the FlatList scrolls its
+  // own overflow. Results on screen without the licence line is the one state
+  // ADR-0009 obligation 4 forbids.
+  list: { marginTop: 16, flexGrow: 0, flexShrink: 1 },
   row: { paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#ddd' },
   rowText: { fontSize: 16 },
   selected: { marginTop: 16 },
   selectedHeading: { fontSize: 14, color: '#555' },
   selectedLabel: { fontSize: 18 },
-  attribution: { marginTop: 'auto', marginBottom: 24, fontSize: 12, color: '#555' },
+  attribution: {
+    marginTop: 'auto',
+    marginBottom: 24,
+    fontSize: 12,
+    color: '#555',
+    flexShrink: 0,
+  },
 });

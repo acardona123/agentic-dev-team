@@ -144,3 +144,9 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
 - ADR-0009 obligation 1 notes a browser silently strips `User-Agent`, so `npm run web`
   is not a valid target for the geocoding path. Nothing in the repo says so where a
   future session would look — `package.json` still exposes a `web` script.
+- `searchAddress` returns `{ kind: 'empty' }` for a blank query, conflating "you typed
+  nothing" with "the server matched nothing". Dead code today — `App.tsx`'s `isSearchable`
+  guard means it is never reached — but S2+ callers that skip that guard would show
+  "No results found." for an untouched field, and the fix in S1's scope
+  (`searchCache`) now caches `empty` answers. Wants a distinct outcome or a thrown
+  precondition. Left alone deliberately: out of S1's scope.
