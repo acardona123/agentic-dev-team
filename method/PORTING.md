@@ -92,6 +92,7 @@ maintained by judgement, deliberately.
 | S0 | `dev.md` rule 5 narrowed — dev moves its own story as far as Review, never Done | core |
 | S1 | `CLAUDE.md` rules 8–10, the dispatching-session block, [ADR-0010](adr/0010-no-orchestrator-agent.md), DoD human gate reordered, merge clause given an honest exception | core |
 | S1 | [ADR-0011](adr/0011-one-gate-command-and-pipefail.md) one gate command + `pipefail`; [ADR-0012](adr/0012-ci-check-for-story-closeout-artifacts.md) + `check-closeout.mjs`; [closeout.md](closeout.md); the `Scope:` tags and this file | core |
+| S1 | `po.md`: an AC checkable only on the device must be paired with one checkable at the desk (from S0's log, unimplemented until now); `architect.md`: `Scope:` in the ADR template, and this table kept live | core |
 
 Append a row per story. If three stories running add nothing, either the method
 is finished or nobody is looking hard enough — `log/README.md` makes the same
