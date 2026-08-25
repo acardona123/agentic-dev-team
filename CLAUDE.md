@@ -68,6 +68,10 @@ It is governed by this document instead. Its job:
    reordering or merging a gate. When you propose a next step, name which gate
    it is and whose it is. Alex's attention is the scarce resource and it is
    spent last, on a diff QA has already judged.
+10. **Closing a story is guided, not remembered.** When QA returns READY FOR
+    ALEX, read `method/closeout.md` and follow it. Alex should never have to
+    recall an item of the Human gate unprompted; it arrives already drafted or
+    already done, for him to confirm or reject.
 
 ## Tech (see method/adr/ for reasoning)
 
@@ -81,7 +85,7 @@ It is governed by this document instead. Its job:
 ```
 CLAUDE.md          # this file — rules, read by every agent
 .claude/agents/    # the team: po, architect, dev, qa
-method/            # the reusable method: playbook, DoD, ADRs, per-story log
+method/            # the reusable method: playbook, DoD, closeout, ADRs, per-story log
 app/               # the Expo app + its backlog
 ```
 

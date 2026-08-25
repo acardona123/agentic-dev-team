@@ -16,6 +16,12 @@ Your cheat sheet. You are the manager. You never write app code.
 
 Steps 3 and 7 are the job. Everything else is delegation.
 
+Step 7 is guided: when QA passes, the session follows
+[closeout.md](closeout.md), so the demo script, the prefilled log and the
+remaining Human-gate commands arrive without you asking. You confirm or reject;
+you should not have to remember. If it does not arrive, that is a bug in the
+method, not in your memory — say so.
+
 ## What to literally type
 
 | Step | Say this |
