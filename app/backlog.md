@@ -7,8 +7,33 @@ Only Alex moves a story to **Done**, and only after seeing it work on his phone.
 
 ## Ready
 
+_(empty)_
+
+---
+
+## Backlog (not yet refined — the PO turns these into stories, one at a time)
+
+- **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
+- **S3 — Arm/disarm + radius.** Choose 200/500/1000 m, arm the alarm, armed state is unmistakable.
+- **S4 — Alarm fires.** Inside the radius → sound + vibration + unmissable screen + dismiss.
+- **S5 — Desk test harness.** Feed fake positions so the alarm can be tested without riding a bus.
+
+> S5 looks like a detour and is the most valuable item here. If you can't test it
+> from your desk, you can't manage it. Expect to want it around S2 — pulling it
+> forward then is the right call, not a failure of planning.
+
+---
+
+## Doing
+
+_(empty)_
+
+---
+
+## Review
+
 ### S1 — Address search
-**Status:** Ready
+**Status:** Review · gate green on `story/S1-address-search` · not yet demoed on a phone
 **Intent:** "I want to type an address, see matching results, pick one, and have the app hold on to its coordinates."
 
 **Acceptance criteria**
@@ -17,8 +42,8 @@ Only Alex moves a story to **Done**, and only after seeing it work on his phone.
 - [ ] AC3 — Given Alex types but does not submit, when he changes characters, then no request is fired per keystroke — a request is only made on an explicit submit action (e.g. tapping search / pressing done). Given Alex submits the exact same query text a second time without changing it, when he submits, then no new network request is made and the previous results are shown again. (Both are usage-policy obligations, not a performance nicety — see [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md).)
 - [ ] AC4 — Given Alex submits a query that matches nothing, when the response comes back, then the app shows a plain "no results found" message instead of an empty or broken list
 - [ ] AC5 — Given Alex submits a query while the phone has no network, or the geocoding service responds with a rate-limit or server error, when the request fails, then the app shows the same plain error message instead of crashing or hanging silently
-- [ ] AC6 — Given the module that builds the geocoding request and turns its response into "candidate" objects (label + lat/lon), when it is unit tested in `app/src/lib/`, then tests verify: the outgoing request carries an identifying `User-Agent` header rather than a library default, a successful response maps to a list of candidates, and an empty response maps to no candidates — with no React or Expo imports in that module
-- [ ] AC7 — Given the project, when `npm run typecheck && npm test && npm run lint` is run, then all three pass
+- [x] AC6 — Given the module that builds the geocoding request and turns its response into "candidate" objects (label + lat/lon), when it is unit tested in `app/src/lib/`, then tests verify: the outgoing request carries an identifying `User-Agent` header rather than a library default, a successful response maps to a list of candidates, and an empty response maps to no candidates — with no React or Expo imports in that module
+- [x] AC7 — Given the project, when `npm run typecheck && npm test && npm run lint` is run, then all three pass
 
 **Not in scope**
 - Distance or bearing calculation to the selected address
@@ -42,27 +67,6 @@ We find that out from real use after this story ships, not by building smarter
 matching in advance.*
 
 ---
-
-## Backlog (not yet refined — the PO turns these into stories, one at a time)
-
-- **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
-- **S3 — Arm/disarm + radius.** Choose 200/500/1000 m, arm the alarm, armed state is unmistakable.
-- **S4 — Alarm fires.** Inside the radius → sound + vibration + unmissable screen + dismiss.
-- **S5 — Desk test harness.** Feed fake positions so the alarm can be tested without riding a bus.
-
-> S5 looks like a detour and is the most valuable item here. If you can't test it
-> from your desk, you can't manage it. Expect to want it around S2 — pulling it
-> forward then is the right call, not a failure of planning.
-
----
-
-## Doing
-
-_(empty)_
-
-## Review
-
-_(empty)_
 
 ## Done
 
@@ -126,3 +130,17 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
   is off-limits. Verified `app/node_modules`, `app/.expo`, `app/dist`, `app/ios`,
   `app/android`, `*.log`, `.DS_Store` and `method/node_modules` all still resolve
   as ignored, and nothing was mis-tracked.
+
+- `src/lib/` is kept React/Expo-free by convention only — nothing in the lint config
+  enforces it, so the first stray `import { Platform } from 'react-native'` in a lib
+  module will pass the gate. An ESLint `no-restricted-imports` override scoped to
+  `src/lib/**` would make CLAUDE.md's code-style rule machine-checked. Out of S1's scope.
+- There is no test that renders `App.tsx`, so AC1–AC5 are verified by eye on the phone
+  only. `jest-expo` ships with `react-test-renderer` available; a component test would
+  let the "no request on keystroke / no re-request for an unchanged query" rule (AC3,
+  ADR-0009 obligation 3) be caught by the gate instead of by inspection. Needs a story
+  and a decision on whether we take on `@testing-library/react-native` under the SDK 54
+  pin ([ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md)).
+- ADR-0009 obligation 1 notes a browser silently strips `User-Agent`, so `npm run web`
+  is not a valid target for the geocoding path. Nothing in the repo says so where a
+  future session would look — `package.json` still exposes a `web` script.
