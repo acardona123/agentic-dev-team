@@ -1,5 +1,6 @@
 # 0009 — Geocoding provider: OpenStreetMap Nominatim, called directly with `fetch`
-**Status:** Accepted · **Date:** 2026-08-25
+**Status:** Accepted · **Date:** 2026-08-25  
+**Scope:** project
 
 ## Context
 `CLAUDE.md`'s `## Tech` list has said "Geocoding: OpenStreetMap Nominatim, no API key"

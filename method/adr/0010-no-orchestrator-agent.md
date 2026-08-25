@@ -1,5 +1,6 @@
 # 0010 — The dispatching session has no role file; no orchestrator subagent
-**Status:** Accepted · **Date:** 2026-08-25
+**Status:** Accepted · **Date:** 2026-08-25  
+**Scope:** core
 
 ## Context
 Four roles live in `.claude/agents/`: `po`, `architect`, `dev`, `qa`. The fifth

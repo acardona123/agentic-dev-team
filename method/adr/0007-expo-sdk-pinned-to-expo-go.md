@@ -1,5 +1,6 @@
 # 0007 — The Expo SDK version is dictated by the Expo Go build on Alex's phone
-**Status:** Accepted · **Date:** 2026-08-25 · **Supersedes the version choice in** 0001
+**Status:** Accepted · **Date:** 2026-08-25 · **Supersedes the version choice in** 0001  
+**Scope:** project
 
 ## Context
 S0 was first scaffolded with `create-expo-app` defaults, which means "latest" —

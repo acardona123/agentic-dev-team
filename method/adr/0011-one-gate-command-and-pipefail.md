@@ -1,5 +1,6 @@
 # 0011 — One `gate` command, and `pipefail` when its output is trimmed
-**Status:** Accepted · **Date:** 2026-08-25
+**Status:** Accepted · **Date:** 2026-08-25  
+**Scope:** core — binds to the gate command, `npm run gate` here.
 
 ## Context
 The machine gate was three scripts every agent composed by hand

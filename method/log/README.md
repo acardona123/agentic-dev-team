@@ -10,6 +10,8 @@ Five lines is plenty. The point is the fifth one.
 **What QA caught:** <or: nothing, and what you found afterwards yourself>
 **What I'd specify differently:** <the AC you wish you'd written>
 **Method change:** <what you edited in CLAUDE.md / an agent file / the DoD — or "none">
+<tag each change `core` or `project`: does it transfer to the next project, or
+is it about this app? See [../PORTING.md](../PORTING.md).>
 ```
 
 The method file is where this project stops being an app and starts being

@@ -1,5 +1,6 @@
 # 0004 — git-flow, with the two long-lived branches carrying the two gates
-**Status:** Accepted · **Date:** 2026-08-24 · **Supersedes part of** [0003](0003-branch-per-story-with-ci.md)
+**Status:** Accepted · **Date:** 2026-08-24 · **Supersedes part of** [0003](0003-branch-per-story-with-ci.md)  
+**Scope:** core
 
 ## Context
 ADR-0003 established one branch and one PR per story against `main`. Alex uses a

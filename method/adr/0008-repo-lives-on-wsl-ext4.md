@@ -1,5 +1,6 @@
 # 0008 — The working copy lives on the WSL2 Linux filesystem, not on /mnt/c
-**Status:** Accepted · **Date:** 2026-08-25
+**Status:** Accepted · **Date:** 2026-08-25  
+**Scope:** project — A WSL2 environment fact, not a method decision.
 
 ## Context
 The repo was originally checked out at `C:\Users\alexc\Documents\agentic_app`, which

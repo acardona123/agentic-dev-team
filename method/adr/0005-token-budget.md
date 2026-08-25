@@ -1,5 +1,6 @@
 # 0005 — Session hygiene as the primary token control
-**Status:** Accepted · **Date:** 2026-08-24
+**Status:** Accepted · **Date:** 2026-08-24  
+**Scope:** core
 
 ## Context
 Alex is paying for model usage and wants the loop to be economical without

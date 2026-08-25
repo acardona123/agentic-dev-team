@@ -1,5 +1,6 @@
 # 0001 — Expo (React Native) + TypeScript for the mobile app
-**Status:** Accepted · **Date:** 2026-08-24
+**Status:** Accepted · **Date:** 2026-08-24  
+**Scope:** project — The app is a pretext; another project picks its own stack.
 
 ## Context
 The app must run on Alex's Android phone. The dev machine is WSL2 with Node 22,

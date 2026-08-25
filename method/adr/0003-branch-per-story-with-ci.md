@@ -1,5 +1,6 @@
 # 0003 — One story, one branch, one PR, with CI as the gate
-**Status:** Accepted · **Date:** 2026-08-24
+**Status:** Accepted · **Date:** 2026-08-24  
+**Scope:** core
 
 ## Context
 Alex works solo, so branches and pull requests look like pure ceremony. The

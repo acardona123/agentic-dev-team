@@ -1,5 +1,6 @@
 # 0002 — One repo, structured as two subtrees
-**Status:** Accepted · **Date:** 2026-08-24
+**Status:** Accepted · **Date:** 2026-08-24  
+**Scope:** core
 
 ## Context
 This project has two products: a **reusable method** for running AI agents as a

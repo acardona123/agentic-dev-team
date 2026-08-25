@@ -1,5 +1,6 @@
 # 0006 — Test and lint toolchain for the Expo app
-**Status:** Accepted · **Date:** 2026-08-24
+**Status:** Accepted · **Date:** 2026-08-24  
+**Scope:** project — Another project brings its own typecheck/test/lint tools.
 
 ## Context
 `method/definition-of-done.md` requires `npm run typecheck && npm test && npm run lint`

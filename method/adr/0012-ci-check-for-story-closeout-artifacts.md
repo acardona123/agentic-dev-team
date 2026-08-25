@@ -1,5 +1,6 @@
 # 0012 — A CI check for story-closeout artifacts
-**Status:** Accepted · **Date:** 2026-08-25
+**Status:** Accepted · **Date:** 2026-08-25  
+**Scope:** core — binds to the backlog and log paths in `check-closeout.mjs`.
 
 ## Context
 S0 was marked Done and fast-forwarded to `main` without `method/log/S0.md` ever
