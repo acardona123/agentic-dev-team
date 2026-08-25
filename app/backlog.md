@@ -14,6 +14,18 @@ _(empty)_
 ## Backlog (not yet refined — the PO turns these into stories, one at a time)
 
 - **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
+  **Blocked on an ADR (2026-08-25).** The PO was asked to refine this and stopped
+  on `CLAUDE.md` rule 8: nothing in `method/adr/` decides how the app obtains the
+  phone's position. ADR-0001 mentions only that *background* location will need a
+  dev build later; no mechanism is committed to even for foreground. Writing the
+  ACs would have meant silently deciding the permission flow, what "streams"
+  means operationally (poll vs watch, interval or distance threshold), and the
+  shape of the injectable seam — which per the S5 note below is what decides
+  whether the fake-position harness is cheap or a rewrite.
+  **Next step:** architect writes that ADR, same shape as
+  [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md) was for geocoding.
+  Then the PO writes S2 from the same one-sentence intent: *"I want to see how
+  far I am from the address I picked, updating as I move."*
 - **S3 — Arm/disarm + radius.** Choose 200/500/1000 m, arm the alarm, armed state is unmistakable.
 - **S4 — Alarm fires.** Inside the radius → sound + vibration + unmissable screen + dismiss.
 - **S5 — Desk test harness.** Feed fake positions so the alarm can be tested without riding a bus.
