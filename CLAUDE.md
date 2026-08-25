@@ -35,9 +35,15 @@ It is governed by this document instead. Its job:
    for what you're about to do, stop and say so.
 2. **One story at a time.** Never implement ahead. Scope creep is the failure
    mode we are specifically training against.
-3. **The gate is not optional.** `npm run typecheck && npm test && npm run lint`
-   must pass before you report work as finished. Report failures honestly; a
-   red gate reported as green is the worst possible outcome here.
+3. **The gate is not optional.** From `app/`, `npm run gate` must pass before you
+   report work as finished. Report failures honestly; a red gate reported as
+   green is the worst possible outcome here — and it happens by pipe, not by
+   lying, so if you trim the output you must keep the status:
+
+       set -o pipefail; cd app && npm run gate 2>&1 | tail -30; echo "GATE EXIT: $?"
+
+   Without `pipefail` that number is the filter's, not the gate's
+   ([ADR-0011](method/adr/0011-one-gate-command-and-pipefail.md)).
 4. **Thin vertical slices.** Every story ends with something visible on the
    phone. No "build the data layer" work.
 5. **Decisions get written down.** Anything a future session would have to

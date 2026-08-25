@@ -7,6 +7,9 @@ except..." means Doing.
 - [ ] `npm run typecheck` passes
 - [ ] `npm test` passes
 - [ ] `npm run lint` passes
+      — locally these are one command, `npm run gate`; invoke it as rule 3 says
+      if you trim its output ([ADR-0011](adr/0011-one-gate-command-and-pipefail.md)).
+      CI keeps them as three named steps so a red X names the failure.
 - [ ] Pure logic in `app/src/lib/` has unit tests covering the happy path and at
       least one edge case
 - [ ] The PR's CI check is green — this, not the dev agent's report, is the
