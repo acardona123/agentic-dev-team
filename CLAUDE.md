@@ -47,7 +47,9 @@ It is governed by this document instead. Its job:
 4. **Thin vertical slices.** Every story ends with something visible on the
    phone. No "build the data layer" work.
 5. **Decisions get written down.** Anything a future session would have to
-   re-derive goes in `method/adr/` as a numbered ADR.
+   re-derive goes in `method/adr/` as a numbered ADR, tagged `**Scope:** core`
+   or `project` — the method is meant to leave this repo one day without the
+   app ([PORTING.md](method/PORTING.md)).
 6. **Be economical with context.** Read the files you need by path; don't crawl
    the repo. Don't restate what's already in `CLAUDE.md` or an ADR — cite it.
    See `method/token-budget.md`.

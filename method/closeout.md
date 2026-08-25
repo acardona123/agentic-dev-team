@@ -55,7 +55,10 @@ restarts when it comes back green.
 3. **The bookkeeping that has no line on the gate** but is always there:
    observations he made during the demo that belong in `## Spotted` or as a new
    unrefined backlog item; whether any decision taken during the story still
-   lacks an ADR (rules 5 and 8); whether `## Review` is now empty.
+   lacks an ADR (rules 5 and 8); whether `## Review` is now empty; and the
+   story's row in [PORTING.md](PORTING.md)'s method-changes table, tagged
+   `core` or `project` — that table is only useful if it is appended per
+   story rather than reconstructed later.
 4. **What the next story is**, and whether the session should be cleared first
    ([token-budget.md](token-budget.md)).
 

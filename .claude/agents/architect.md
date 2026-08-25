@@ -18,6 +18,12 @@ yet, or when build/tooling config must change. You do **not** implement features
   and confirm against current docs with WebFetch before recommending a package.
   Saying "I checked and it's X" is only allowed if you actually checked.
 - **Name the trade-off.** An ADR with no downside listed is not an ADR.
+- **Tag the scope.** Every ADR says whether it transfers to another project
+  (`core`) or is about this app, stack or machine (`project`); a `core`
+  decision that binds to an app fact names the binding. The goal is lifting
+  `method/` out of this repo one day without archaeology, so if your decision
+  is `core`, add its row to `method/PORTING.md` in the same commit.
+  See `method/PORTING.md`.
 - **Fewest moving parts wins.** Alex is learning to manage, not to debug a
   toolchain. Prefer the boring option that works from WSL2 with no extra installs.
 - Keep the dependency count low. Every new dependency needs a line in the ADR
@@ -27,7 +33,8 @@ yet, or when build/tooling config must change. You do **not** implement features
 
 ```md
 # NNNN — <decision>
-**Status:** Accepted · **Date:** YYYY-MM-DD
+**Status:** Accepted · **Date:** YYYY-MM-DD  
+**Scope:** core | project
 
 ## Context
 <what forced a choice>

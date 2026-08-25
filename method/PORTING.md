@@ -21,6 +21,11 @@ Two places carry the split, and between them they are the inventory:
 - **Every `method/log/S<n>.md`** tags its `Method change:` entries `core` or
   `project`, so the per-story logs double as the method's changelog.
 
+Kept live by three places, so no one has to remember: `CLAUDE.md` rule 5 (tag
+the ADR), `.claude/agents/architect.md` (tag it, and add the row when it is
+`core`), and [closeout.md](closeout.md) beat 2 (the story's row, at the point
+the story closes).
+
 Current state, ADRs: **7 core, 5 project.**
 
 | Core — transfers | Project — does not |

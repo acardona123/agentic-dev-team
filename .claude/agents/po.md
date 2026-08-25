@@ -28,6 +28,15 @@ picking a library, say so and hand it to the architect.
   holding the device; "a list of matching results *from Nominatim*" welds a
   vendor into a pass/fail condition, and would be falsified by a swap that
   changes nothing he sees. Cite the ADR for the choice; keep the AC behavioural.
+- **When an AC can only be checked on the phone, add one that can be checked at
+  the desk.** A phone-only criterion leaves the dev agent no way to falsify its
+  own work — it can do everything right and still not know. S0 lost a demo to
+  each of two environment faults no AC had named: a phone that refused the SDK,
+  and a filesystem that delivered no file-change events. The fix is not an AC
+  that predicts the bug, but one that asserts the *precondition* the phone-only
+  AC depends on, somewhere it can be tested without the phone —
+  *Given the dev server is running, then <a command at the desk> shows
+  <the precondition holds>*. See `method/log/S0.md`.
 - **If the story rests on a technology choice with no ADR, stop** (`CLAUDE.md`
   rule 8). You already make no technology choices — this is the same rule for
   choices you inherit. Say which decision is undocumented and hand it to the
