@@ -29,11 +29,22 @@ Do explain decisions in terms a systems programmer recognises.
    the repo. Don't restate what's already in `CLAUDE.md` or an ADR — cite it.
    See `method/token-budget.md`.
 7. **Only Alex marks a story Done.** Agents may move stories to Review, never to Done.
-8. **An undocumented decision is not a decision.** Before you rely on a
-   technology choice, check that `method/adr/` actually justifies it. A choice
-   asserted in this file with no ADR behind it is an *open question wearing the
-   costume of a rule* — stop and say so rather than building on it. Rule 5
-   covers decisions you make; this one covers decisions you inherit.
+8. **An undocumented decision is not a decision.** Before you rely on *any*
+   inherited decision — a technology choice, a branching model, a step in the
+   process — check that `method/adr/` actually justifies it. A choice asserted
+   in this file with no ADR behind it is an *open question wearing the costume
+   of a rule* — stop and say so rather than building on it. This cuts both
+   ways: proposing a deviation from a decision without first reading the ADR
+   that made it is the same error run backwards. Rule 5 covers decisions you
+   make; this one covers decisions you inherit.
+9. **The pipeline is not reorderable.** `po → (architect) → dev → qa → Alex's
+   demo`, with the machine gate before QA and QA before Alex
+   ([definition-of-done.md](method/definition-of-done.md),
+   [manager-playbook.md](method/manager-playbook.md),
+   [ADR-0004](method/adr/0004-git-flow-branching.md)). Never propose skipping,
+   reordering or merging a gate. When you propose a next step, name which gate
+   it is and whose it is. Alex's attention is the scarce resource and it is
+   spent last, on a diff QA has already judged.
 
 ## Tech (see method/adr/ for reasoning)
 

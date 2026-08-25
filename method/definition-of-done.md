@@ -18,10 +18,18 @@ except..." means Doing.
 - [ ] Anything QA couldn't verify is written up as steps for Alex
 
 ## Human gate (Alex only)
-- [ ] Ran the demo on a real Android phone and saw it work
-- [ ] Any new technology decision has an ADR in `method/adr/`
+
+**This list is a sequence, not a set.** The order below is the order it happens
+in; `develop` is where stories integrate before a demo, so the merge comes
+first ([ADR-0004](adr/0004-git-flow-branching.md)). Demoing a story branch
+directly demos code that has never been integrated with anything else on
+`develop` — harmless with one story in flight, wrong the moment two dev agents
+run in parallel, which is the case `develop` exists for.
+
 - [ ] Committed with the story ID in the message, e.g. `S2: live distance display`
+- [ ] Any new technology decision has an ADR in `method/adr/`
 - [ ] PR merged into `develop` by Alex (never by an agent)
+- [ ] Ran the demo on a real Android phone and saw it work
 - [ ] `main` fast-forwarded to `develop` — this is what "demoed" means in git
 - [ ] `method/log/S<n>.md` written — especially the "method change" line
 
