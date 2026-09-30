@@ -1,5 +1,5 @@
 # 0007 — The Expo SDK version is dictated by the Expo Go build on Alex's phone
-**Status:** Accepted · **Date:** 2026-08-25 · **Supersedes the version choice in** 0001  
+**Status:** Superseded by [0013](0013-expo-sdk-follows-the-store-expo-go.md) (2026-09-30), whose premise is that the store moves Expo Go; the principle below still holds · **Date:** 2026-08-25 · **Supersedes the version choice in** 0001  
 **Scope:** project
 
 ## Context
@@ -40,7 +40,9 @@ Metro's manifest carries the SDK Expo Go matches against. With `expo start` runn
     curl -s -H "expo-platform: android" -H "accept: application/expo+json,application/json" \
       http://localhost:8081/ | grep -o '"runtimeVersion":"[^"]*"'
 
-It must say `exposdk:54.0.0`. `npx expo-doctor` (18/18) catches version drift more broadly.
+It must say `exposdk:<N>.0.0`, where N is the SDK the phone's Expo Go names; the
+current value and the full check live in [0013](0013-expo-sdk-follows-the-store-expo-go.md).
+`npx expo-doctor` catches version drift more broadly.
 
 ## Alternatives rejected
 - **Upgrade Expo Go on the phone** — not available to him; the Play Store build is the
