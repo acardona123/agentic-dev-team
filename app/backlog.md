@@ -7,45 +7,7 @@ Only Alex moves a story to **Done**, and only after seeing it work on his phone.
 
 ## Ready
 
-### S7 — Move the project to the SDK the phone's Expo Go now speaks
-**Status:** Ready
-**Intent:** "I want the app to open on my phone again, now that Expo Go on it has moved to SDK 57."
-
-*Why this story exists (decided by Alex, 2026-09-30):* the Play Store auto-updated
-Expo Go on his phone to SDK 57, and opening the project now shows "Project is
-incompatible with this version of Expo Go — The installed version of Expo Go is for
-SDK 57. The project you opened uses SDK 54." The principle of
-[ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md) still holds (the SDK is
-whatever Expo Go on the phone speaks); its premise (the Play Store build is capped at
-54) has been falsified, so the architect must supersede it. Alex decided to move the
-project up to the phone's SDK. **Rejected alternative:** sideloading an SDK 54 Expo Go
-APK, already rejected in ADR-0007 as a manual step in the loop, and fragile because
-the Play Store would re-update it. **Sequencing:** this goes before S2, because S2
-adds location support whose version is SDK-bound, and doing S2 on 54 would mean
-upgrading twice. Story IDs are identifiers, not order; S7 runs first.
-
-**Acceptance criteria**
-- [ ] AC1 — Given Expo Go installed from the Play Store on Alex's phone and the dev server running via `npx expo start --tunnel`, when he scans the QR code, then the app opens with no "incompatible with this version of Expo Go" message.
-- [ ] AC2 — Given the app has opened, when Alex repeats the S1 flow (type an address, submit, see results with the "© OpenStreetMap contributors" line, tap one, see it shown as the selected target; also a no-match query and a no-network submit), then each behaves exactly as at the S1 demo, with no visible regression.
-- [ ] AC3 — Given the dev server is running, when the desk check from ADR-0007's "How to verify" section is run (the `curl` of the manifest's `runtimeVersion`), then it reports the SDK number that the phone's Expo Go names in its own compatibility message or About screen (57 at the time of writing), and `npx expo-doctor` and `npx expo install --check` report no problems.
-- [ ] AC4 — Given the project, when `set -o pipefail; cd app && npm run gate` is run, then it exits 0 (typecheck, tests and lint, per ADR-0011), with no test deleted or weakened to get there.
-- [ ] AC5 — Given `method/adr/`, when it is read, then a new ADR marks ADR-0007 as superseded and states the new premise and the new pinned SDK, and the "How to verify" expectation is updated so it no longer hard-codes `exposdk:54.0.0`.
-
-**Not in scope**
-- Fixing any item in Spotted, including the search-field staleness (S2 handles it) and the double-tap request.
-- Any feature work or visible UI change.
-- Leaving Expo Go for a development build.
-- Dependency additions beyond what the upgrade itself requires.
-- Re-triaging the "18 advisories accepted" Spotted item (see below).
-
-**Follow-up flagged, not done here:** that Spotted item was accepted because ADR-0007
-pinned SDK 54, and its "Re-open when" condition assumed a store build. After this
-upgrade, re-check the advisory list against the new SDK; Alex or a later triage does
-that, not this story.
-
-**Demo:** Alex opens Expo Go (SDK 57) on his phone, scans the QR code, and the app
-opens instead of the incompatibility error. He searches an address, picks a result,
-and sees the same behaviour as at the S1 demo.
+_(empty)_
 
 ---
 
@@ -96,7 +58,45 @@ and sees the same behaviour as at the S1 demo.
 
 ## Doing
 
-_(empty)_
+### S7 — Move the project to the SDK the phone's Expo Go now speaks
+**Status:** Doing
+**Intent:** "I want the app to open on my phone again, now that Expo Go on it has moved to SDK 57."
+
+*Why this story exists (decided by Alex, 2026-09-30):* the Play Store auto-updated
+Expo Go on his phone to SDK 57, and opening the project now shows "Project is
+incompatible with this version of Expo Go — The installed version of Expo Go is for
+SDK 57. The project you opened uses SDK 54." The principle of
+[ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md) still holds (the SDK is
+whatever Expo Go on the phone speaks); its premise (the Play Store build is capped at
+54) has been falsified, so the architect must supersede it. Alex decided to move the
+project up to the phone's SDK. **Rejected alternative:** sideloading an SDK 54 Expo Go
+APK, already rejected in ADR-0007 as a manual step in the loop, and fragile because
+the Play Store would re-update it. **Sequencing:** this goes before S2, because S2
+adds location support whose version is SDK-bound, and doing S2 on 54 would mean
+upgrading twice. Story IDs are identifiers, not order; S7 runs first.
+
+**Acceptance criteria**
+- [ ] AC1 — Given Expo Go installed from the Play Store on Alex's phone and the dev server running via `npx expo start --tunnel`, when he scans the QR code, then the app opens with no "incompatible with this version of Expo Go" message.
+- [ ] AC2 — Given the app has opened, when Alex repeats the S1 flow (type an address, submit, see results with the "© OpenStreetMap contributors" line, tap one, see it shown as the selected target; also a no-match query and a no-network submit), then each behaves exactly as at the S1 demo, with no visible regression.
+- [ ] AC3 — Given the dev server is running, when the desk check from ADR-0007's "How to verify" section is run (the `curl` of the manifest's `runtimeVersion`), then it reports the SDK number that the phone's Expo Go names in its own compatibility message or About screen (57 at the time of writing), and `npx expo-doctor` and `npx expo install --check` report no problems.
+- [ ] AC4 — Given the project, when `set -o pipefail; cd app && npm run gate` is run, then it exits 0 (typecheck, tests and lint, per ADR-0011), with no test deleted or weakened to get there.
+- [ ] AC5 — Given `method/adr/`, when it is read, then a new ADR marks ADR-0007 as superseded and states the new premise and the new pinned SDK, and the "How to verify" expectation is updated so it no longer hard-codes `exposdk:54.0.0`.
+
+**Not in scope**
+- Fixing any item in Spotted, including the search-field staleness (S2 handles it) and the double-tap request.
+- Any feature work or visible UI change.
+- Leaving Expo Go for a development build.
+- Dependency additions beyond what the upgrade itself requires.
+- Re-triaging the "18 advisories accepted" Spotted item (see below).
+
+**Follow-up flagged, not done here:** that Spotted item was accepted because ADR-0007
+pinned SDK 54, and its "Re-open when" condition assumed a store build. After this
+upgrade, re-check the advisory list against the new SDK; Alex or a later triage does
+that, not this story.
+
+**Demo:** Alex opens Expo Go (SDK 57) on his phone, scans the QR code, and the app
+opens instead of the incompatibility error. He searches an address, picks a result,
+and sees the same behaviour as at the S1 demo.
 
 ---
 
