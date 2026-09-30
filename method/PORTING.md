@@ -26,17 +26,17 @@ the ADR), `.claude/agents/architect.md` (tag it, and add the row when it is
 `core`), and [closeout.md](closeout.md) beat 2 (the story's row, at the point
 the story closes).
 
-Current state, ADRs: **7 core, 5 project.**
+Current state, ADRs: **7 core, 6 project.**
 
 | Core — transfers | Project — does not |
 |---|---|
 | [0002](adr/0002-single-repo-two-subtrees.md) two subtrees | [0001](adr/0001-expo-react-native.md) Expo + TypeScript |
 | [0003](adr/0003-branch-per-story-with-ci.md) branch/PR/CI per story | [0006](adr/0006-test-and-lint-toolchain.md) test + lint toolchain |
-| [0004](adr/0004-git-flow-branching.md) git-flow, two gates | [0007](adr/0007-expo-sdk-pinned-to-expo-go.md) SDK pinned to Expo Go |
+| [0004](adr/0004-git-flow-branching.md) git-flow, two gates | ~~[0007](adr/0007-expo-sdk-pinned-to-expo-go.md) SDK pinned to Expo Go~~ superseded by 0013 |
 | [0005](adr/0005-token-budget.md) token budget | [0008](adr/0008-repo-lives-on-wsl-ext4.md) repo on WSL ext4 |
 | [0010](adr/0010-no-orchestrator-agent.md) no orchestrator agent | [0009](adr/0009-geocoding-via-nominatim.md) Nominatim geocoding |
 | [0011](adr/0011-one-gate-command-and-pipefail.md) one gate command + pipefail | |
-| [0012](adr/0012-ci-check-for-story-closeout-artifacts.md) closeout check | |
+| [0012](adr/0012-ci-check-for-story-closeout-artifacts.md) closeout check | [0013](adr/0013-expo-sdk-follows-the-store-expo-go.md) SDK follows the store's Expo Go |
 
 ## What a new project copies
 

@@ -59,7 +59,7 @@ diagnose after the fact. Verified against
 ### Why `fetch` and not a client library
 `fetch` is in the React Native runtime already. A Nominatim/geocoding wrapper would buy
 us typed response objects and save perhaps twenty lines of parsing, at the cost of a
-dependency that must track SDK 54's constraints ([ADR-0007](0007-expo-sdk-pinned-to-expo-go.md))
+dependency that must track the pinned SDK's constraints ([ADR-0013](0013-expo-sdk-follows-the-store-expo-go.md))
 and that would sit between us and the two headers we are legally obliged to control.
 **Without it we write:** one `async` function that builds a URL, sets `User-Agent`,
 awaits the JSON, and maps it to `{ label, lat, lon }` — which is exactly the pure

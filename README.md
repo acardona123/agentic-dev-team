@@ -67,7 +67,7 @@ npm install
 npx expo start
 ```
 
-Scan the QR code with Expo Go on a phone running SDK 54, or press `a` / `i` for an emulator.
+Scan the QR code with Expo Go from the Play Store (the project tracks its SDK, see [ADR-0013](method/adr/0013-expo-sdk-follows-the-store-expo-go.md)), or press `a` / `i` for an emulator.
 The method itself is used by reading [CLAUDE.md](CLAUDE.md) and the role files in [.claude/agents/](.claude/agents/), then dispatching agents through the loop above.
 
 ## 🧪 Tests
