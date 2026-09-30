@@ -58,8 +58,14 @@ _(empty)_
 
 ## Doing
 
+_(empty)_
+
+---
+
+## Review
+
 ### S7 — Move the project to the SDK the phone's Expo Go now speaks
-**Status:** Doing
+**Status:** Review · [ADR-0013](../method/adr/0013-expo-sdk-follows-the-store-expo-go.md)
 **Intent:** "I want the app to open on my phone again, now that Expo Go on it has moved to SDK 57."
 
 *Why this story exists (decided by Alex, 2026-09-30):* the Play Store auto-updated
@@ -97,12 +103,6 @@ that, not this story.
 **Demo:** Alex opens Expo Go (SDK 57) on his phone, scans the QR code, and the app
 opens instead of the incompatibility error. He searches an address, picks a result,
 and sees the same behaviour as at the S1 demo.
-
----
-
-## Review
-
-_(empty)_
 
 ---
 
