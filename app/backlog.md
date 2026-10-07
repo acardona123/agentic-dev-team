@@ -490,7 +490,9 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   networking and SDK 57 advisories entries above do not yet carry the "becomes a
   task (T3/T4)" verdict that ADR-0014 §4 wants written into each entry, and the
   "Method gap" entry's last paragraph still says "points 5–7" where T1/T2 split
-  them as 7–8 and 5–6.
+  them as 7–8 and 5–6. (3) `check-closeout.mjs` has no tests (QA on T1,
+  2026-10-08): T1's CC8 "(including its tests)" passed vacuously. T5 extends the
+  script, so its completion criteria should require tests for it.
 - **Agents merging and pushing `main` vs `CLAUDE.md`** (QA, 2026-10-07; predates
   the "Method gap" work item). `CLAUDE.md` `## Git workflow` says "Agents never
   push to `main` or `develop`, and never merge a PR", but the
