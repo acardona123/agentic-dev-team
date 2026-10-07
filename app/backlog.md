@@ -391,8 +391,9 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
   sound method, then let S2 test the method.
 
   **Plan, in order.** (1) ADR-0014, work-item types (points 1–4) — architect,
-  Proposed, Alex's gate before its edits are applied. (2) ADR-0015, point 8, as
-  task T1. (3) Points 5–6 as T2 (needed before S2's PR merges), the dev-loop
+  Proposed, Alex's gate before its edits are applied. (2) ADR-0015, points 7 and
+  8, as task T1 (Alex, 2026-10-07: the point 7 rule lands with "where each rule
+  lives"). (3) Points 5–6 as T2 (needed before S2's PR merges), the dev-loop
   networking ADR as T3 (needed for S2's demo), the advisory re-triage as T4.
   (4) S2. Out of scope: sprints, GitHub Issues, plugin packaging, role redesign.
 
@@ -400,6 +401,17 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
   task type it needs does not exist yet. It runs on branch `method/work-items`
   with a PR to `develop`; no more direct commits on `develop` from here on. The
   exception is to be written into ADR-0014.
+
+  **Raised by the architect while drafting ADR-0014 (2026-10-07), not settled
+  there:**
+  - *QA's Bash allow-list.* `qa.md` limits QA to `git diff`, tests and typecheck;
+    re-running a world-state observation (`gh api …`, `dpkg -s …`) needs it widened
+    to "read-only observation commands". Word it when ADR-0014's `qa.md` edit is
+    applied; ADR-0015's QA read-only hook must allow the same set.
+  - *World-state criteria if QA ever runs in CI.* A machine observation such as
+    `dpkg -s libasound2` only means something on the dev machine, where QA runs
+    today. **Trigger:** the day QA runs anywhere else, such criteria become
+    Alex-witnessed — a future task, not now.
 
   The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–7)
   are the first candidates for the new work-item type — do them as tracked tasks
