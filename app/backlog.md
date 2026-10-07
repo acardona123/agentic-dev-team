@@ -73,7 +73,7 @@ _Refined tasks live here as `### T<n> — title` blocks with a
 `**Status:**` line: Ready / Doing / Review / Done._
 
 ### T1 — Contradictions flagged at decision time, and where each rule lives
-**Status:** Draft
+**Status:** Ready
 **Intent:** "Write down that a decision contradicting an ADR is flagged when it is proposed, never after, and decide where each rule of the method lives — prose, hook, CI, skill or plugin."
 **Owner:** architect
 
