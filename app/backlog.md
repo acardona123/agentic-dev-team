@@ -64,8 +64,14 @@ _(empty)_
 
 ## Review
 
+_(empty)_
+
+---
+
+## Done
+
 ### S7 — Move the project to the SDK the phone's Expo Go now speaks
-**Status:** Review · [ADR-0013](../method/adr/0013-expo-sdk-follows-the-store-expo-go.md)
+**Status:** Done · demoed on Alex's phone 2026-09-30 · merged in [PR #4](https://github.com/acardona123/agentic-dev-team/pull/4) · [ADR-0013](../method/adr/0013-expo-sdk-follows-the-store-expo-go.md)
 **Intent:** "I want the app to open on my phone again, now that Expo Go on it has moved to SDK 57."
 
 *Why this story exists (decided by Alex, 2026-09-30):* the Play Store auto-updated
@@ -82,11 +88,11 @@ adds location support whose version is SDK-bound, and doing S2 on 54 would mean
 upgrading twice. Story IDs are identifiers, not order; S7 runs first.
 
 **Acceptance criteria**
-- [ ] AC1 — Given Expo Go installed from the Play Store on Alex's phone and the dev server running via `npx expo start --tunnel`, when he scans the QR code, then the app opens with no "incompatible with this version of Expo Go" message.
-- [ ] AC2 — Given the app has opened, when Alex repeats the S1 flow (type an address, submit, see results with the "© OpenStreetMap contributors" line, tap one, see it shown as the selected target; also a no-match query and a no-network submit), then each behaves exactly as at the S1 demo, with no visible regression.
-- [ ] AC3 — Given the dev server is running, when the desk check from ADR-0007's "How to verify" section is run (the `curl` of the manifest's `runtimeVersion`), then it reports the SDK number that the phone's Expo Go names in its own compatibility message or About screen (57 at the time of writing), and `npx expo-doctor` and `npx expo install --check` report no problems.
-- [ ] AC4 — Given the project, when `set -o pipefail; cd app && npm run gate` is run, then it exits 0 (typecheck, tests and lint, per ADR-0011), with no test deleted or weakened to get there.
-- [ ] AC5 — Given `method/adr/`, when it is read, then a new ADR marks ADR-0007 as superseded and states the new premise and the new pinned SDK, and the "How to verify" expectation is updated so it no longer hard-codes `exposdk:54.0.0`.
+- [x] AC1 — Given Expo Go installed from the Play Store on Alex's phone and the dev server running via `npx expo start --tunnel`, when he scans the QR code, then the app opens with no "incompatible with this version of Expo Go" message.
+- [x] AC2 — Given the app has opened, when Alex repeats the S1 flow (type an address, submit, see results with the "© OpenStreetMap contributors" line, tap one, see it shown as the selected target; also a no-match query and a no-network submit), then each behaves exactly as at the S1 demo, with no visible regression.
+- [x] AC3 — Given the dev server is running, when the desk check from ADR-0007's "How to verify" section is run (the `curl` of the manifest's `runtimeVersion`), then it reports the SDK number that the phone's Expo Go names in its own compatibility message or About screen (57 at the time of writing), and `npx expo-doctor` and `npx expo install --check` report no problems.
+- [x] AC4 — Given the project, when `set -o pipefail; cd app && npm run gate` is run, then it exits 0 (typecheck, tests and lint, per ADR-0011), with no test deleted or weakened to get there.
+- [x] AC5 — Given `method/adr/`, when it is read, then a new ADR marks ADR-0007 as superseded and states the new premise and the new pinned SDK, and the "How to verify" expectation is updated so it no longer hard-codes `exposdk:54.0.0`.
 
 **Not in scope**
 - Fixing any item in Spotted, including the search-field staleness (S2 handles it) and the double-tap request.
@@ -97,16 +103,22 @@ upgrading twice. Story IDs are identifiers, not order; S7 runs first.
 
 **Follow-up flagged, not done here:** that Spotted item was accepted because ADR-0007
 pinned SDK 54, and its "Re-open when" condition assumed a store build. After this
-upgrade, re-check the advisory list against the new SDK; Alex or a later triage does
-that, not this story.
+upgrade, re-check the advisory list against the new SDK. *(Closeout 2026-09-30:
+"Alex or a later triage" was wrong — no role owns triage, which is the method gap
+this story exposed. Re-triage is assigned to the architect; see Spotted.)*
 
 **Demo:** Alex opens Expo Go (SDK 57) on his phone, scans the QR code, and the app
 opens instead of the incompatibility error. He searches an address, picks a result,
 and sees the same behaviour as at the S1 demo.
 
----
+**What it cost, and why that was the point:** the upgrade itself was routine —
+three SDK steps, gate green at each, no app source touched, QA found no defect.
+What it exposed was in the method. Work that is not a phone-demoable story has
+nowhere to live: the advisory re-triage was correctly out of scope here and had
+no other home, so every participant deferred it to Alex. See
+[method/log/S7.md](../method/log/S7.md).
 
-## Done
+---
 
 ### S1 — Address search
 **Status:** Done · demoed on Alex's phone 2026-08-25 · merged in [PR #2](https://github.com/acardona123/agentic-dev-team/pull/2)
@@ -203,6 +215,11 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
   moderate. `npx expo-doctor` is clean.
   **Re-open when:** a store build is cut. That build is not Expo Go, so the SDK
   pin dissolves and this list should be re-run against whatever SDK we move to.
+  **Re-opened 2026-09-30 by S7.** The trigger above missed the case that actually
+  happened: the SDK moved without a store build. On SDK 57 `npm install` reports
+  13 advisories (11 moderate, 2 high). **Re-triage assigned to the architect**, not
+  to Alex — it is a technical judgement (does it reach the phone, or only build
+  tooling?). Pending the method work below, which gives this kind of task a home.
 - ~~`.gitignore` now exists at both the repo root and in `app/`, with overlapping rules.
   Harmless, but worth collapsing to one file at some point.~~
   **Triaged 2026-08-25 — resolved, not as proposed (`b573729`).** The suggestion to
@@ -229,8 +246,8 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
   only. `jest-expo` ships with `react-test-renderer` available; a component test would
   let the "no request on keystroke / no re-request for an unchanged query" rule (AC3,
   ADR-0009 obligation 3) be caught by the gate instead of by inspection. Needs a story
-  and a decision on whether we take on `@testing-library/react-native` under the SDK 54
-  pin ([ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md)).
+  and a decision on whether we take on `@testing-library/react-native` under the SDK
+  pin ([ADR-0013](../method/adr/0013-expo-sdk-follows-the-store-expo-go.md); was 54, now 57).
 - ADR-0009 obligation 1 notes a browser silently strips `User-Agent`, so `npm run web`
   is not a valid target for the geocoding path. Nothing in the repo says so where a
   future session would look — `package.json` still exposes a `web` script.
@@ -263,3 +280,49 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
   but it lands on Nominatim's rate policy
   ([ADR-0009](../method/adr/0009-geocoding-via-nominatim.md) obligation 2), not
   just on UX.
+- **Dev-loop networking and DevTools — fixed by Alex on the machine, not yet in an
+  ADR.** `npx expo start --tunnel` failed on 2026-09-30 (`CommandError: TypeError:
+  Cannot read properties of undefined (reading 'body')`; the bundled ngrok 2.3.41
+  showed the real cause, `ERR_NGROK_4018 — session not authenticated`; it reproduced
+  on `develop` at SDK 54, so not S7). A WSL restart cured it once; **it recurred on
+  2026-10-07.** Separately, React Native DevTools opened from the phone showed
+  "127.0.0.1 refused to connect", and the `libasound.so.2` error was still printed
+  at every start. Alex then changed the machine:
+  - enabled **WSL2 mirrored networking** — the phone reaches the dev server again,
+    and DevTools now opens;
+  - installed **`libasound2`** (`libasound2t64` on Ubuntu ≥ 24.04).
+
+  Both contradict [ADR-0006](../method/adr/0006-test-and-lint-toolchain.md), which
+  records libasound as absent and the ngrok tunnel as the way the phone connects,
+  and neither is written anywhere a fresh machine would find it (rules 5 and 8).
+  **Owner: the architect** — an ADR "how the phone reaches the dev server, and the
+  machine prerequisites", superseding the relevant parts of ADR-0006, and stating
+  whether `--tunnel` remains the documented start command. A tracked task under the
+  method work below, not a story. S7's demo step 5 (our `User-Agent` under Expo's
+  own `fetch`) was settled indirectly because DevTools was unusable at the time; it
+  can now be checked directly.
+- **Method gap, raised by Alex at S7 closeout (2026-09-30) — the next session starts
+  here.** The method knows one kind of work, the phone-demoable story. Everything
+  else (ADRs, Spotted triage, method edits, README) has no container, which is why
+  `git log` holds a dozen `Method:` commits made straight on `develop` with no story
+  or PR, and why the advisory re-triage above was deferred to Alex by everyone.
+  Alex's rule: **every operation is motivated by a tracked work item**; if a needed
+  task fits no scope, the scope definitions are wrong. Questions to work through,
+  drawing on how real dev teams and current agentic-team practice handle them:
+  1. *Work item types* — story vs task (no demo; its gate is Alex confirming a
+     drafted deliverable). Are there others? Who triages Spotted (proposal: the
+     session routes each item to the owning role; Alex only confirms verdicts)?
+  2. *Priorities and planning* across those types; what the PO owns beyond writing
+     one story (today it only writes; it neither orders nor grooms the backlog).
+  3. *Agile/sprints* — which parts are useful to an agent team with one story in
+     flight.
+  4. *GitHub Issues* — the repo stays the **only** source of truth (Alex: absolute).
+     Issues would be a progress view and PR↔work-item links, and would let CI check
+     "every PR references a work item". The real problem is keeping them in sync
+     with the repo, and the method that writes and syncs them; also its portability
+     (it binds the method to GitHub).
+  5. *Kickoff decisions* — merge strategy is a per-project choice made at project
+     start; the architect should guide a new project through such choices. For this
+     project Alex chose **merge commits** (`--merge`): what QA and CI judged is what
+     lands, per-step commits stay bisectable, `--first-parent` still gives one line
+     per story. Needs a core ADR (kickoff decisions) and a project ADR (the choice).

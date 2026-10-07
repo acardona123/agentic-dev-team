@@ -95,7 +95,7 @@ It has to pass before a story is reported done ([method/definition-of-done.md](m
 
 ## 📊 Status
 
-Two stories done, both demoed on a real phone and merged.
+Three stories done, all demoed on a real phone and merged.
 
 **S0, walking skeleton.**
 A blank screen on the phone, chosen first to prove the riskiest link before any feature existed.
@@ -107,6 +107,12 @@ Geocoding against OpenStreetMap Nominatim, results listed and one held as the ta
 QA failed the first pass and was right to: every outcome was cached, failures included, so a search that failed in a tunnel could never be retried for the rest of the session.
 It typechecked, passed 21 tests, and CI was green.
 An error path that fails politely is invisible to a machine gate by construction, which is the whole argument for the review gate in one defect.
+
+**S7, SDK move.**
+The phone's Expo Go updated itself from SDK 54 to 57, and the app stopped opening.
+The project followed it one SDK at a time, gate green at each step, with no app code touched.
+The upgrade was routine; what it exposed was in the method: work that is not a phone-demoable story had no home, so every participant deferred it to the human.
+That gap is the next thing to fix.
 
 **S2, live position, is blocked on purpose.**
 The product-owner agent was asked to refine it and stopped, because nothing in `method/adr/` decides how the app obtains the phone's position, and writing the criteria would have meant silently deciding it.
