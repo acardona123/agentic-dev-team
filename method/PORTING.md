@@ -26,7 +26,7 @@ the ADR), `.claude/agents/architect.md` (tag it, and add the row when it is
 `core`), and [closeout.md](closeout.md) beat 2 (the story's row, at the point
 the story closes).
 
-Current state, ADRs: **10 core, 6 project.**
+Current state, ADRs: **11 core, 6 project.**
 
 | Core — transfers | Project — does not |
 |---|---|
@@ -40,11 +40,12 @@ Current state, ADRs: **10 core, 6 project.**
 | [0014](adr/0014-work-item-types.md) two work-item types, story and task | |
 | [0015](adr/0015-adr-lifecycle.md) ADR draft until `develop`, frozen after | |
 | [0016](adr/0016-contradictions-flagged-and-where-rules-live.md) contradictions flagged first; a rule leaves prose only for an observed failure | |
+| [0017](adr/0017-adr-revisit-trigger-register.md) revisit-trigger register, read by QA at every verdict, kept complete by CI | |
 
 ## What a new project copies
 
 `CLAUDE.md` rules 1–10 · `.claude/agents/` · `method/` minus the project ADRs
-and the per-story logs · `.github/workflows/` · the `## Spotted`, `## Tasks`
+(and their lines in `adr-triggers.md`) and the per-story logs · `.github/workflows/` · the `## Spotted`, `## Tasks`
 and story structure of the backlog.
 
 ## What it must substitute
