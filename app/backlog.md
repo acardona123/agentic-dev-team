@@ -69,8 +69,40 @@ _(empty)_
 
 ## Tasks
 
-_(empty — refined tasks live here as `### T<n> — title` blocks with a
-`**Status:**` line: Ready / Doing / Review / Done)_
+_Refined tasks live here as `### T<n> — title` blocks with a
+`**Status:**` line: Ready / Doing / Review / Done._
+
+### T1 — Contradictions flagged at decision time, and where each rule lives
+**Status:** Draft
+**Intent:** "Write down that a decision contradicting an ADR is flagged when it is proposed, never after, and decide where each rule of the method lives — prose, hook, CI, skill or plugin."
+**Owner:** architect
+
+**Scope choice (PO, stated explicitly).** T1 **decides and writes down; it
+implements no hook, no CI check, no skill and no GitHub setting.** Each
+mechanism the ADR accepts becomes its own queued follow-up task, so that every
+enforcement change is its own diff, reviewed on its own. The only edits T1
+makes outside the ADR are the rule text in `CLAUDE.md` and the pointers that
+ADR-0016 needs. Basis: the research verdict's principle, "fix only what an
+observed failure justifies".
+
+**Completion criteria**
+- [ ] CC1 — *diff* — `method/adr/0016-*.md` exists, tagged `**Scope:** core`, status Proposed (draft, consolidated per [ADR-0015](../method/adr/0015-adr-lifecycle.md)), and states the rule of point 7: whoever sees a proposed decision contradict an ADR or method text says so **before it is acted on**, citing the text; if Alex validates it, it takes effect only together with the superseding ADR, in the same tracked work item.
+- [ ] CC2 — *diff* — `CLAUDE.md` rule 8 is extended with that rule (or a rule beside it that rule 8 points to), in prose short enough not to grow the file noticeably, citing ADR-0016 rather than restating it; no other rule is reworded.
+- [ ] CC3 — *diff* — ADR-0016 has one entry for each candidate mechanism of point 8 — (a) block agent commits/pushes on `develop`/`main`; (b) make QA read-only; (c) CI check that each PR names a work item present in `backlog.md`; (d) branch protection on GitHub; (e) `closeout.md` as a `/closeout` skill; (f) a slimmer `CLAUDE.md`; (g) packaging the method as a plugin — and for each states: where the rule lives (prose, hook, agent frontmatter, CI, GitHub setting, skill, plugin), **the observed failure that justifies it**, citing the log, story or Spotted entry, or **"no observed failure — not now"** with the trigger that would reopen it. (g) is expected to read "not now, at porting time" ([PORTING.md](../method/PORTING.md)).
+- [ ] CC4 — *diff* — ADR-0016 states, for the mechanical check named in point 7's last sentence ("behaviour or config that contradicts an accepted ADR"), whether it is feasible and by whom; if not feasible now, says so and why, rather than leaving it silent.
+- [ ] CC5 — *diff* — ADR-0016 records whether [ADR-0010](../method/adr/0010-no-orchestrator-agent.md)'s "Revisit" condition (second slip after prose) is now met, citing the S7 rule-8 slip, and does not edit ADR-0010 (frozen; change only by supersession per ADR-0015).
+- [ ] CC6 — *diff* — If ADR-0016 accepts a QA read-only mechanism, it states the allowed command set and that this set is the same as the "read-only observation commands" QA's Bash allow-list in `qa.md` permits (the allow-list item raised while drafting ADR-0014); if it accepts none, it says the two stay consistent by default.
+- [ ] CC7 — *diff* — For every mechanism ADR-0016 accepts, `app/backlog.md` `## Backlog` gains one one-line follow-up entry (next free T-number, owner named), added as a separate `T1: backlog — …` commit confined to that section; none of them is implemented in this branch.
+- [ ] CC8 — *diff* — `set -o pipefail; cd app && npm run gate` exits 0, and `method/check-closeout.mjs` (including its tests) passes against the branch.
+
+**Not in scope**
+- Implementing any hook, CI workflow, `settings.json` entry, agent-frontmatter change, skill or plugin; each is a follow-up task (CC7).
+- Applying branch protection on GitHub. If ADR-0016 accepts it, it is a follow-up task whose world-state criterion Alex witnesses or QA observes via `gh api`; T1 itself has no world-state criterion.
+- Merge style and why `main` is fast-forwarded (points 5–6) — T2. The playbook's merge-after-demo ordering line — T2.
+- The "QA findings left out of the Method gap work item" Spotted entry (`check-closeout.mjs` robustness, Spotted verdict wording): not T1's; a separate task, to be triaged by the session.
+- The "Agents merging and pushing `main` vs `CLAUDE.md`" Spotted entry: not T1's to resolve. Note for the architect: any hook accepted under CC3(a) must not encode one reading of that disagreement silently; ADR-0016 names the entry as the open question it depends on.
+- Sprints, GitHub Issues, plugin packaging, role redesign (rejected or deferred in the "Method gap" entry).
+- Triaging Spotted entries, or editing any frozen ADR.
 
 ---
 
