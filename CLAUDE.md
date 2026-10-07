@@ -28,11 +28,24 @@ It is governed by this document instead. Its job:
   It may never *be* the gate — not QA's verdict, and never Alex's demo.
 - **Read before recommending.** It is the participant most likely to propose a
   next step from memory rather than from `method/`. Rule 8 applies to it most.
+- **Clerk for the PO.** The PO has no Bash. Before dispatching it, the session
+  cuts the item's branch from `develop`, then commits the PO's draft
+  (`S<n>: story — …` / `T<n>: task — …`), Alex's approval (`<ID>: approved
+  Ready`) and any planning edit (`<ID>: backlog — …`). Committing someone
+  else's text is clerical: the text stays the PO's, the approval Alex's
+  ([ADR-0014 §6](method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).
 
 ## Standing rules — every agent, and the session that dispatches them
 
-1. **No code without an approved story.** If `app/backlog.md` has no Ready story
-   for what you're about to do, stop and say so.
+1. **No change without an approved work item.** If `app/backlog.md` *on the
+   work item's own branch* has no Ready story or Ready task for what you're
+   about to do, stop and say so — the PO's draft of that item, always the
+   branch's first commit, and planning edits (`<ID>: backlog — …`) are the only
+   writes that come before it. `develop`'s `## Ready` stays empty: an item is drafted
+   and approved on its own branch
+   ([ADR-0014 §6](method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)). A story is
+   app behaviour ending in a phone demo; a task is everything else
+   ([ADR-0014](method/adr/0014-work-item-types.md)).
 2. **One story at a time.** Never implement ahead. Scope creep is the failure
    mode we are specifically training against.
 3. **The gate is not optional.** From `app/`, `npm run gate` must pass before you
@@ -53,7 +66,7 @@ It is governed by this document instead. Its job:
 6. **Be economical with context.** Read the files you need by path; don't crawl
    the repo. Don't restate what's already in `CLAUDE.md` or an ADR — cite it.
    See `method/token-budget.md`.
-7. **Only Alex marks a story Done.** Agents may move stories to Review, never to Done.
+7. **Only Alex marks a work item Done.** Agents may move work items to Review, never to Done.
 8. **An undocumented decision is not a decision.** Before you rely on *any*
    inherited decision — a technology choice, a branching model, a step in the
    process — check that `method/adr/` actually justifies it. A choice asserted
@@ -66,14 +79,19 @@ It is governed by this document instead. Its job:
    demo`, with the machine gate before QA and QA before Alex
    ([definition-of-done.md](method/definition-of-done.md),
    [manager-playbook.md](method/manager-playbook.md),
-   [ADR-0004](method/adr/0004-git-flow-branching.md)). Never propose skipping,
+   [ADR-0004](method/adr/0004-git-flow-branching.md)). A task has its own
+   pipeline, `po → owning role → qa → Alex confirms and merges` — no `dev` and
+   no demo because it changes nothing the phone runs, not because a gate was
+   skipped ([ADR-0014](method/adr/0014-work-item-types.md)). Never propose skipping,
    reordering or merging a gate. When you propose a next step, name which gate
    it is and whose it is. Alex's attention is the scarce resource and it is
    spent last, on a diff QA has already judged.
 10. **Closing a story is guided, not remembered.** When QA returns READY FOR
     ALEX, read `method/closeout.md` and follow it. Alex should never have to
     recall an item of the Human gate unprompted; it arrives already drafted or
-    already done, for him to confirm or reject.
+    already done, for him to confirm or reject. For a task, only its "Task
+    closeout" part applies: the verdict, the merge command and the bookkeeping —
+    no demo script, no log.
 
 ## Tech (see method/adr/ for reasoning)
 
@@ -105,22 +123,42 @@ The two long-lived branches carry the project's two gates. Do not blur them:
 
 Supporting branches:
 
-- `story/S<n>-<slug>` — cut from `develop`, PR targets `develop`. One story, one branch.
+- `story/S<n>-<slug>` — cut from `develop` when the story is drafted, PR targets
+  `develop`. Its first commit is always the PO's draft, then Alex's `approved Ready`,
+  then the work
+  ([ADR-0014 §6](method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).
+  One story, one work branch, plus `story/S<n>-closeout` after the demo for its bookkeeping
+  ([ADR-0014 §2](method/adr/0014-work-item-types.md#2-closing-a-story)).
+- `task/T<n>-<slug>` — cut from `develop` when the task is drafted, PR targets
+  `develop`; same first two commits. One task, one branch.
+  A task reaches `main` only by riding the next demoed fast-forward
+  ([ADR-0014](method/adr/0014-work-item-types.md)).
 - `hotfix/<slug>` — cut from `main`, merged to **both** `main` and `develop`. Unused until there's a released build.
 - `release/vX.Y` — cut from `develop` when a store build is prepared. Unused for now.
 
 Rules:
 
-- Commit messages start with the story ID: `S2: stream position updates`
+- Commit messages start with the work item ID: `S2: stream position updates`,
+  `T1: ADR on where each rule lives`
+- **Nothing reaches `develop` except through a merged `story/` or `task/` PR.**
+  No direct commits, method edits and backlog edits included.
+- A planning edit that belongs to no item — a new `## Backlog` line, a reorder,
+  a `## Spotted` entry, whoever writes it — rides the branch in flight as its own
+  `<ID>: backlog — …` commit, confined to those two sections, never inside a
+  work commit. With nothing in flight it waits for the next item's branch and
+  is committed right after the PO's draft; if it cannot wait, it is a task.
 - **Agents never push to `main` or `develop`, and never merge a PR.** An agent
-  pushes its own `story/` branch and opens the PR. Merging is Alex's.
+  pushes its own `story/` or `task/` branch and opens the PR. Merging is Alex's.
 - CI runs the machine gate on every PR touching `app/`. A red check means the
   story is not finished, whatever any agent reports.
-- `main` is only ever fast-forwarded from `develop` after a phone demo.
+- `main` is only ever fast-forwarded after a phone demo, and only to the exact
+  demoed commit, never past it. A story's closeout PR lands on `develop` after
+  that and rides the next demoed fast-forward.
 
-`git diff develop...HEAD` is exactly the set of changes a story is permitted to
-contain. Anything in there not traceable to an acceptance criterion is scope
-creep, and QA is expected to name it.
+`git diff develop...HEAD` is exactly the set of changes a work item is permitted
+to contain. Anything in there not traceable to an acceptance criterion (story) or
+completion criterion (task), other than a confined `backlog —` planning commit,
+is scope creep, and QA is expected to name it.
 
 ## Code style
 

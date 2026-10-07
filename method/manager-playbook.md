@@ -6,8 +6,9 @@ Your cheat sheet. You are the manager. You never write app code.
 
 ```
 1. YOU     one sentence of intent
-2. po      drafts the story + acceptance criteria
-3. YOU     approve or sharpen the AC                    ← YOUR GATE
+2. po      drafts the story + acceptance criteria, on the story's own
+           branch (the session cuts it and commits the draft)
+3. YOU     approve or sharpen the AC → "approved Ready"  ← YOUR GATE
 4. architect  (only if a new tech decision is needed)
 5. dev     implements exactly that story, gate green
 6. qa      reviews cold, read-only, PASS/FAIL per AC
@@ -16,11 +17,35 @@ Your cheat sheet. You are the manager. You never write app code.
 
 Steps 3 and 7 are the job. Everything else is delegation.
 
+Your step-3 "yes" is a commit, `S<n>: approved Ready`, on the story's branch:
+`develop` never shows an item as Ready, and the approval reaches it with the
+work, in one PR ([ADR-0014 §6](adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).
+
 Step 7 is guided: when QA passes, the session follows
 [closeout.md](closeout.md), so the demo script, the prefilled log and the
 remaining Human-gate commands arrive without you asking. You confirm or reject;
 you should not have to remember. If it does not arrive, that is a bug in the
 method, not in your memory — say so.
+
+## The loop, per task
+
+Work that changes nothing the phone runs — an ADR, a method edit, Spotted triage,
+machine or hosting setup ([ADR-0014](adr/0014-work-item-types.md)).
+
+```
+1. YOU     one sentence of intent
+2. po      drafts the task + completion criteria (diff / world-state), names the owner,
+           on the task's own branch (the session cuts it and commits the draft)
+3. YOU     approve or sharpen the criteria → "approved Ready"   ← YOUR GATE
+4. owner   does the work (architect for ADRs and config, po for backlog text)
+5. qa      reviews cold, read-only, PASS/FAIL per completion criterion
+6. YOU     read the deliverable, witness anything QA could not observe,
+           merge the PR → Done, or back to 4                     ← YOUR GATE
+```
+
+No dev, no demo, no log: the task changes nothing you could hold in your hand.
+It reaches `main` by riding the next story's demoed fast-forward. Step 6 is the
+"Task closeout" part of [closeout.md](closeout.md).
 
 ## What to literally type
 
@@ -32,21 +57,42 @@ method, not in your memory — say so.
 | 6 | `Use the qa agent to review S<n>.` |
 | 7 | `gh pr merge --squash` — after you've seen it on the phone |
 
-## Git, per story
+Per task:
+
+| Step | Say this |
+|---|---|
+| 2 | `Use the po agent to write a task: I want <one sentence>.` |
+| 4 | `Use the <owner> agent to do T<n>.` |
+| 5 | `Use the qa agent to review T<n>.` |
+| 6 | merge the PR — after you've read the deliverable |
+
+## Git, per story (and per task)
 
 ```bash
 git switch develop && git pull
-git switch -c story/S2-live-position          # dev agent works here
+git switch -c story/S2-live-position          # po drafts here; dev works here after your approval
+# the session commits "S2: story — ..." (po's draft), then "S2: approved Ready" (your yes);
+# a new Backlog line or Spotted entry meanwhile: its own "S2: backlog — ..." commit
+# (one that arrived with nothing in flight: committed right after the po's draft)
+# (a task: task/T1-<slug>, same first two commits, owner commits as "T1: ...",
+#  same PR to develop, and it stops after the merge — no demo, no main move of its own)
 # ... dev implements, commits as "S2: ...", opens the PR against develop
 gh pr comment --body-file qa-report.md        # qa's verdict, permanently on the diff
 gh pr merge --squash --delete-branch          # into develop: "the machine believes it"
 
-# then YOU demo on the phone. Only after that:
-git switch main && git merge --ff-only develop && git push
+# then YOU demo on the phone — on D, the commit that merge left develop at.
+# Only after that, main moves to exactly D, never past it:
+git fetch origin && git switch main && git merge --ff-only <demoed SHA> && git push
+
+# then the bookkeeping, by its own PR (closeout.md Beat 2 hands you each line):
+git switch develop && git pull
+git switch -c story/S2-closeout               # Done, ticked ACs, log, PORTING row
+# ... commit "S2: closeout", push, gh pr create --base develop
+# merge it once its closeout check is green; main picks it up at the next demo
 ```
 
-That last line is the one that matters. `main` means *you have held this in your
-hand*. If you ever find yourself merging it without a demo, the branch has
+The `git merge --ff-only <demoed SHA>` line is the one that matters. `main`
+means *you have held this in your hand*. If you ever find yourself merging it without a demo, the branch has
 stopped meaning anything and you should collapse back to trunk-based.
 
 The PR is where the review becomes permanent. A QA verdict in a terminal

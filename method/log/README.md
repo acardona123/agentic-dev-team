@@ -1,10 +1,13 @@
 # Per-story log
 
-One file per story, `S<n>.md`, written by **Alex** after the story is Done.
-Five lines is plenty. The point is the fifth one.
+One file per story, `S<n>.md` — **Alex's**, drafted for him by the session after
+the demo passes, and committed in the story's closeout PR, whose merge makes the
+story Done.
+Six lines is plenty. The point is the last one, **Method change**.
 
 ```md
 # S<n> — <title>
+**Demonstrated commit:** <SHA of the commit main was fast-forwarded to — the session fills it, not your memory>
 **Asked for:** <your one-sentence intent>
 **What came back:** <what the dev agent actually built>
 **What QA caught:** <or: nothing, and what you found afterwards yourself>

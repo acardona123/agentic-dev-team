@@ -1,7 +1,9 @@
 # Backlog — Almost There
 
-Single source of truth. A story moves: **Backlog → Ready → Doing → Review → Done**.
-Only Alex moves a story to **Done**, and only after seeing it work on his phone.
+Single source of truth. A work item moves: **Backlog → Ready → Doing → Review → Done**.
+Only Alex moves a work item to **Done** — a story only after seeing it work on his
+phone, a task after reading its deliverable
+([ADR-0014](../method/adr/0014-work-item-types.md)).
 
 ---
 
@@ -11,8 +13,17 @@ _(empty)_
 
 ---
 
-## Backlog (not yet refined — the PO turns these into stories, one at a time)
+## Backlog (not yet refined — the PO turns these into stories or tasks, one at a time, and owns this order: top is next)
 
+- **T1 — ADR: contradictions flagged at decision time, and where each rule lives.**
+  Points 7 and 8 of the "Method gap" entry in `## Spotted`. Owner: architect.
+- **T2 — Merge style as a kickoff decision; why `main` moves by fast-forward.**
+  Points 5 and 6 of the "Method gap" entry. Owner: architect. Needed before S2's PR merges.
+- **T3 — ADR: how the phone reaches the dev server, and the machine prerequisites.**
+  The "Dev-loop networking and DevTools" entry in `## Spotted`; supersedes the
+  relevant parts of ADR-0006. Owner: architect. Needed for S2's demo.
+- **T4 — Re-triage the SDK 57 `npm install` advisories.** The re-opened advisories
+  entry in `## Spotted`. Owner: architect.
 - **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
   **Blocked on an ADR (2026-08-25).** The PO was asked to refine this and stopped
   on `CLAUDE.md` rule 8: nothing in `method/adr/` decides how the app obtains the
@@ -53,6 +64,13 @@ _(empty)_
 > as `FetchLike` — faking it is nearly free. If `expo-location` is wired straight
 > into the component, S5 means gutting S2. Hence the code-style rule in
 > `CLAUDE.md`: a device capability is taken as a parameter, never reached for.
+
+---
+
+## Tasks
+
+_(empty — refined tasks live here as `### T<n> — title` blocks with a
+`**Status:**` line: Ready / Doing / Review / Done)_
 
 ---
 
@@ -202,7 +220,7 @@ Both would have been attributed to feature code had they first appeared during S
 ---
 
 ## Spotted
-_Things agents noticed but were not allowed to fix. Triage these yourself._
+_Things agents noticed but were not allowed to fix. The session routes each entry to its owning role; the role returns a verdict; Alex confirms it._
 
 - ~~`npm install` on Expo SDK 54 reports 18 advisories (9 moderate, 9 high).~~
   **Triaged 2026-08-25 — accepted, no action.** All 18 are transitive through the
@@ -316,11 +334,24 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
      one story (today it only writes; it neither orders nor grooms the backlog).
   3. *Agile/sprints* — which parts are useful to an agent team with one story in
      flight.
+     **Rejected (2026-10-07).** Sprints and their ceremonies coordinate several
+     humans working in parallel; here one story is in flight and the backlog order
+     already says what is next. Anthropic's own long-running-agent harness dropped
+     its sprint decomposition as scaffolding the model no longer needed. Nothing
+     observed in S0–S7 failed for want of a sprint. Recorded as an alternative
+     rejected in ADR-0014.
   4. *GitHub Issues* — the repo stays the **only** source of truth (Alex: absolute).
      Issues would be a progress view and PR↔work-item links, and would let CI check
      "every PR references a work item". The real problem is keeping them in sync
      with the repo, and the method that writes and syncs them; also its portability
      (it binds the method to GitHub).
+     **Rejected (2026-10-07).** Issues would be a second copy of the state, kept in
+     sync by hand or by tooling — the opposite of "the repo is the only source of
+     truth" — and would bind a core method to one host. The one real need, "every
+     PR references a work item", is checked by CI against `backlog.md` itself, by
+     extending `method/check-closeout.mjs`
+     ([ADR-0012](../method/adr/0012-ci-check-for-story-closeout-artifacts.md)).
+     Recorded as an alternative rejected in ADR-0014.
   5. *Kickoff decisions* — merge strategy is a per-project choice made at project
      start; the architect should guide a new project through such choices. For this
      project Alex chose **merge commits** (`--merge`): what QA and CI judged is what
@@ -352,7 +383,92 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
      together with the superseding ADR, in the same tracked work item. Consider
      whether QA or the closeout check can catch "behaviour or config that
      contradicts an accepted ADR" mechanically, as ADR-0012 did for logs.
+  8. *Where each rule lives — prose, hook, CI, skill or plugin.* Added 2026-10-07
+     from the research below. `CLAUDE.md` is advisory: the model reads it and may
+     not follow it. Hooks in `.claude/settings.json` and tool limits in agent
+     frontmatter are enforced by the harness; the repo has neither. The second
+     slip foreseen by [ADR-0010](../method/adr/0010-no-orchestrator-agent.md)'s
+     "Revisit" has happened (S7, rule 8 — point 5's correction), so by its own
+     condition a mechanical fix is due. Candidates, each tied to an observed
+     failure: block agent commits/pushes on `develop`/`main`; make QA truly
+     read-only; CI checks each PR names a work item present in `backlog.md`;
+     branch protection on GitHub (Alex's action); `closeout.md` as a `/closeout`
+     skill; a slimmer `CLAUDE.md`. Packaging the method as a plugin: decide "not
+     now, at porting time" ([PORTING.md](../method/PORTING.md)). Becomes T1's ADR,
+     done as the first task once the task type exists.
+
+  **Research verdict (session of 2026-10-07).** Sources: Claude Code documentation
+  (memory/`CLAUDE.md`, hooks, subagents, skills, plugins); Anthropic engineering
+  posts on agent harnesses ("every component in a harness encodes an assumption
+  about what the model can't do on its own"); Cognition on multi-agent systems
+  (one writer; reviewers in fresh context). They confirm the core of the method —
+  writer ≠ reviewer in a fresh context, one writer at a time, machine gate before
+  the human, state kept in the repo — and name two real risks: rules enforced by
+  prose alone (point 8), and over-building (points 3 and 4). Guiding principle:
+  fix only what an observed failure justifies, the minimum for S2 to run through a
+  sound method, then let S2 test the method.
+
+  **Plan, in order.** (1) ADR-0014, work-item types (points 1–4) — architect,
+  Proposed, Alex's gate before its edits are applied. (2) T1's ADR, points 7 and
+  8, as task T1 (Alex, 2026-10-07: the point 7 rule lands with "where each rule
+  lives"). (3) Points 5–6 as T2 (needed before S2's PR merges), the dev-loop
+  networking ADR as T3 (needed for S2's demo), the advisory re-triage as T4.
+  (4) S2. Out of scope: sprints, GitHub Issues, plugin packaging, role redesign.
+  (1b, Alex 2026-10-07, before this chantier's PR) An ADR lifecycle rule — an
+  ADR is a draft, consolidated, until it reaches `develop`, and frozen after,
+  changed only by supersession — and ADR-0014 consolidated under it, its QA
+  checking that no decision was lost or changed. **Accepted at Alex's gate
+  (2026-10-07):** [ADR-0015](../method/adr/0015-adr-lifecycle.md) as drafted,
+  taking number 0015 (T1's ADR takes the next free one); the PO's backlog
+  writes land on the item's own branch from its first commit
+  ([ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop));
+  and QA's A6/A7 fixes (playbook fast-forward fetch and pointer, log-line
+  references named by field, `check-closeout.mjs` message).
+  **(1) and (1b) Done** — PR #5, QA READY FOR ALEX on ff2b7c9 (2026-10-07).
+  Next: (2) T1.
+
+  **This entry is the work item for that work** — the one exception, since the
+  task type it needs does not exist yet. It runs on branch `method/work-items`
+  with a PR to `develop`; no more direct commits on `develop` from here on. The
+  exception is to be written into ADR-0014.
+
+  **Raised by the architect while drafting ADR-0014 (2026-10-07), not settled
+  there:**
+  - *QA's Bash allow-list.* `qa.md` limits QA to `git diff`, tests and typecheck;
+    re-running a world-state observation (`gh api …`, `dpkg -s …`) needs it widened
+    to "read-only observation commands". Word it when ADR-0014's `qa.md` edit is
+    applied; T1's QA read-only hook, if it adds one, must allow the same set.
+  - *World-state criteria if QA ever runs in CI.* A machine observation such as
+    `dpkg -s libasound2` only means something on the dev machine, where QA runs
+    today. **Trigger:** the day QA runs anywhere else, such criteria become
+    Alex-witnessed — a future task, not now.
 
   The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–7)
   are the first candidates for the new work-item type — do them as tracked tasks
   once it exists, not before.
+- **QA findings left out of the "Method gap" work item (QA on f3cfdfd,
+  2026-10-07), not fixed there.** (1) `method/check-closeout.mjs` robustness: a
+  `### T<n>` block placed outside `## Tasks` is silently ignored — with
+  `## Done / ### T1 / Status: Done / - [ ] CC1` the script exits 0, and moving a
+  block under `## Done` the way stories move is a natural mistake; and a T block
+  sitting under a story section has its checkboxes and Status counted against
+  the preceding story block. (2) Spotted verdict wording: the dev-loop
+  networking and SDK 57 advisories entries above do not yet carry the "becomes a
+  task (T3/T4)" verdict that ADR-0014 §4 wants written into each entry, and the
+  "Method gap" entry's last paragraph still says "points 5–7" where T1/T2 split
+  them as 7–8 and 5–6.
+- **Agents merging and pushing `main` vs `CLAUDE.md`** (QA, 2026-10-07; predates
+  the "Method gap" work item). `CLAUDE.md` `## Git workflow` says "Agents never
+  push to `main` or `develop`, and never merge a PR", but the
+  [DoD](../method/definition-of-done.md) Human gate lets an agent merge on Alex's
+  explicit instruction for that specific PR (the S1 exception, now extended to
+  the closeout PR and task PRs), and [closeout.md](../method/closeout.md) Beat 2
+  says "He may tell you to do all of it. Do it", which covers `git push` of
+  `main`. The two texts disagree on whether an agent may ever merge or push
+  `main`.
+- **Playbook orders the merge after the demo** (QA, 2026-10-07; predates the
+  "Method gap" work item). `method/manager-playbook.md` "What to literally type",
+  step 7: "`gh pr merge --squash` — after you've seen it on the phone". That
+  contradicts the order fixed in the DoD and ADR-0014 §2 (merge story PR → demo
+  D → fast-forward `main` to D → closeout PR). The squash lines are T2's
+  (merge style), so this belongs in T2's completion criteria.

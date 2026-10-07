@@ -1,7 +1,8 @@
 # Definition of Done
 
 A story is Done when **every** line below is true. No partial credit — "Done
-except..." means Doing.
+except..." means Doing. A task has its own, shorter list —
+[Task](#task) at the end ([ADR-0014](adr/0014-work-item-types.md)).
 
 ## Machine gate (CI enforces this; dev runs it locally first)
 - [ ] `npm run typecheck` passes
@@ -17,7 +18,10 @@ except..." means Doing.
 
 ## Review gate (QA, read-only)
 - [ ] Every acceptance criterion has a verdict: PASS / FAIL / UNVERIFIABLE HERE
-- [ ] No changes in the diff that aren't traceable to an AC in this story
+- [ ] No changes in the diff that aren't traceable to an AC in this story,
+      other than planning edits confined to `## Backlog` / `## Spotted` in their
+      own `backlog —` commit; no AC edited after the `approved Ready` commit
+      ([ADR-0014 §6](adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop))
 - [ ] Anything QA couldn't verify is written up as steps for Alex
 
 ## Human gate (Alex only)
@@ -40,11 +44,20 @@ run in parallel, which is the case `develop` exists for.
 - [ ] Any new technology decision has an ADR in `method/adr/`
 - [ ] PR merged into `develop` by Alex, or by an agent on Alex's explicit
       instruction for that specific PR — never on an agent's own judgement
-- [ ] Ran the demo on a real Android phone and saw it work
-- [ ] `main` fast-forwarded to `develop` — this is what "demoed" means in git
-- [ ] `method/log/S<n>.md` written — especially the "method change" line
-      (`node method/check-closeout.mjs` verifies this one, and CI runs it —
-      it is the only item on this gate that leaves an artifact a machine can see)
+- [ ] Ran the demo on a real Android phone and saw it work — on D, the commit
+      the merge left `develop` at
+- [ ] `main` fast-forwarded *to the demoed commit* D, never past it — this is
+      what "demoed" means in git
+- [ ] Closeout PR merged into `develop` by Alex, or by an agent on his explicit
+      instruction for that specific PR: branch `story/S<n>-closeout`,
+      commit `S<n>: closeout`, holding only the bookkeeping — Status → Done, ACs
+      ticked, the story's PORTING row, any demo observations for `## Spotted`,
+      and `method/log/S<n>.md`, which records the demonstrated commit, and
+      especially the "method change" line
+      (`node method/check-closeout.mjs` verifies the log, and CI runs it on this
+      PR — it is the only item on this gate that leaves an artifact a machine
+      can see). It reaches `main` with the next demoed fast-forward
+      ([ADR-0014 §2](adr/0014-work-item-types.md#2-closing-a-story))
 
 **On that "unless Alex says otherwise":** the rule has two jobs. One is keeping
 the machine gate honest — an agent must never merge because *it* judged the work
@@ -65,3 +78,33 @@ to watch for.
 attention is the scarce resource — spend it on whether the thing is *right*,
 not on whether it compiles. Coming from C/C++: this is `-Wall -Werror` plus a
 test run, wired so nobody can skip it.
+
+---
+
+## Task
+
+A task is Done when **every** line below is true. Same rule: "Done except..."
+means Doing.
+
+- [ ] Every completion criterion has a QA verdict: PASS / FAIL / UNVERIFIABLE HERE
+- [ ] Every *world-state* criterion carries its dated record — the observation
+      command or procedure and its result — in the task's block in `## Tasks`
+- [ ] Every criterion QA marked UNVERIFIABLE HERE was witnessed by Alex
+- [ ] No hunk in `git diff develop...HEAD` outside its criteria — and none under
+      `app/src/` or the app's dependencies, ever. Planning edits confined to
+      `## Backlog` / `## Spotted` in their own `backlog —` commit are the one
+      exception; no criterion edited after the `approved Ready` commit
+      ([ADR-0014 §6](adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop))
+- [ ] Committed with the task ID in the message, e.g. `T1: ADR on where each rule lives`
+- [ ] The Done edit — Status → Done, boxes ticked, Alex's witness note under any
+      UNVERIFIABLE criterion, the PORTING row — is the branch's last commit,
+      made after QA and Alex's read
+- [ ] PR merged into `develop` by Alex, or by an agent on his explicit
+      instruction for that specific PR — the merge is what makes the Done edit
+      true, since Done is a claim about `develop`
+      ([ADR-0014 §3](adr/0014-work-item-types.md#3-closing-a-task))
+
+Not on this list, deliberately: no phone demo, no `main` move (a task reaches
+`main` only inside the next demoed fast-forward), no `method/log/` file — a task
+that changes the method records it as a row in [PORTING.md](PORTING.md)'s
+method-changes table instead.
