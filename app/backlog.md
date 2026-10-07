@@ -26,6 +26,7 @@ _(empty)_
   entry in `## Spotted`. Owner: architect.
 - **T5 — CI check: every PR's branch names a work item in `backlog.md`.** ADR-0016 §3(c). Owner: architect.
 - **T6 — Branch protection on `develop` and `main`.** ADR-0016 §3(d); after T5, whose job is the required check. Owner: architect specifies, Alex applies.
+- **T7 — Register of ADR revisit triggers, evaluated by QA at every verdict.** 11 of 16 ADRs carry a revisit signal that no step ever reads (ADR-0007's premise fell in S7 unread). One-line index pointing to each ADR; QA reports "triggers fired: none / ADR-00xx" in each verdict; CI checks the register is complete. Owner: architect (then `qa.md`, `closeout.md`). Alex rates it high priority, as a guard on every item; order is the PO's call.
 - **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
   **Blocked on an ADR (2026-08-25).** The PO was asked to refine this and stopped
   on `CLAUDE.md` rule 8: nothing in `method/adr/` decides how the app obtains the
