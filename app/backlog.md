@@ -326,3 +326,20 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
      project Alex chose **merge commits** (`--merge`): what QA and CI judged is what
      lands, per-step commits stay bisectable, `--first-parent` still gives one line
      per story. Needs a core ADR (kickoff decisions) and a project ADR (the choice).
+     **Correction (2026-10-07):** the session told Alex "no ADR decides merge style"
+     without reading the playbook — `manager-playbook.md` "Git, per story"
+     prescribes `gh pr merge --squash`, so PR #4's squash *followed* the method.
+     Alex's `--merge` choice therefore supersedes a written rule and must reconcile
+     it, not fill a void. (Rule 8, broken by the dispatching session — the S1
+     failure again.)
+  6. *Why `main` is promoted by fast-forward, not by PR* — decided in
+     [ADR-0004](../method/adr/0004-git-flow-branching.md), `CLAUDE.md` and the DoD,
+     but the reason is written nowhere: a fast-forward keeps `main` on the exact
+     commit Alex demoed, while any GitHub PR merge (merge, squash or rebase) mints
+     a new commit nobody demoed, and GitHub's UI offers no pure fast-forward.
+     Alex asked; a future project will too. Add it to ADR-0004's alternatives
+     rejected (core). Belongs in the same task as point 5.
+
+  The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–6)
+  are the first candidates for the new work-item type — do them as tracked tasks
+  once it exists, not before.
