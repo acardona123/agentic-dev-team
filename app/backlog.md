@@ -339,7 +339,20 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
      a new commit nobody demoed, and GitHub's UI offers no pure fast-forward.
      Alex asked; a future project will too. Add it to ADR-0004's alternatives
      rejected (core). Belongs in the same task as point 5.
+  7. *A decision that contradicts an ADR is flagged when it is proposed, never
+     after.* Raised by Alex 2026-10-07 — "très important, pour maintenant et pour
+     la suite". Twice in S7's closeout the dispatching session saw a decision
+     contradict written method and only filed it in Spotted afterwards: Alex's
+     machine fix (WSL2 mirrored networking, libasound2) against
+     [ADR-0006](../method/adr/0006-test-and-lint-toolchain.md), and the session's
+     own `--merge` recommendation against the playbook's squash. Rule to write
+     (core, extends `CLAUDE.md` rule 8 — likely a rule edit plus an ADR): whoever
+     sees a proposed decision contradict an ADR or method text says so **before it
+     is acted on**, citing the text; if Alex validates it, it takes effect only
+     together with the superseding ADR, in the same tracked work item. Consider
+     whether QA or the closeout check can catch "behaviour or config that
+     contradicts an accepted ADR" mechanically, as ADR-0012 did for logs.
 
-  The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–6)
+  The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–7)
   are the first candidates for the new work-item type — do them as tracked tasks
   once it exists, not before.
