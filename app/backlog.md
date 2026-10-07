@@ -424,6 +424,8 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   ([ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop));
   and QA's A6/A7 fixes (playbook fast-forward fetch and pointer, log-line
   references named by field, `check-closeout.mjs` message).
+  **(1) and (1b) Done** — PR #5, QA READY FOR ALEX on ff2b7c9 (2026-10-07).
+  Next: (2) T1.
 
   **This entry is the work item for that work** — the one exception, since the
   task type it needs does not exist yet. It runs on branch `method/work-items`
