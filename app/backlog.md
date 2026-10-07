@@ -316,11 +316,24 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
      one story (today it only writes; it neither orders nor grooms the backlog).
   3. *Agile/sprints* — which parts are useful to an agent team with one story in
      flight.
+     **Rejected (2026-10-07).** Sprints and their ceremonies coordinate several
+     humans working in parallel; here one story is in flight and the backlog order
+     already says what is next. Anthropic's own long-running-agent harness dropped
+     its sprint decomposition as scaffolding the model no longer needed. Nothing
+     observed in S0–S7 failed for want of a sprint. Recorded as an alternative
+     rejected in ADR-0014.
   4. *GitHub Issues* — the repo stays the **only** source of truth (Alex: absolute).
      Issues would be a progress view and PR↔work-item links, and would let CI check
      "every PR references a work item". The real problem is keeping them in sync
      with the repo, and the method that writes and syncs them; also its portability
      (it binds the method to GitHub).
+     **Rejected (2026-10-07).** Issues would be a second copy of the state, kept in
+     sync by hand or by tooling — the opposite of "the repo is the only source of
+     truth" — and would bind a core method to one host. The one real need, "every
+     PR references a work item", is checked by CI against `backlog.md` itself, by
+     extending `method/check-closeout.mjs`
+     ([ADR-0012](../method/adr/0012-ci-check-for-story-closeout-artifacts.md)).
+     Recorded as an alternative rejected in ADR-0014.
   5. *Kickoff decisions* — merge strategy is a per-project choice made at project
      start; the architect should guide a new project through such choices. For this
      project Alex chose **merge commits** (`--merge`): what QA and CI judged is what
@@ -352,6 +365,41 @@ _Things agents noticed but were not allowed to fix. Triage these yourself._
      together with the superseding ADR, in the same tracked work item. Consider
      whether QA or the closeout check can catch "behaviour or config that
      contradicts an accepted ADR" mechanically, as ADR-0012 did for logs.
+  8. *Where each rule lives — prose, hook, CI, skill or plugin.* Added 2026-10-07
+     from the research below. `CLAUDE.md` is advisory: the model reads it and may
+     not follow it. Hooks in `.claude/settings.json` and tool limits in agent
+     frontmatter are enforced by the harness; the repo has neither. The second
+     slip foreseen by [ADR-0010](../method/adr/0010-no-orchestrator-agent.md)'s
+     "Revisit" has happened (S7, rule 8 — point 5's correction), so by its own
+     condition a mechanical fix is due. Candidates, each tied to an observed
+     failure: block agent commits/pushes on `develop`/`main`; make QA truly
+     read-only; CI checks each PR names a work item present in `backlog.md`;
+     branch protection on GitHub (Alex's action); `closeout.md` as a `/closeout`
+     skill; a slimmer `CLAUDE.md`. Packaging the method as a plugin: decide "not
+     now, at porting time" ([PORTING.md](../method/PORTING.md)). Becomes ADR-0015,
+     done as the first task once the task type exists.
+
+  **Research verdict (session of 2026-10-07).** Sources: Claude Code documentation
+  (memory/`CLAUDE.md`, hooks, subagents, skills, plugins); Anthropic engineering
+  posts on agent harnesses ("every component in a harness encodes an assumption
+  about what the model can't do on its own"); Cognition on multi-agent systems
+  (one writer; reviewers in fresh context). They confirm the core of the method —
+  writer ≠ reviewer in a fresh context, one writer at a time, machine gate before
+  the human, state kept in the repo — and name two real risks: rules enforced by
+  prose alone (point 8), and over-building (points 3 and 4). Guiding principle:
+  fix only what an observed failure justifies, the minimum for S2 to run through a
+  sound method, then let S2 test the method.
+
+  **Plan, in order.** (1) ADR-0014, work-item types (points 1–4) — architect,
+  Proposed, Alex's gate before its edits are applied. (2) ADR-0015, point 8, as
+  task T1. (3) Points 5–6 as T2 (needed before S2's PR merges), the dev-loop
+  networking ADR as T3 (needed for S2's demo), the advisory re-triage as T4.
+  (4) S2. Out of scope: sprints, GitHub Issues, plugin packaging, role redesign.
+
+  **This entry is the work item for that work** — the one exception, since the
+  task type it needs does not exist yet. It runs on branch `method/work-items`
+  with a PR to `develop`; no more direct commits on `develop` from here on. The
+  exception is to be written into ADR-0014.
 
   The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–7)
   are the first candidates for the new work-item type — do them as tracked tasks
