@@ -15,10 +15,21 @@ _(empty)_
 
 ## Backlog (not yet refined — the PO turns these into stories or tasks, one at a time, and owns this order: top is next)
 
-- **T1 — ADR: contradictions flagged at decision time, and where each rule lives.**
-  Points 7 and 8 of the "Method gap" entry in `## Spotted`. Owner: architect.
+- **T7 — Register of ADR revisit triggers, evaluated by QA at every verdict.** 11 of 16 ADRs carry a revisit signal that no step ever reads (ADR-0007's premise fell in S7 unread). One-line index pointing to each ADR; QA reports "triggers fired: none / ADR-00xx" in each verdict; CI checks the register is complete. Owner: architect (then `qa.md`, `closeout.md`). Alex rates it high priority, as a guard on every item; placed first by Alex, 2026-10-08.
+- **T8 — Backlog lifecycle: the Draft status and when a one-liner leaves `## Backlog`.**
+  Covers the Spotted entries "No status for a drafted, not-yet-approved work item"
+  and "Nothing says when an item's one-line `## Backlog` entry is removed" (verdict:
+  the one-liner stays while the item is Ready/Doing/Review and is removed only when
+  it is Done, in a task's Done commit; the `## Backlog` heading's "not yet refined"
+  wording changes accordingly). Owner: po (`po.md` templates, backlog header), plus
+  `method/check-closeout.mjs` accepting `Draft`, whose owner the task will name.
 - **T2 — Merge style as a kickoff decision; why `main` moves by fast-forward.**
   Points 5 and 6 of the "Method gap" entry. Owner: architect. Needed before S2's PR merges.
+  Also carries the verdict on "Agents merging and pushing `main` vs `CLAUDE.md`":
+  merging a PR is Alex's only, never an agent's, even on instruction (the DoD's "or by
+  an agent on Alex's explicit instruction" clauses go); fast-forwarding and pushing
+  `main` an agent may do on Alex's explicit one-shot consent given at that moment;
+  `CLAUDE.md`'s wording is nuanced accordingly.
 - **T3 — ADR: how the phone reaches the dev server, and the machine prerequisites.**
   The "Dev-loop networking and DevTools" entry in `## Spotted`; supersedes the
   relevant parts of ADR-0006. Owner: architect. Needed for S2's demo.
@@ -26,7 +37,6 @@ _(empty)_
   entry in `## Spotted`. Owner: architect.
 - **T5 — CI check: every PR's branch names a work item in `backlog.md`.** ADR-0016 §3(c). Owner: architect.
 - **T6 — Branch protection on `develop` and `main`.** ADR-0016 §3(d); after T5, whose job is the required check. Owner: architect specifies, Alex applies.
-- **T7 — Register of ADR revisit triggers, evaluated by QA at every verdict.** 11 of 16 ADRs carry a revisit signal that no step ever reads (ADR-0007's premise fell in S7 unread). One-line index pointing to each ADR; QA reports "triggers fired: none / ADR-00xx" in each verdict; CI checks the register is complete. Owner: architect (then `qa.md`, `closeout.md`). Alex rates it high priority, as a guard on every item; order is the PO's call.
 - **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
   **Blocked on an ADR (2026-08-25).** The PO was asked to refine this and stopped
   on `CLAUDE.md` rule 8: nothing in `method/adr/` decides how the app obtains the
@@ -488,7 +498,8 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   and QA's A6/A7 fixes (playbook fast-forward fetch and pointer, log-line
   references named by field, `check-closeout.mjs` message).
   **(1) and (1b) Done** — PR #5, QA READY FOR ALEX on ff2b7c9 (2026-10-07).
-  Next: (2) T1.
+  **(2) T1 Done** (PR #6, 2026-10-08). Next, in order (Alex, 2026-10-08): T7
+  (his priority), T8, then T2–T6, then S2.
 
   **This entry is the work item for that work** — the one exception, since the
   task type it needs does not exist yet. It runs on branch `method/work-items`
@@ -506,7 +517,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
     today. **Trigger:** the day QA runs anywhere else, such criteria become
     Alex-witnessed — a future task, not now.
 
-  The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–7)
+  The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–6 and 7–8)
   are the first candidates for the new work-item type — do them as tracked tasks
   once it exists, not before.
 - **QA findings left out of the "Method gap" work item (QA on f3cfdfd,
@@ -518,12 +529,17 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   the preceding story block. (2) Spotted verdict wording: the dev-loop
   networking and SDK 57 advisories entries above do not yet carry the "becomes a
   task (T3/T4)" verdict that ADR-0014 §4 wants written into each entry, and the
-  "Method gap" entry's last paragraph still says "points 5–7" where T1/T2 split
-  them as 7–8 and 5–6. (3) `check-closeout.mjs` has no tests (QA on T1,
+  "Method gap" entry's last paragraph still said "points 5–7" where T1/T2 split
+  them as 7–8 and 5–6 (wording fixed 2026-10-08, T7 planning). (3) `check-closeout.mjs` has no tests (QA on T1,
   2026-10-08): T1's CC8 "(including its tests)" passed vacuously. T5 extends the
   script, so its completion criteria should require tests for it.
-- **Agents merging and pushing `main` vs `CLAUDE.md`** (QA, 2026-10-07; predates
-  the "Method gap" work item). `CLAUDE.md` `## Git workflow` says "Agents never
+- ~~**Agents merging and pushing `main` vs `CLAUDE.md`** (QA, 2026-10-07; predates
+  the "Method gap" work item).~~ **Triaged 2026-10-08 — becomes part of T2 (Alex's
+  decision).** Merging a PR is Alex's only, never an agent's, even on instruction,
+  so the DoD's "or by an agent on Alex's explicit instruction" clauses go. The
+  non-PR git operations of the closeout — fast-forwarding `main` and pushing it —
+  an agent may run on Alex's explicit, one-shot consent given at that moment;
+  `CLAUDE.md`'s wording is nuanced accordingly. Original finding: `CLAUDE.md` `## Git workflow` says "Agents never
   push to `main` or `develop`, and never merge a PR", but the
   [DoD](../method/definition-of-done.md) Human gate lets an agent merge on Alex's
   explicit instruction for that specific PR (the S1 exception, now extended to
@@ -537,8 +553,8 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   contradicts the order fixed in the DoD and ADR-0014 §2 (merge story PR → demo
   D → fast-forward `main` to D → closeout PR). The squash lines are T2's
   (merge style), so this belongs in T2's completion criteria.
-- **No status for a drafted, not-yet-approved work item** (session, T1 draft,
-  2026-10-07). [ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)
+- ~~**No status for a drafted, not-yet-approved work item** (session, T1 draft,
+  2026-10-07).~~ **Triaged 2026-10-08 — becomes task T8.** Original finding: [ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)
   makes Alex's approval the Status → Ready commit, so the PO's draft (the
   branch's first commit) needs a status before Ready. None exists: ADR-0014 §1's
   table, the `po.md` templates (which write `**Status:** Ready` directly) and
@@ -546,9 +562,23 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   draft used `Draft`, and `node method/check-closeout.mjs` exits 1 on that
   commit. Harmless for CI, which checks the PR head, but every draft commit is
   red locally and nothing says how a draft is written.
-- **Nothing says when an item's one-line `## Backlog` entry is removed** (Alex,
-  T1 draft, 2026-10-07). Once an item is refined into its own block, does its
+- ~~**Nothing says when an item's one-line `## Backlog` entry is removed** (Alex,
+  T1 draft, 2026-10-07).~~ **Triaged 2026-10-08 — becomes part of task T8 (Alex's
+  decision).** The one-liner stays in `## Backlog` while the item is
+  Ready/Doing/Review (it may be updated after Ready, and an item in progress
+  should be visible there, e.g. after a pause); it is removed only when the item is
+  Done — for a task, in its Done commit (the branch's last commit, ADR-0014 §3).
+  The `## Backlog` heading's "not yet refined" wording changes with it. Original
+  finding: once an item is refined into its own block, does its
   one-liner leave `## Backlog`, and at which commit (the PO's draft, the
   `approved Ready` commit, or the merge)? S7 no longer appears there, but no
   text records the practice. T1's one-liner is left in place until this is
   decided.
+- **Task/story relation for technical decisions** (Alex, 2026-10-08; not triaged).
+  `CLAUDE.md` rule 9's pipeline, `po → (architect) → dev`, puts the architect
+  *inside* a story, while [ADR-0014](../method/adr/0014-work-item-types.md) §1's
+  table classes "an ADR" as a task. Nothing says which wins, which precedes which,
+  or what happens when a technical decision arises mid-story. Until now technology
+  choices were made within stories. S2 is blocked on exactly this case (its ADR on
+  how the app obtains position). **To be settled before S2.** Raised during the T7
+  ordering; deliberately not acted on now — focus stays on the Method gap work.
