@@ -25,10 +25,22 @@ Hand him, in one message:
    Say which step covers which AC, and which single step is the one that would
    most embarrass us if skipped. Post it as a PR comment too, so he can read it
    off the phone instead of scrolling a terminal.
-3. **The merge command**, ready to paste. He may tell you to run it; that is
+3. **The triggers QA reported fired**, read from its verdict's
+   `triggers fired:` line ([ADR-0017](adr/0017-adr-revisit-trigger-register.md)).
+   `none` is said in one line, not skipped. For each ADR named, draft a one-line
+   `## Backlog` entry for him to confirm or reject:
+   `**Revisit ADR-00xx** — trigger "<its line in adr-triggers.md>" fired (QA on <ID>, <date>): <QA's evidence>. Owner: architect.`
+   Confirmed, it is committed on the item's own branch, before the merge, as
+   `<ID>: backlog — revisit ADR-00xx`, appended to `## Backlog` for the PO to
+   place ([ADR-0014 §6](adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).
+   Rejected, draft a `## Spotted` line instead — the ADR, the evidence, and his
+   reason — committed the same way, so the same evidence is not raised again.
+   Neither touches `adr-triggers.md`: a state there changes in the item that
+   handles the trigger.
+4. **The merge command**, ready to paste. He may tell you to run it; that is
    allowed and the Human gate says so explicitly. Merging because *you* judged
    the work ready is not.
-4. **Anything still unpushed**, named. A local-only commit is a thing he cannot
+5. **Anything still unpushed**, named. A local-only commit is a thing he cannot
    see and will not remember.
 
 Then stop. Do not prefill the log yet — half its content is the demo's outcome.
@@ -101,13 +113,17 @@ and no log. When QA returns READY FOR ALEX on a task, Beat 1 only, adapted:
 
 1. **The verdict**, per completion criterion — and, for each one QA marked
    UNVERIFIABLE HERE, the steps Alex performs to witness it.
-2. **The merge command**, ready to paste. Marking the task Done (status line,
+2. **The triggers QA reported fired**, exactly as Beat 1 item 3: a drafted
+   `## Backlog` or `## Spotted` line per ADR for him to confirm or reject, and
+   its `T<n>: backlog — …` commit lands before the Done commit, which stays the
+   branch's last.
+3. **The merge command**, ready to paste. Marking the task Done (status line,
    ticked boxes in its `## Tasks` block, his witness note under any
    UNVERIFIABLE criterion) is Alex's call (rule 7); once he makes it, the edit
    is the task branch's last commit, and it becomes true at the merge — Done is
    a claim about `develop`, so `develop` never shows the task Done while its PR
    is unmerged ([ADR-0014 §3](adr/0014-work-item-types.md#3-closing-a-task)).
-3. **Anything still unpushed**, named — and, if the task changed the method, its
+4. **Anything still unpushed**, named — and, if the task changed the method, its
    row in [PORTING.md](PORTING.md)'s method-changes table, which is a task's
    only record.
 

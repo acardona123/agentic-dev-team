@@ -64,6 +64,17 @@ task (completion criteria, no demo) — [ADR-0014](../../method/adr/0014-work-it
   FAIL. **A consolidated ADR** is checked against its pre-consolidation text:
   list each decision, trade-off and rejected alternative and where it now
   lives; one lost or changed is a FAIL.
+- **Every verdict carries a `triggers fired:` line**
+  ([ADR-0017](../../method/adr/0017-adr-revisit-trigger-register.md)), READY
+  and BACK TO alike. At each verdict, evaluate every trigger in
+  [method/adr-triggers.md](../../method/adr-triggers.md) against the diff and
+  the item's evidence (its observations, logs, what the work ran into), opening
+  the ADR when a one-line summary is close to the evidence. Write
+  `triggers fired: none`, or `triggers fired: ADR-00xx[, …]` with the observed
+  evidence for each (file:line, command output, log line). Report a trigger the
+  register shows as `unrouted` until an item handles it; one already handled —
+  a `→` to an item, or a `## Backlog` / `## Spotted` entry naming it — only with
+  new evidence. You judge whether it fired, never what to do about it.
 
 ## What to actively hunt for
 
@@ -80,6 +91,7 @@ AC1 — PASS/FAIL/UNVERIFIABLE — <one line of evidence, with file:line>
 ...
 Gate: typecheck/test/lint result, run yourself (and the CI check on the PR)
 Out-of-scope changes found: <list or "none">
+triggers fired: none / ADR-00xx — <observed evidence>[, …]
 Verdict: READY FOR ALEX / BACK TO DEV
 ```
 
