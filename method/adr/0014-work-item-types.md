@@ -156,7 +156,7 @@ which is what was not happening.
   the DoD's human gate gain an "unless" clause each — the kind of exception that
   quietly becomes the rule.
 
-## Amendment 1 — Closeout bookkeeping reaches `develop` by PR; `main` stays on the demoed commit (Proposed, 2026-10-07)
+## Amendment 1 — Closeout bookkeeping reaches `develop` by PR; `main` stays on the demoed commit (Accepted, 2026-10-07)
 
 ### Context
 QA on f3cfdfd, two findings against this ADR as applied:
@@ -288,20 +288,23 @@ guarantee. This variant's worst case is documentation one cycle late.
 Out of scope here, left as QA filed them: `check-closeout.mjs` robustness, and
 the Spotted verdict wording.
 
-### Implied edits — not applied until Alex accepts this amendment
-- [ ] **`CLAUDE.md` `## Git workflow`:**
+### Implied edits — applied
+Applied after Alex accepted this amendment (2026-10-07, variant B), under the
+same bootstrap work item, then reviewed by QA as a diff.
+
+- [x] **`CLAUDE.md` `## Git workflow`:**
   - in the `story/` bullet, "One story, one branch" → one work branch, plus
     `story/S<n>-closeout` after the demo;
   - the `main` bullet adds that `main` is fast-forwarded to the exact demoed
     commit, never past it, and that the closeout rides the next demo.
-- [ ] **`method/definition-of-done.md` Human gate:**
+- [x] **`method/definition-of-done.md` Human gate:**
   - the order becomes merge → demo → `main` fast-forwarded *to the demoed
     commit* → closeout PR merged;
   - the log line moves into the closeout PR and gains "records the
     demonstrated commit".
-- [ ] **`method/definition-of-done.md` Task list:** the Done edit is the
+- [x] **`method/definition-of-done.md` Task list:** the Done edit is the
   branch's last commit, and it becomes true at the merge.
-- [ ] **`method/closeout.md` Beat 2:**
+- [x] **`method/closeout.md` Beat 2:**
   - item 1's prefilled log fills `Demonstrated commit:` with D's SHA;
   - item 2 becomes the ordered, paste-ready sequence for Alex: fast-forward
     `main` to D (`git switch main && git merge --ff-only <D> && git push`),
@@ -309,18 +312,18 @@ the Spotted verdict wording.
     Each step is presented at its moment, none left for him to recall (rule
     10);
   - "mark Done … write the log" are no longer separate steps.
-- [ ] **`method/closeout.md` "Task closeout":** item 2 gets the "last commit,
+- [x] **`method/closeout.md` "Task closeout":** item 2 gets the "last commit,
   true at the merge" wording, replacing "because nothing reaches `develop`
   except through the PR".
-- [ ] **`method/manager-playbook.md` "Git, per story":**
+- [x] **`method/manager-playbook.md` "Git, per story":**
   - the post-demo line becomes `git merge --ff-only <demoed SHA>` instead of
     `develop`;
   - add the closeout branch/PR lines after it.
   - The two loop diagrams do not change.
-- [ ] **`method/log/README.md`:** the template gains `**Demonstrated commit:**
+- [x] **`method/log/README.md`:** the template gains `**Demonstrated commit:**
   <SHA of the commit main was fast-forwarded to>`. The session fills it, not
   Alex's memory.
-- [ ] **`method/PORTING.md`:** no new core-table row, because this is an
+- [x] **`method/PORTING.md`:** no new core-table row, because this is an
   amendment, not a new ADR. The "Method gap (bootstrap, pre-task)" row in
   "Method changes by story" gains "Amendment 1: story closeout PR, `main` on
   the demoed commit, log records it; task Done at merge".

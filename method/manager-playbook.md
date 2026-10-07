@@ -71,8 +71,15 @@ git switch -c story/S2-live-position          # dev agent works here
 gh pr comment --body-file qa-report.md        # qa's verdict, permanently on the diff
 gh pr merge --squash --delete-branch          # into develop: "the machine believes it"
 
-# then YOU demo on the phone. Only after that:
-git switch main && git merge --ff-only develop && git push
+# then YOU demo on the phone — on D, the commit that merge left develop at.
+# Only after that, main moves to exactly D, never past it:
+git switch main && git merge --ff-only <demoed SHA> && git push
+
+# then the bookkeeping, by its own PR (closeout.md Beat 2 hands you each line):
+git switch develop && git pull
+git switch -c story/S2-closeout               # Done, ticked ACs, log, PORTING row
+# ... commit "S2: closeout", push, gh pr create --base develop
+# merge it once its closeout check is green; main picks it up at the next demo
 ```
 
 That last line is the one that matters. `main` means *you have held this in your

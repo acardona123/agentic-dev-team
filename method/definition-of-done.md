@@ -41,11 +41,20 @@ run in parallel, which is the case `develop` exists for.
 - [ ] Any new technology decision has an ADR in `method/adr/`
 - [ ] PR merged into `develop` by Alex, or by an agent on Alex's explicit
       instruction for that specific PR — never on an agent's own judgement
-- [ ] Ran the demo on a real Android phone and saw it work
-- [ ] `main` fast-forwarded to `develop` — this is what "demoed" means in git
-- [ ] `method/log/S<n>.md` written — especially the "method change" line
-      (`node method/check-closeout.mjs` verifies this one, and CI runs it —
-      it is the only item on this gate that leaves an artifact a machine can see)
+- [ ] Ran the demo on a real Android phone and saw it work — on D, the commit
+      the merge left `develop` at
+- [ ] `main` fast-forwarded *to the demoed commit* D, never past it — this is
+      what "demoed" means in git
+- [ ] Closeout PR merged into `develop` by Alex, or by an agent on his explicit
+      instruction for that specific PR: branch `story/S<n>-closeout`,
+      commit `S<n>: closeout`, holding only the bookkeeping — Status → Done, ACs
+      ticked, the story's PORTING row, any demo observations for `## Spotted`,
+      and `method/log/S<n>.md`, which records the demonstrated commit, and
+      especially the "method change" line
+      (`node method/check-closeout.mjs` verifies the log, and CI runs it on this
+      PR — it is the only item on this gate that leaves an artifact a machine
+      can see). It reaches `main` with the next demoed fast-forward
+      ([ADR-0014 Amendment 1](adr/0014-work-item-types.md))
 
 **On that "unless Alex says otherwise":** the rule has two jobs. One is keeping
 the machine gate honest — an agent must never merge because *it* judged the work
@@ -81,8 +90,13 @@ means Doing.
 - [ ] No hunk in `git diff develop...HEAD` outside its criteria — and none under
       `app/src/` or the app's dependencies, ever
 - [ ] Committed with the task ID in the message, e.g. `T1: ADR-0015 where each rule lives`
+- [ ] The Done edit — Status → Done, boxes ticked, Alex's witness note under any
+      UNVERIFIABLE criterion, the PORTING row — is the branch's last commit,
+      made after QA and Alex's read
 - [ ] PR merged into `develop` by Alex, or by an agent on his explicit
-      instruction for that specific PR
+      instruction for that specific PR — the merge is what makes the Done edit
+      true, since Done is a claim about `develop`
+      ([ADR-0014 Amendment 1](adr/0014-work-item-types.md))
 
 Not on this list, deliberately: no phone demo, no `main` move (a task reaches
 `main` only inside the next demoed fast-forward), no `method/log/` file — a task

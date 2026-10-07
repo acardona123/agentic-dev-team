@@ -112,7 +112,9 @@ The two long-lived branches carry the project's two gates. Do not blur them:
 
 Supporting branches:
 
-- `story/S<n>-<slug>` — cut from `develop`, PR targets `develop`. One story, one branch.
+- `story/S<n>-<slug>` — cut from `develop`, PR targets `develop`. One story, one work
+  branch, plus `story/S<n>-closeout` after the demo for its bookkeeping
+  ([ADR-0014 Amendment 1](method/adr/0014-work-item-types.md)).
 - `task/T<n>-<slug>` — cut from `develop`, PR targets `develop`. One task, one branch.
   A task reaches `main` only by riding the next demoed fast-forward
   ([ADR-0014](method/adr/0014-work-item-types.md)).
@@ -129,7 +131,9 @@ Rules:
   pushes its own `story/` or `task/` branch and opens the PR. Merging is Alex's.
 - CI runs the machine gate on every PR touching `app/`. A red check means the
   story is not finished, whatever any agent reports.
-- `main` is only ever fast-forwarded from `develop` after a phone demo.
+- `main` is only ever fast-forwarded after a phone demo, and only to the exact
+  demoed commit, never past it. A story's closeout PR lands on `develop` after
+  that and rides the next demoed fast-forward.
 
 `git diff develop...HEAD` is exactly the set of changes a work item is permitted
 to contain. Anything in there not traceable to an acceptance criterion (story) or
