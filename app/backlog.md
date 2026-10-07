@@ -24,6 +24,9 @@ _(empty)_
   relevant parts of ADR-0006. Owner: architect. Needed for S2's demo.
 - **T4 — Re-triage the SDK 57 `npm install` advisories.** The re-opened advisories
   entry in `## Spotted`. Owner: architect.
+- **T5 — CI check: every PR's branch names a work item in `backlog.md`.** ADR-0016 §3(c). Owner: architect.
+- **T6 — Branch protection on `develop` and `main`.** ADR-0016 §3(d); after T5, whose job is the required check. Owner: architect specifies, Alex applies.
+- **T7 — Register of ADR revisit triggers, evaluated by QA at every verdict.** 11 of 16 ADRs carry a revisit signal that no step ever reads (ADR-0007's premise fell in S7 unread). One-line index pointing to each ADR; QA reports "triggers fired: none / ADR-00xx" in each verdict; CI checks the register is complete. Owner: architect (then `qa.md`, `closeout.md`). Alex rates it high priority, as a guard on every item; order is the PO's call.
 - **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
   **Blocked on an ADR (2026-08-25).** The PO was asked to refine this and stopped
   on `CLAUDE.md` rule 8: nothing in `method/adr/` decides how the app obtains the
@@ -69,8 +72,40 @@ _(empty)_
 
 ## Tasks
 
-_(empty — refined tasks live here as `### T<n> — title` blocks with a
-`**Status:**` line: Ready / Doing / Review / Done)_
+_Refined tasks live here as `### T<n> — title` blocks with a
+`**Status:**` line: Ready / Doing / Review / Done._
+
+### T1 — Contradictions flagged at decision time, and where each rule lives
+**Status:** Done · confirmed by Alex 2026-10-08 · [PR #6](https://github.com/acardona123/agentic-dev-team/pull/6) · [ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md)
+**Intent:** "Write down that a decision contradicting an ADR is flagged when it is proposed, never after, and decide where each rule of the method lives — prose, hook, CI, skill or plugin."
+**Owner:** architect
+
+**Scope choice (PO, stated explicitly).** T1 **decides and writes down; it
+implements no hook, no CI check, no skill and no GitHub setting.** Each
+mechanism the ADR accepts becomes its own queued follow-up task, so that every
+enforcement change is its own diff, reviewed on its own. The only edits T1
+makes outside the ADR are the rule text in `CLAUDE.md` and the pointers that
+ADR-0016 needs. Basis: the research verdict's principle, "fix only what an
+observed failure justifies".
+
+**Completion criteria**
+- [x] CC1 — *diff* — `method/adr/0016-*.md` exists, tagged `**Scope:** core`, status Proposed (draft, consolidated per [ADR-0015](../method/adr/0015-adr-lifecycle.md)), and states the rule of point 7: whoever sees a proposed decision contradict an ADR or method text says so **before it is acted on**, citing the text; if Alex validates it, it takes effect only together with the superseding ADR, in the same tracked work item.
+- [x] CC2 — *diff* — `CLAUDE.md` rule 8 is extended with that rule (or a rule beside it that rule 8 points to), in prose short enough not to grow the file noticeably, citing ADR-0016 rather than restating it; no other rule is reworded.
+- [x] CC3 — *diff* — ADR-0016 has one entry for each candidate mechanism of point 8 — (a) block agent commits/pushes on `develop`/`main`; (b) make QA read-only; (c) CI check that each PR names a work item present in `backlog.md`; (d) branch protection on GitHub; (e) `closeout.md` as a `/closeout` skill; (f) a slimmer `CLAUDE.md`; (g) packaging the method as a plugin — and for each states: where the rule lives (prose, hook, agent frontmatter, CI, GitHub setting, skill, plugin), **the observed failure that justifies it**, citing the log, story or Spotted entry, or **"no observed failure — not now"** with the trigger that would reopen it. (g) is expected to read "not now, at porting time" ([PORTING.md](../method/PORTING.md)).
+- [x] CC4 — *diff* — ADR-0016 states, for the mechanical check named in point 7's last sentence ("behaviour or config that contradicts an accepted ADR"), whether it is feasible and by whom; if not feasible now, says so and why, rather than leaving it silent.
+- [x] CC5 — *diff* — ADR-0016 records whether [ADR-0010](../method/adr/0010-no-orchestrator-agent.md)'s "Revisit" condition (second slip after prose) is now met, citing the S7 rule-8 slip, and does not edit ADR-0010 (frozen; change only by supersession per ADR-0015).
+- [x] CC6 — *diff* — If ADR-0016 accepts a QA read-only mechanism, it states the allowed command set and that this set is the same as the "read-only observation commands" QA's Bash allow-list in `qa.md` permits (the allow-list item raised while drafting ADR-0014); if it accepts none, it says the two stay consistent by default.
+- [x] CC7 — *diff* — For every mechanism ADR-0016 accepts, `app/backlog.md` `## Backlog` gains one one-line follow-up entry (next free T-number, owner named), added as a separate `T1: backlog — …` commit confined to that section; none of them is implemented in this branch.
+- [x] CC8 — *diff* — `set -o pipefail; cd app && npm run gate` exits 0, and `method/check-closeout.mjs` (including its tests) passes against the branch.
+
+**Not in scope**
+- Implementing any hook, CI workflow, `settings.json` entry, agent-frontmatter change, skill or plugin; each is a follow-up task (CC7).
+- Applying branch protection on GitHub. If ADR-0016 accepts it, it is a follow-up task whose world-state criterion Alex witnesses or QA observes via `gh api`; T1 itself has no world-state criterion.
+- Merge style and why `main` is fast-forwarded (points 5–6) — T2. The playbook's merge-after-demo ordering line — T2.
+- The "QA findings left out of the Method gap work item" Spotted entry (`check-closeout.mjs` robustness, Spotted verdict wording): not T1's; a separate task, to be triaged by the session.
+- The "Agents merging and pushing `main` vs `CLAUDE.md`" Spotted entry: not T1's to resolve. Note for the architect: any hook accepted under CC3(a) must not encode one reading of that disagreement silently; ADR-0016 names the entry as the open question it depends on.
+- Sprints, GitHub Issues, plugin packaging, role redesign (rejected or deferred in the "Method gap" entry).
+- Triaging Spotted entries, or editing any frozen ADR.
 
 ---
 
@@ -456,7 +491,9 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   networking and SDK 57 advisories entries above do not yet carry the "becomes a
   task (T3/T4)" verdict that ADR-0014 §4 wants written into each entry, and the
   "Method gap" entry's last paragraph still says "points 5–7" where T1/T2 split
-  them as 7–8 and 5–6.
+  them as 7–8 and 5–6. (3) `check-closeout.mjs` has no tests (QA on T1,
+  2026-10-08): T1's CC8 "(including its tests)" passed vacuously. T5 extends the
+  script, so its completion criteria should require tests for it.
 - **Agents merging and pushing `main` vs `CLAUDE.md`** (QA, 2026-10-07; predates
   the "Method gap" work item). `CLAUDE.md` `## Git workflow` says "Agents never
   push to `main` or `develop`, and never merge a PR", but the
@@ -472,3 +509,18 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   contradicts the order fixed in the DoD and ADR-0014 §2 (merge story PR → demo
   D → fast-forward `main` to D → closeout PR). The squash lines are T2's
   (merge style), so this belongs in T2's completion criteria.
+- **No status for a drafted, not-yet-approved work item** (session, T1 draft,
+  2026-10-07). [ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)
+  makes Alex's approval the Status → Ready commit, so the PO's draft (the
+  branch's first commit) needs a status before Ready. None exists: ADR-0014 §1's
+  table, the `po.md` templates (which write `**Status:** Ready` directly) and
+  `method/check-closeout.mjs` know only Ready / Doing / Review / Done. T1's
+  draft used `Draft`, and `node method/check-closeout.mjs` exits 1 on that
+  commit. Harmless for CI, which checks the PR head, but every draft commit is
+  red locally and nothing says how a draft is written.
+- **Nothing says when an item's one-line `## Backlog` entry is removed** (Alex,
+  T1 draft, 2026-10-07). Once an item is refined into its own block, does its
+  one-liner leave `## Backlog`, and at which commit (the PO's draft, the
+  `approved Ready` commit, or the merge)? S7 no longer appears there, but no
+  text records the practice. T1's one-liner is left in place until this is
+  decided.

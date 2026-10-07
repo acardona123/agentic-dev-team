@@ -26,7 +26,7 @@ the ADR), `.claude/agents/architect.md` (tag it, and add the row when it is
 `core`), and [closeout.md](closeout.md) beat 2 (the story's row, at the point
 the story closes).
 
-Current state, ADRs: **9 core, 6 project.**
+Current state, ADRs: **10 core, 6 project.**
 
 | Core — transfers | Project — does not |
 |---|---|
@@ -39,6 +39,7 @@ Current state, ADRs: **9 core, 6 project.**
 | [0012](adr/0012-ci-check-for-story-closeout-artifacts.md) closeout check | [0013](adr/0013-expo-sdk-follows-the-store-expo-go.md) SDK follows the store's Expo Go |
 | [0014](adr/0014-work-item-types.md) two work-item types, story and task | |
 | [0015](adr/0015-adr-lifecycle.md) ADR draft until `develop`, frozen after | |
+| [0016](adr/0016-contradictions-flagged-and-where-rules-live.md) contradictions flagged first; a rule leaves prose only for an observed failure | |
 
 ## What a new project copies
 
@@ -100,6 +101,7 @@ record ([ADR-0014](adr/0014-work-item-types.md)).
 | S1 | `CLAUDE.md` code style: a device capability is injected, never reached for — generalised from S1's `FetchLike` | core |
 | S1 | `po.md`: an AC checkable only on the device must be paired with one checkable at the desk (from S0's log, unimplemented until now); `architect.md`: `Scope:` in the ADR template, and this table kept live | core |
 | S7 | None edited yet. Logged: work that is not a story has no container (Spotted triage, method work); merge strategy is a kickoff decision; a third-candidate `pipefail` slip ([ADR-0011](adr/0011-one-gate-command-and-pipefail.md)) — see [log/S7.md](log/S7.md) | core |
+| T1 | [ADR-0016](adr/0016-contradictions-flagged-and-where-rules-live.md): a contradiction is flagged before it is acted on (`CLAUDE.md` rule 8); where each rule lives — work-item CI check (T5) and branch protection (T6) accepted, (a)(b)(e)(f)(g) deferred with reopen triggers | core |
 | Method gap (bootstrap, pre-task) | [ADR-0014](adr/0014-work-item-types.md): two work-item types, story and task; `CLAUDE.md` rules 1, 7, 9, 10 and Git workflow; `po.md` writes tasks and orders `## Backlog`; `qa.md` per completion criterion, read-only observation allow-list; DoD Task section; playbook task loop; `check-closeout.mjs` parses `## Tasks`; `closeout.md` Task closeout; backlog `## Tasks` and routed Spotted triage; story closeout PR, `main` on the demoed commit, log records it; task Done at merge; the item's branch cut before the PO drafts, so backlog writes reach `develop` by PR too. [ADR-0015](adr/0015-adr-lifecycle.md): ADRs consolidated before `develop`, frozen after | core |
 
 Append a row per story, and per task that changes the method. If three stories running add nothing, either the method

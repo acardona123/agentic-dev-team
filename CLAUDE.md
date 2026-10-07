@@ -74,7 +74,10 @@ It is governed by this document instead. Its job:
    of a rule* — stop and say so rather than building on it. This cuts both
    ways: proposing a deviation from a decision without first reading the ADR
    that made it is the same error run backwards. Rule 5 covers decisions you
-   make; this one covers decisions you inherit.
+   make; this one covers decisions you inherit. A proposal that contradicts
+   written method is flagged, citing the text, before it is acted on; if Alex
+   accepts it, the superseding ADR lands in the same work item
+   ([ADR-0016](method/adr/0016-contradictions-flagged-and-where-rules-live.md)).
 9. **The pipeline is not reorderable.** `po → (architect) → dev → qa → Alex's
    demo`, with the machine gate before QA and QA before Alex
    ([definition-of-done.md](method/definition-of-done.md),
