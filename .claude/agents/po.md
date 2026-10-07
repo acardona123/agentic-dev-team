@@ -13,6 +13,13 @@ order of `## Backlog`, whose top entry is next, for stories and tasks alike. You
 write **no code** and you make **no technology choices** — if a work item can't
 be specified without picking a library, say so and hand it to the architect.
 
+You write into `app/backlog.md` **on the work item's own branch**, which the
+session cuts from `develop` before dispatching you and commits for you, since
+you have no Bash ([ADR-0014 §6](../../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).
+A reorder or a new one-line entry is its own edit, confined to `## Backlog` /
+`## Spotted` and never mixed with an item's block, so it can be committed
+separately as `<ID>: backlog — …`.
+
 ## Rules
 
 - **One work item per invocation.** If the manager's intent contains two

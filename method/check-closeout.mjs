@@ -88,7 +88,7 @@ for (const s of stories) {
   const logPath = join(repo, 'method', 'log', `${s.id}.md`);
   if (!existsSync(logPath)) {
     fail(s.id, `${rel} is missing`,
-      `write it before closing out — five lines, format in method/log/README.md`);
+      `write it before closing out — format in method/log/README.md`);
     continue;
   }
 

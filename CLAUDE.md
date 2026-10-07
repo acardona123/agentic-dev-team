@@ -28,11 +28,21 @@ It is governed by this document instead. Its job:
   It may never *be* the gate — not QA's verdict, and never Alex's demo.
 - **Read before recommending.** It is the participant most likely to propose a
   next step from memory rather than from `method/`. Rule 8 applies to it most.
+- **Clerk for the PO.** The PO has no Bash. Before dispatching it, the session
+  cuts the item's branch from `develop`, then commits the PO's draft
+  (`S<n>: story — …` / `T<n>: task — …`), Alex's approval (`<ID>: approved
+  Ready`) and any planning edit (`<ID>: backlog — …`). Committing someone
+  else's text is clerical: the text stays the PO's, the approval Alex's
+  ([ADR-0014 §6](method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).
 
 ## Standing rules — every agent, and the session that dispatches them
 
-1. **No change without an approved work item.** If `app/backlog.md` has no Ready
-   story or Ready task for what you're about to do, stop and say so. A story is
+1. **No change without an approved work item.** If `app/backlog.md` *on the
+   work item's own branch* has no Ready story or Ready task for what you're
+   about to do, stop and say so — the PO's draft of that item is the one write
+   that comes before it. `develop`'s `## Ready` stays empty: an item is drafted
+   and approved on its own branch
+   ([ADR-0014 §6](method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)). A story is
    app behaviour ending in a phone demo; a task is everything else
    ([ADR-0014](method/adr/0014-work-item-types.md)).
 2. **One story at a time.** Never implement ahead. Scope creep is the failure
@@ -112,10 +122,14 @@ The two long-lived branches carry the project's two gates. Do not blur them:
 
 Supporting branches:
 
-- `story/S<n>-<slug>` — cut from `develop`, PR targets `develop`. One story, one work
-  branch, plus `story/S<n>-closeout` after the demo for its bookkeeping
-  ([ADR-0014 Amendment 1](method/adr/0014-work-item-types.md)).
-- `task/T<n>-<slug>` — cut from `develop`, PR targets `develop`. One task, one branch.
+- `story/S<n>-<slug>` — cut from `develop` when the story is drafted, PR targets
+  `develop`. Its first commit is the PO's draft, then Alex's `approved Ready`,
+  then the work
+  ([ADR-0014 §6](method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).
+  One story, one work branch, plus `story/S<n>-closeout` after the demo for its bookkeeping
+  ([ADR-0014 §2](method/adr/0014-work-item-types.md#2-closing-a-story)).
+- `task/T<n>-<slug>` — cut from `develop` when the task is drafted, PR targets
+  `develop`; same first two commits. One task, one branch.
   A task reaches `main` only by riding the next demoed fast-forward
   ([ADR-0014](method/adr/0014-work-item-types.md)).
 - `hotfix/<slug>` — cut from `main`, merged to **both** `main` and `develop`. Unused until there's a released build.
@@ -124,9 +138,13 @@ Supporting branches:
 Rules:
 
 - Commit messages start with the work item ID: `S2: stream position updates`,
-  `T1: ADR-0015 where each rule lives`
+  `T1: ADR on where each rule lives`
 - **Nothing reaches `develop` except through a merged `story/` or `task/` PR.**
-  No direct commits, method edits included.
+  No direct commits, method edits and backlog edits included.
+- A planning edit that belongs to no item — a new `## Backlog` line, a reorder,
+  a `## Spotted` entry — rides the branch in flight as its own
+  `<ID>: backlog — …` commit, confined to those two sections. With nothing in
+  flight it opens the next item's branch, or is a task.
 - **Agents never push to `main` or `develop`, and never merge a PR.** An agent
   pushes its own `story/` or `task/` branch and opens the PR. Merging is Alex's.
 - CI runs the machine gate on every PR touching `app/`. A red check means the
@@ -137,7 +155,8 @@ Rules:
 
 `git diff develop...HEAD` is exactly the set of changes a work item is permitted
 to contain. Anything in there not traceable to an acceptance criterion (story) or
-completion criterion (task) is scope creep, and QA is expected to name it.
+completion criterion (task), other than a confined `backlog —` planning commit,
+is scope creep, and QA is expected to name it.
 
 ## Code style
 

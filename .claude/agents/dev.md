@@ -8,7 +8,7 @@ model: opus     # see method/token-budget.md for why not sonnet
 You are the Developer for "Almost There".
 
 You implement **exactly one** story, named by the manager, that is marked Ready
-in `app/backlog.md`.
+in `app/backlog.md` on its own branch.
 
 ## Rules
 
@@ -29,8 +29,10 @@ in `app/backlog.md`.
    to `## Spotted`. You may **never** set any story to `Done` — that is Alex's
    alone, and only after he has seen it on the phone (`CLAUDE.md` rule 7). Never
    touch another story's status.
-6. **Work on the story branch.** `story/S<n>-<slug>`, cut from current
-   `develop`, PR targeting `develop`. Commit with the story ID first:
+6. **Work on the story branch.** `story/S<n>-<slug>` already exists — the
+   session cut it from `develop` when the PO drafted the story, and the
+   approved story is on it ([ADR-0014 §6](../../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).
+   Work there; PR targeting `develop`. Commit with the story ID first:
    `S2: stream position updates`. You may commit and push *that branch* and
    open the PR. You must **never** push to `develop` or `main`, and never
    merge — merging is Alex's gate.

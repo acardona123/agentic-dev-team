@@ -15,7 +15,7 @@ _(empty)_
 
 ## Backlog (not yet refined — the PO turns these into stories or tasks, one at a time, and owns this order: top is next)
 
-- **T1 — ADR-0015: contradictions flagged at decision time, and where each rule lives.**
+- **T1 — ADR: contradictions flagged at decision time, and where each rule lives.**
   Points 7 and 8 of the "Method gap" entry in `## Spotted`. Owner: architect.
 - **T2 — Merge style as a kickoff decision; why `main` moves by fast-forward.**
   Points 5 and 6 of the "Method gap" entry. Owner: architect. Needed before S2's PR merges.
@@ -394,7 +394,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
      read-only; CI checks each PR names a work item present in `backlog.md`;
      branch protection on GitHub (Alex's action); `closeout.md` as a `/closeout`
      skill; a slimmer `CLAUDE.md`. Packaging the method as a plugin: decide "not
-     now, at porting time" ([PORTING.md](../method/PORTING.md)). Becomes ADR-0015,
+     now, at porting time" ([PORTING.md](../method/PORTING.md)). Becomes T1's ADR,
      done as the first task once the task type exists.
 
   **Research verdict (session of 2026-10-07).** Sources: Claude Code documentation
@@ -409,11 +409,21 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   sound method, then let S2 test the method.
 
   **Plan, in order.** (1) ADR-0014, work-item types (points 1–4) — architect,
-  Proposed, Alex's gate before its edits are applied. (2) ADR-0015, points 7 and
+  Proposed, Alex's gate before its edits are applied. (2) T1's ADR, points 7 and
   8, as task T1 (Alex, 2026-10-07: the point 7 rule lands with "where each rule
   lives"). (3) Points 5–6 as T2 (needed before S2's PR merges), the dev-loop
   networking ADR as T3 (needed for S2's demo), the advisory re-triage as T4.
   (4) S2. Out of scope: sprints, GitHub Issues, plugin packaging, role redesign.
+  (1b, Alex 2026-10-07, before this chantier's PR) An ADR lifecycle rule — an
+  ADR is a draft, consolidated, until it reaches `develop`, and frozen after,
+  changed only by supersession — and ADR-0014 consolidated under it, its QA
+  checking that no decision was lost or changed. **Accepted at Alex's gate
+  (2026-10-07):** [ADR-0015](../method/adr/0015-adr-lifecycle.md) as drafted,
+  taking number 0015 (T1's ADR takes the next free one); the PO's backlog
+  writes land on the item's own branch from its first commit
+  ([ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop));
+  and QA's A6/A7 fixes (playbook fast-forward fetch and pointer, log-line
+  references named by field, `check-closeout.mjs` message).
 
   **This entry is the work item for that work** — the one exception, since the
   task type it needs does not exist yet. It runs on branch `method/work-items`
@@ -425,7 +435,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   - *QA's Bash allow-list.* `qa.md` limits QA to `git diff`, tests and typecheck;
     re-running a world-state observation (`gh api …`, `dpkg -s …`) needs it widened
     to "read-only observation commands". Word it when ADR-0014's `qa.md` edit is
-    applied; ADR-0015's QA read-only hook must allow the same set.
+    applied; T1's QA read-only hook, if it adds one, must allow the same set.
   - *World-state criteria if QA ever runs in CI.* A machine observation such as
     `dpkg -s libasound2` only means something on the dev machine, where QA runs
     today. **Trigger:** the day QA runs anywhere else, such criteria become
@@ -434,3 +444,29 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–7)
   are the first candidates for the new work-item type — do them as tracked tasks
   once it exists, not before.
+- **QA findings left out of the "Method gap" work item (QA on f3cfdfd,
+  2026-10-07), not fixed there.** (1) `method/check-closeout.mjs` robustness: a
+  `### T<n>` block placed outside `## Tasks` is silently ignored — with
+  `## Done / ### T1 / Status: Done / - [ ] CC1` the script exits 0, and moving a
+  block under `## Done` the way stories move is a natural mistake; and a T block
+  sitting under a story section has its checkboxes and Status counted against
+  the preceding story block. (2) Spotted verdict wording: the dev-loop
+  networking and SDK 57 advisories entries above do not yet carry the "becomes a
+  task (T3/T4)" verdict that ADR-0014 §4 wants written into each entry, and the
+  "Method gap" entry's last paragraph still says "points 5–7" where T1/T2 split
+  them as 7–8 and 5–6.
+- **Agents merging and pushing `main` vs `CLAUDE.md`** (QA, 2026-10-07; predates
+  the "Method gap" work item). `CLAUDE.md` `## Git workflow` says "Agents never
+  push to `main` or `develop`, and never merge a PR", but the
+  [DoD](../method/definition-of-done.md) Human gate lets an agent merge on Alex's
+  explicit instruction for that specific PR (the S1 exception, now extended to
+  the closeout PR and task PRs), and [closeout.md](../method/closeout.md) Beat 2
+  says "He may tell you to do all of it. Do it", which covers `git push` of
+  `main`. The two texts disagree on whether an agent may ever merge or push
+  `main`.
+- **Playbook orders the merge after the demo** (QA, 2026-10-07; predates the
+  "Method gap" work item). `method/manager-playbook.md` "What to literally type",
+  step 7: "`gh pr merge --squash` — after you've seen it on the phone". That
+  contradicts the order fixed in the DoD and ADR-0014 §2 (merge story PR → demo
+  D → fast-forward `main` to D → closeout PR). The squash lines are T2's
+  (merge style), so this belongs in T2's completion criteria.

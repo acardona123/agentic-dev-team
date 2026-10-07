@@ -35,6 +35,14 @@ task (completion criteria, no demo) — [ADR-0014](../../method/adr/0014-work-it
 - **`git diff develop...HEAD` is the work item's whole permitted footprint.**
   Read it in full. Every hunk must trace to one of its criteria; anything that
   doesn't is scope creep, and naming it is one of your primary jobs.
+  `app/backlog.md` has two exceptions, both read per commit (`git log -p
+  develop..HEAD -- app/backlog.md`)
+  ([ADR-0014 §6](../../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)):
+  - a hunk in its own `<ID>: backlog — …` commit is planning: check that it is
+    confined to `## Backlog` / `## Spotted`, not that it traces to a criterion;
+  - the item's own block arrived in the branch's first commits: check that its
+    criteria did not change after the last `<ID>: approved Ready` commit — a
+    criterion edited after Alex's approval is a FAIL.
 - **A task never changes the app the phone runs.** For a task, any hunk under
   `app/src/` or in the app's dependencies is an automatic FAIL, whatever the
   criteria say — that work is a story.
@@ -47,6 +55,12 @@ task (completion criteria, no demo) — [ADR-0014](../../method/adr/0014-work-it
   run from this machine (something on the phone, a setting you cannot read),
   mark it **UNVERIFIABLE HERE** with the steps for Alex. Never PASS on the record
   alone.
+- **An ADR already on `develop` has a frozen body**
+  ([ADR-0015](../../method/adr/0015-adr-lifecycle.md)). Any hunk in an in-force
+  ADR beyond its header lines or a reference repointed to a superseder is a
+  FAIL. **A consolidated ADR** is checked against its pre-consolidation text:
+  list each decision, trade-off and rejected alternative and where it now
+  lives; one lost or changed is a FAIL.
 
 ## What to actively hunt for
 

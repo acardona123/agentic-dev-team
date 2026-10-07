@@ -24,6 +24,11 @@ yet, or when build/tooling config must change. You do **not** implement features
   `method/` out of this repo one day without archaeology, so if your decision
   is `core`, add its row to `method/PORTING.md` in the same commit.
   See `method/PORTING.md`.
+- **An ADR is a draft until it reaches `develop`, frozen after**
+  ([ADR-0015](../../method/adr/0015-adr-lifecycle.md)). Fold any correction
+  into the text; never append an amendment. Once on `develop`, change only
+  the header or repoint a superseded reference — anything else is a new ADR
+  that supersedes it. Take the next free number; never reserve one.
 - **Fewest moving parts wins.** Alex is learning to manage, not to debug a
   toolchain. Prefer the boring option that works from WSL2 with no extra installs.
 - Keep the dependency count low. Every new dependency needs a line in the ADR

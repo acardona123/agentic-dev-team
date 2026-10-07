@@ -18,7 +18,10 @@ except..." means Doing. A task has its own, shorter list —
 
 ## Review gate (QA, read-only)
 - [ ] Every acceptance criterion has a verdict: PASS / FAIL / UNVERIFIABLE HERE
-- [ ] No changes in the diff that aren't traceable to an AC in this story
+- [ ] No changes in the diff that aren't traceable to an AC in this story,
+      other than planning edits confined to `## Backlog` / `## Spotted` in their
+      own `backlog —` commit; no AC edited after the `approved Ready` commit
+      ([ADR-0014 §6](adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop))
 - [ ] Anything QA couldn't verify is written up as steps for Alex
 
 ## Human gate (Alex only)
@@ -54,7 +57,7 @@ run in parallel, which is the case `develop` exists for.
       (`node method/check-closeout.mjs` verifies the log, and CI runs it on this
       PR — it is the only item on this gate that leaves an artifact a machine
       can see). It reaches `main` with the next demoed fast-forward
-      ([ADR-0014 Amendment 1](adr/0014-work-item-types.md))
+      ([ADR-0014 §2](adr/0014-work-item-types.md#2-closing-a-story))
 
 **On that "unless Alex says otherwise":** the rule has two jobs. One is keeping
 the machine gate honest — an agent must never merge because *it* judged the work
@@ -88,15 +91,18 @@ means Doing.
       command or procedure and its result — in the task's block in `## Tasks`
 - [ ] Every criterion QA marked UNVERIFIABLE HERE was witnessed by Alex
 - [ ] No hunk in `git diff develop...HEAD` outside its criteria — and none under
-      `app/src/` or the app's dependencies, ever
-- [ ] Committed with the task ID in the message, e.g. `T1: ADR-0015 where each rule lives`
+      `app/src/` or the app's dependencies, ever. Planning edits confined to
+      `## Backlog` / `## Spotted` in their own `backlog —` commit are the one
+      exception; no criterion edited after the `approved Ready` commit
+      ([ADR-0014 §6](adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop))
+- [ ] Committed with the task ID in the message, e.g. `T1: ADR on where each rule lives`
 - [ ] The Done edit — Status → Done, boxes ticked, Alex's witness note under any
       UNVERIFIABLE criterion, the PORTING row — is the branch's last commit,
       made after QA and Alex's read
 - [ ] PR merged into `develop` by Alex, or by an agent on his explicit
       instruction for that specific PR — the merge is what makes the Done edit
       true, since Done is a claim about `develop`
-      ([ADR-0014 Amendment 1](adr/0014-work-item-types.md))
+      ([ADR-0014 §3](adr/0014-work-item-types.md#3-closing-a-task))
 
 Not on this list, deliberately: no phone demo, no `main` move (a task reaches
 `main` only inside the next demoed fast-forward), no `method/log/` file — a task
