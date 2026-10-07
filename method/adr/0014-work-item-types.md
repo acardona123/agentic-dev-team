@@ -156,6 +156,175 @@ which is what was not happening.
   the DoD's human gate gain an "unless" clause each — the kind of exception that
   quietly becomes the rule.
 
+## Amendment 1 — Closeout bookkeeping reaches `develop` by PR; `main` stays on the demoed commit (Proposed, 2026-10-07)
+
+### Context
+QA on f3cfdfd, two findings against this ADR as applied:
+
+1. **Blocking.** §4, now in `CLAUDE.md` `## Git workflow`, says nothing reaches
+   `develop` except through a merged `story/` or `task/` PR. But the story Human
+   gate ([DoD](../definition-of-done.md)) runs merge → demo → `main`
+   fast-forward → log, and [closeout.md](../closeout.md) Beat 2 then commits the
+   Done status, ticked AC, `method/log/S<n>.md` and the PORTING row *after*
+   the story PR has merged. No permitted path for that commit exists. S7's
+   was 951d36d, straight on `develop`, and `main` was fast-forwarded to it rather
+   than to the demoed a1d5207. The commit cannot be dropped:
+   [ADR-0012](0012-ci-check-for-story-closeout-artifacts.md) fails a Done story
+   with no log.
+2. **Minor.** For a task, the DoD makes "PR merged" a Done condition and the
+   playbook says "merge the PR → Done", but closeout.md's "Task closeout"
+   commits Done on the branch *before* the merge. The three disagree on when
+   Done becomes true.
+
+A first draft fast-forwarded `main` past the demoed commit, guarded by a
+file-equivalence check. At his gate (2026-10-07), Alex chose this variant
+instead. He had asked for two outside reviews (DeepSeek, ChatGPT), and both
+picked it independently.
+
+### Decision
+
+**Story: a closeout PR.** After the demo passes, the session cuts
+`story/S<n>-closeout` from `develop` and commits `S<n>: closeout`, containing
+only the bookkeeping Beat 2 drafts and Alex confirms:
+- the story's block: Status → Done, AC ticked, PR recorded;
+- `method/log/S<n>.md`;
+- the story's PORTING row;
+- any `## Spotted` / `## Backlog` entries from the demo.
+
+Alex merges the PR to `develop`. He reviews it, because the log and the Done
+call are his (rule 7), and so does the `closeout` CI check, which checks
+exactly these artifacts (ADR-0012). There is no QA run, because there is no
+acceptance criterion to judge. The §4 rule stands unchanged: the branch is a
+`story/` branch.
+
+**`main` is always fast-forwarded to D, the exact demoed commit.** The order is:
+1. Merge the story PR; `develop` is now at D.
+2. Demo D on the phone.
+3. Fast-forward `main` to D.
+4. Merge the closeout PR; `develop` is now at D′.
+
+The closeout reaches `main` with the next demoed fast-forward. That is the same
+lag §1 already accepts for tasks. `main` never moves to D′. So ADR-0004 is not
+amended, and §1's "`main` keeps ADR-0004's single meaning" stays literally
+true: `main` names the demoed commit by identity, not by a property of its
+contents.
+
+**The log names the demoed commit.** `method/log/README.md`'s template gains
+`**Demonstrated commit:** <SHA of D>`. The session fills it in its Beat 2
+draft, so Alex never has to remember it. The record of an acceptance lives in a
+later commit, separate from the accepted object, because the proof of an action
+cannot be part of the state observed before the action.
+
+**Every manual step this adds is guided.** Rule 10 requires the session to give
+Alex every manual step this adds, in order and at the right moment, as
+paste-ready commands in closeout.md Beat 2. The steps are: merge the closeout
+PR, fast-forward `main` to D, and push. He confirms or rejects; he does not
+recall.
+
+**Task: Done is the last commit on the branch; the merge makes it true.** After
+QA and Alex's read, the Done edit is committed on the `task/` branch as its
+final commit, and then Alex merges. The edit contains:
+- Status → Done and the boxes ticked;
+- Alex's witness note under any UNVERIFIABLE criterion;
+- the PORTING row.
+
+Done is a claim about `develop`, and the edit reaches `develop` only by that
+merge. So `develop` can never show a task as Done while its PR is unmerged. The
+DoD's "PR merged" and the playbook's "merge the PR → Done" then describe the
+same event, and closeout.md is reworded to say so. Tasks get no closeout PR.
+
+**Why this shape.** It follows common industry practice: nothing lands on a
+protected branch except by PR, bookkeeping included. The release-PR pattern
+(release-please, changesets) is the same move. The accepted commit is pinned by
+identity. The outside reviews chose this over a file-equivalence check for one
+reason: such a check can pass for the wrong reason. A runtime-affecting file
+outside `app/`, or build config, would slip through and give a false
+guarantee. This variant's worst case is documentation one cycle late.
+
+### Trade-off
+- **One more PR per story**, plus one more `closeout` CI run. The cost is agent
+  tokens and one paste. Alex already reads the log draft.
+- **`main` lags `develop` by the closeout**, so on `main` the latest story reads
+  Review with no log until the next demo. A fresh session or a porting attempt
+  reading `main` sees stale status. This is the same signal §1's trade-off
+  already watches for tasks, and the same answer applies if it fires.
+- **The task's Done commit is made after QA**, so QA never sees it. The
+  `closeout` check (status ↔ section, no unticked box on Done) is its only
+  machine review.
+- **Signal to revisit:** a closeout PR carrying anything beyond the listed
+  files. Then CI should enforce the file list.
+
+### Alternatives rejected
+- **`main` → D′, guarded by a `git diff --quiet D develop -- app
+  ':!app/backlog.md'` check** (this amendment's first draft). It weakens
+  ADR-0004's commit-identity guarantee into a file-equivalence check, which
+  passes wrongly when a runtime-affecting file sits outside the pathspec.
+  Reopen if the lag of `main` behind `develop` is shown to cost more than that
+  guarantee.
+- **Annotated tag `demo/S<n>` on D, plus a CI check that `main` moves only to a
+  tagged commit.** It adds a manual step and a mechanism that no observed
+  failure justifies, while `main` = D already names the demoed commit. Reopen
+  the day `main` must point somewhere other than the demoed commit, or as a T1
+  (ADR-0015) candidate.
+- **git notes on D.** They are invisible on the host and need an explicit fetch
+  and push.
+- **release-please / changesets.** That is release tooling for a different
+  problem, and an external dependency. Without it we write one commit by hand,
+  which is what this decision does.
+- **Commit the bookkeeping on the story branch before merging.** The log
+  records the demo's outcome, and the demo follows the merge (DoD order).
+- **Demo the story branch, then merge with the bookkeeping included.** It
+  reorders the Human gate, which the DoD fixed for integration reasons.
+- **A named exception letting Alex commit bookkeeping straight to `develop`.**
+  It reopens the unreviewed-direct-commit hole §4 closed, and it breaks the
+  moment branch protection (a world-state task) lands.
+- **Fold the bookkeeping into the next work item's PR.** That is scope creep
+  by construction.
+- **A new `closeout/` branch prefix.** Every rule that lists two prefixes would
+  need a third; `story/S<n>-closeout` says the same with none.
+- **Close out tasks by a second PR too.** It doubles a task's ceremony to fix a
+  wording disagreement.
+
+Out of scope here, left as QA filed them: `check-closeout.mjs` robustness, and
+the Spotted verdict wording.
+
+### Implied edits — not applied until Alex accepts this amendment
+- [ ] **`CLAUDE.md` `## Git workflow`:**
+  - in the `story/` bullet, "One story, one branch" → one work branch, plus
+    `story/S<n>-closeout` after the demo;
+  - the `main` bullet adds that `main` is fast-forwarded to the exact demoed
+    commit, never past it, and that the closeout rides the next demo.
+- [ ] **`method/definition-of-done.md` Human gate:**
+  - the order becomes merge → demo → `main` fast-forwarded *to the demoed
+    commit* → closeout PR merged;
+  - the log line moves into the closeout PR and gains "records the
+    demonstrated commit".
+- [ ] **`method/definition-of-done.md` Task list:** the Done edit is the
+  branch's last commit, and it becomes true at the merge.
+- [ ] **`method/closeout.md` Beat 2:**
+  - item 1's prefilled log fills `Demonstrated commit:` with D's SHA;
+  - item 2 becomes the ordered, paste-ready sequence for Alex: fast-forward
+    `main` to D (`git switch main && git merge --ff-only <D> && git push`),
+    then cut `story/S<n>-closeout`, commit, push, open the PR, and merge it.
+    Each step is presented at its moment, none left for him to recall (rule
+    10);
+  - "mark Done … write the log" are no longer separate steps.
+- [ ] **`method/closeout.md` "Task closeout":** item 2 gets the "last commit,
+  true at the merge" wording, replacing "because nothing reaches `develop`
+  except through the PR".
+- [ ] **`method/manager-playbook.md` "Git, per story":**
+  - the post-demo line becomes `git merge --ff-only <demoed SHA>` instead of
+    `develop`;
+  - add the closeout branch/PR lines after it.
+  - The two loop diagrams do not change.
+- [ ] **`method/log/README.md`:** the template gains `**Demonstrated commit:**
+  <SHA of the commit main was fast-forwarded to>`. The session fills it, not
+  Alex's memory.
+- [ ] **`method/PORTING.md`:** no new core-table row, because this is an
+  amendment, not a new ADR. The "Method gap (bootstrap, pre-task)" row in
+  "Method changes by story" gains "Amendment 1: story closeout PR, `main` on
+  the demoed commit, log records it; task Done at merge".
+
 ## Consequences — edits this ADR implies
 Applied after Alex accepted this ADR (2026-10-07), under the same bootstrap
 work item, then reviewed by QA as a diff.
