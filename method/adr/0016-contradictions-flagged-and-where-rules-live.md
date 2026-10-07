@@ -1,5 +1,5 @@
 # 0016 — A contradiction is flagged before it is acted on; a rule leaves prose only for an observed failure
-**Status:** Proposed · **Date:** 2026-10-07  
+**Status:** Accepted · **Date:** 2026-10-07  
 **Scope:** core — binds to GitHub as the host (branch protection, Actions) and
 to Claude Code as the harness (hooks, agent frontmatter, skills, plugins); a
 project on another host or harness substitutes the equivalent mechanism, not
