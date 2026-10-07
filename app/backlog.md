@@ -16,8 +16,15 @@ _(empty)_
 ## Backlog (not yet refined — the PO turns these into stories or tasks, one at a time, and owns this order: top is next)
 
 - **T7 — Register of ADR revisit triggers, evaluated by QA at every verdict.** 11 of 16 ADRs carry a revisit signal that no step ever reads (ADR-0007's premise fell in S7 unread). One-line index pointing to each ADR; QA reports "triggers fired: none / ADR-00xx" in each verdict; CI checks the register is complete. Owner: architect (then `qa.md`, `closeout.md`). Alex rates it high priority, as a guard on every item; placed first by Alex, 2026-10-08.
-- **T8 — Backlog lifecycle: the Draft status and when a one-liner leaves `## Backlog`.**
-  Covers the Spotted entries "No status for a drafted, not-yet-approved work item"
+- **T8 — Backlog structure and lifecycle, for human and AI reading at low token cost.**
+  Widened by Alex (2026-10-08) to a full review of the file's structure and
+  upkeep, not only the two gaps below. Observed: T1 is Done yet sits in `## Tasks`,
+  not `## Done` — `## Tasks` and stories should show items in progress only;
+  `## Doing` and `## Review` are present but empty; `## Spotted` mixes done,
+  pending and rejected entries in one list. Token economy is a criterion. Note
+  QA's finding that `check-closeout.mjs` ignores a `### T<n>` block outside
+  `## Tasks` — any move of Done blocks must carry the script along. Also
+  covers the Spotted entries "No status for a drafted, not-yet-approved work item"
   and "Nothing says when an item's one-line `## Backlog` entry is removed" (verdict:
   the one-liner stays while the item is Ready/Doing/Review and is removed only when
   it is Done, in a task's Done commit; the `## Backlog` heading's "not yet refined"
