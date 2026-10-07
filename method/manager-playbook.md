@@ -22,6 +22,25 @@ remaining Human-gate commands arrive without you asking. You confirm or reject;
 you should not have to remember. If it does not arrive, that is a bug in the
 method, not in your memory — say so.
 
+## The loop, per task
+
+Work that changes nothing the phone runs — an ADR, a method edit, Spotted triage,
+machine or hosting setup ([ADR-0014](adr/0014-work-item-types.md)).
+
+```
+1. YOU     one sentence of intent
+2. po      drafts the task + completion criteria (diff / world-state), names the owner
+3. YOU     approve or sharpen the criteria                       ← YOUR GATE
+4. owner   does the work (architect for ADRs and config, po for backlog text)
+5. qa      reviews cold, read-only, PASS/FAIL per completion criterion
+6. YOU     read the deliverable, witness anything QA could not observe,
+           merge the PR → Done, or back to 4                     ← YOUR GATE
+```
+
+No dev, no demo, no log: the task changes nothing you could hold in your hand.
+It reaches `main` by riding the next story's demoed fast-forward. Step 6 is the
+"Task closeout" part of [closeout.md](closeout.md).
+
 ## What to literally type
 
 | Step | Say this |
@@ -32,11 +51,22 @@ method, not in your memory — say so.
 | 6 | `Use the qa agent to review S<n>.` |
 | 7 | `gh pr merge --squash` — after you've seen it on the phone |
 
-## Git, per story
+Per task:
+
+| Step | Say this |
+|---|---|
+| 2 | `Use the po agent to write a task: I want <one sentence>.` |
+| 4 | `Use the <owner> agent to do T<n>.` |
+| 5 | `Use the qa agent to review T<n>.` |
+| 6 | merge the PR — after you've read the deliverable |
+
+## Git, per story (and per task)
 
 ```bash
 git switch develop && git pull
 git switch -c story/S2-live-position          # dev agent works here
+# (a task: task/T1-<slug>, owner commits as "T1: ...", same PR to develop,
+#  and it stops after the merge — no demo, no main move of its own)
 # ... dev implements, commits as "S2: ...", opens the PR against develop
 gh pr comment --body-file qa-report.md        # qa's verdict, permanently on the diff
 gh pr merge --squash --delete-branch          # into develop: "the machine believes it"

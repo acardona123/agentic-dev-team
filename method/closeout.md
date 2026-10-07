@@ -66,6 +66,23 @@ He may tell you to do all of it. Do it, then report what actually landed — ref
 what is pushed, and the gate re-run on the merged result rather than the branch's
 earlier green.
 
+## Task closeout
+
+A task ([ADR-0014](adr/0014-work-item-types.md)) has no demo, so it has no Beat 2
+and no log. When QA returns READY FOR ALEX on a task, Beat 1 only, adapted:
+
+1. **The verdict**, per completion criterion — and, for each one QA marked
+   UNVERIFIABLE HERE, the steps Alex performs to witness it.
+2. **The merge command**, ready to paste. Marking the task Done (status line,
+   ticked boxes in its `## Tasks` block) is Alex's call (rule 7); once he makes
+   it, the edit is committed on the task branch *before* the merge, because
+   nothing reaches `develop` except through the PR.
+3. **Anything still unpushed**, named — and, if the task changed the method, its
+   row in [PORTING.md](PORTING.md)'s method-changes table, which is a task's
+   only record.
+
+No `main` move: the task reaches `main` with the next demoed story.
+
 ---
 
 **What this is not.** A checklist Alex ticks is exactly the thing that failed for

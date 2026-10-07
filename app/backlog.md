@@ -1,7 +1,9 @@
 # Backlog — Almost There
 
-Single source of truth. A story moves: **Backlog → Ready → Doing → Review → Done**.
-Only Alex moves a story to **Done**, and only after seeing it work on his phone.
+Single source of truth. A work item moves: **Backlog → Ready → Doing → Review → Done**.
+Only Alex moves a work item to **Done** — a story only after seeing it work on his
+phone, a task after reading its deliverable
+([ADR-0014](../method/adr/0014-work-item-types.md)).
 
 ---
 
@@ -11,8 +13,17 @@ _(empty)_
 
 ---
 
-## Backlog (not yet refined — the PO turns these into stories, one at a time)
+## Backlog (not yet refined — the PO turns these into stories or tasks, one at a time, and owns this order: top is next)
 
+- **T1 — ADR-0015: contradictions flagged at decision time, and where each rule lives.**
+  Points 7 and 8 of the "Method gap" entry in `## Spotted`. Owner: architect.
+- **T2 — Merge style as a kickoff decision; why `main` moves by fast-forward.**
+  Points 5 and 6 of the "Method gap" entry. Owner: architect. Needed before S2's PR merges.
+- **T3 — ADR: how the phone reaches the dev server, and the machine prerequisites.**
+  The "Dev-loop networking and DevTools" entry in `## Spotted`; supersedes the
+  relevant parts of ADR-0006. Owner: architect. Needed for S2's demo.
+- **T4 — Re-triage the SDK 57 `npm install` advisories.** The re-opened advisories
+  entry in `## Spotted`. Owner: architect.
 - **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
   **Blocked on an ADR (2026-08-25).** The PO was asked to refine this and stopped
   on `CLAUDE.md` rule 8: nothing in `method/adr/` decides how the app obtains the
@@ -53,6 +64,13 @@ _(empty)_
 > as `FetchLike` — faking it is nearly free. If `expo-location` is wired straight
 > into the component, S5 means gutting S2. Hence the code-style rule in
 > `CLAUDE.md`: a device capability is taken as a parameter, never reached for.
+
+---
+
+## Tasks
+
+_(empty — refined tasks live here as `### T<n> — title` blocks with a
+`**Status:**` line: Ready / Doing / Review / Done)_
 
 ---
 
@@ -202,7 +220,7 @@ Both would have been attributed to feature code had they first appeared during S
 ---
 
 ## Spotted
-_Things agents noticed but were not allowed to fix. Triage these yourself._
+_Things agents noticed but were not allowed to fix. The session routes each entry to its owning role; the role returns a verdict; Alex confirms it._
 
 - ~~`npm install` on Expo SDK 54 reports 18 advisories (9 moderate, 9 high).~~
   **Triaged 2026-08-25 — accepted, no action.** All 18 are transitive through the

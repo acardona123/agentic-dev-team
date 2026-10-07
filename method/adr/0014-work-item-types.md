@@ -1,5 +1,5 @@
 # 0014 — Two work-item types: story and task
-**Status:** Proposed · **Date:** 2026-10-07  
+**Status:** Accepted (by Alex, 2026-10-07) · **Date:** 2026-10-07  
 **Scope:** core — binds to `app/backlog.md` (where items live) and to what
 "demo" means for a story ([PORTING.md](../PORTING.md) substitution table).
 
@@ -157,33 +157,33 @@ which is what was not happening.
   quietly becomes the rule.
 
 ## Consequences — edits this ADR implies
-Applied only after Alex accepts this ADR, under the same bootstrap work item,
-then reviewed by QA as a diff. None is applied by this ADR.
+Applied after Alex accepted this ADR (2026-10-07), under the same bootstrap
+work item, then reviewed by QA as a diff.
 
-- [ ] **`CLAUDE.md` rule 1** — "No code without an approved story … no Ready
+- [x] **`CLAUDE.md` rule 1** — "No code without an approved story … no Ready
       story" → no change without an approved work item (Ready story or Ready
       task).
-- [ ] **`CLAUDE.md` rule 7** — "Only Alex marks a story Done. Agents may move
+- [x] **`CLAUDE.md` rule 7** — "Only Alex marks a story Done. Agents may move
       stories to Review" → work item, both sentences.
-- [ ] **`CLAUDE.md` rule 9** — the pipeline `po → (architect) → dev → qa →
+- [x] **`CLAUDE.md` rule 9** — the pipeline `po → (architect) → dev → qa →
       Alex's demo` is story-only; add the task pipeline `po → owning role → qa →
       Alex confirms and merges`, so a task is not read as skipping two gates.
       *(Not in the original edit list; needed for consistency.)*
-- [ ] **`CLAUDE.md` rule 10** — "When QA returns READY FOR ALEX, read
+- [x] **`CLAUDE.md` rule 10** — "When QA returns READY FOR ALEX, read
       `method/closeout.md`" → say which part applies to a task (no demo script,
       no log; merge command and bookkeeping only).
-- [ ] **`CLAUDE.md` `## Git workflow`** — add `task/T<n>-<slug>` to the
+- [x] **`CLAUDE.md` `## Git workflow`** — add `task/T<n>-<slug>` to the
       supporting-branches list; "Commit messages start with the story ID" → work
       item ID; "`git diff develop...HEAD` is exactly the set of changes a story is
       permitted" → work item; state that nothing reaches `develop` but a merged
       `story/` or `task/` PR.
-- [ ] **`.claude/agents/po.md`** — "Your only output is a story appended";
+- [x] **`.claude/agents/po.md`** — "Your only output is a story appended";
       "One story per invocation"; "A story must be demonstrable on the phone" →
       PO writes stories *or* tasks (task template: Status, Intent, Owner,
       Completion criteria each tagged *diff* or *world-state*, Not in scope),
       and owns the `## Backlog` order. Keep the demonstrability rule, scoped to
       stories.
-- [ ] **`.claude/agents/qa.md`** — "Verdict per acceptance criterion";
+- [x] **`.claude/agents/qa.md`** — "Verdict per acceptance criterion";
       "`git diff develop...HEAD` is the story's whole permitted footprint" →
       per completion criterion for a task; footprint is the work item's; for a
       task, any hunk under `app/src/` or app dependencies is an automatic FAIL
@@ -191,31 +191,31 @@ then reviewed by QA as a diff. None is applied by this ADR.
       observation read-only and compare, or, if it cannot run from the repo
       machine, mark it UNVERIFIABLE HERE with the steps for Alex — never PASS on
       the record alone. Report format: `CC1 — PASS/FAIL/UNVERIFIABLE`.
-- [ ] **`method/definition-of-done.md`** — opening "A story is Done when…": add
+- [x] **`method/definition-of-done.md`** — opening "A story is Done when…": add
       a Task section — completion criteria each with a QA verdict, every
       world-state criterion carrying its dated record, any UNVERIFIABLE one
       witnessed by Alex, no hunk outside them, committed `T<n>: …`, PR merged by
       Alex; no phone, no `main` move, no log file.
-- [ ] **`method/manager-playbook.md`** — "The loop, per story" and "What to
+- [x] **`method/manager-playbook.md`** — "The loop, per story" and "What to
       literally type": add the task loop; "Git, per story": add the `task/`
       branch. The `gh pr merge --squash` lines are **not** touched here — merge
       style is T2's (Spotted point 5).
-- [ ] **`method/check-closeout.mjs`** — parse `### T<n>` blocks under
+- [x] **`method/check-closeout.mjs`** — parse `### T<n>` blocks under
       `## Tasks`: status is one of Ready/Doing/Review/Done, and a Done task has no
       unticked box. No log rule for tasks. "Every PR references a work item" is
       **not** in this edit — it is a candidate of ADR-0015 (T1).
       `.github/workflows/closeout.yml` path filter needs no change (it already
       watches `app/backlog.md`).
-- [ ] **`method/PORTING.md`** — row for 0014 in the core column, count to
+- [x] **`method/PORTING.md`** — row for 0014 in the core column, count to
       "8 core, 6 project"; "What a new project copies" → "the `## Spotted`,
       `## Tasks` and story structure of the backlog"; a row in "Method changes by
       story" per task that changes the method — this row, not a log file, is a
       task's record (that table's name may want to become "by work item").
-- [ ] **`app/backlog.md`** — `## Spotted` header "Triage these yourself" → "The
+- [x] **`app/backlog.md`** — `## Spotted` header "Triage these yourself" → "The
       session routes each entry to its owning role; the role returns a verdict;
       Alex confirms it."; add `## Tasks`; add T1–T4 from the "Method gap" entry
       to `## Backlog` in the order of its "Plan, in order"; the line under the
       title "A story moves: Backlog → … → Done" → a work item moves.
-- [ ] **`method/closeout.md`** — a short "Task closeout" note: Beat 1 only (verdict,
+- [x] **`method/closeout.md`** — a short "Task closeout" note: Beat 1 only (verdict,
       merge command, anything unpushed), no Beat 2. *(Not in the original edit
       list; follows from the rule 10 edit.)*

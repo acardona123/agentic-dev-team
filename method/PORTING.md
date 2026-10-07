@@ -26,7 +26,7 @@ the ADR), `.claude/agents/architect.md` (tag it, and add the row when it is
 `core`), and [closeout.md](closeout.md) beat 2 (the story's row, at the point
 the story closes).
 
-Current state, ADRs: **7 core, 6 project.**
+Current state, ADRs: **8 core, 6 project.**
 
 | Core — transfers | Project — does not |
 |---|---|
@@ -37,12 +37,13 @@ Current state, ADRs: **7 core, 6 project.**
 | [0010](adr/0010-no-orchestrator-agent.md) no orchestrator agent | [0009](adr/0009-geocoding-via-nominatim.md) Nominatim geocoding |
 | [0011](adr/0011-one-gate-command-and-pipefail.md) one gate command + pipefail | |
 | [0012](adr/0012-ci-check-for-story-closeout-artifacts.md) closeout check | [0013](adr/0013-expo-sdk-follows-the-store-expo-go.md) SDK follows the store's Expo Go |
+| [0014](adr/0014-work-item-types.md) two work-item types, story and task | |
 
 ## What a new project copies
 
 `CLAUDE.md` rules 1–10 · `.claude/agents/` · `method/` minus the project ADRs
-and the per-story logs · `.github/workflows/` · the `## Spotted` and story
-structure of the backlog.
+and the per-story logs · `.github/workflows/` · the `## Spotted`, `## Tasks`
+and story structure of the backlog.
 
 ## What it must substitute
 
@@ -85,9 +86,12 @@ maintained by judgement, deliberately.
 
 ---
 
-## Method changes by story
+## Method changes by work item
 
-| Story | Change | Scope |
+A task that changes the method has no `method/log/` file; its row here is its
+record ([ADR-0014](adr/0014-work-item-types.md)).
+
+| Work item | Change | Scope |
 |---|---|---|
 | S0 | `dev.md` rule 5 narrowed — dev moves its own story as far as Review, never Done | core |
 | S1 | `CLAUDE.md` rules 8–10, the dispatching-session block, [ADR-0010](adr/0010-no-orchestrator-agent.md), DoD human gate reordered, merge clause given an honest exception | core |
@@ -95,7 +99,8 @@ maintained by judgement, deliberately.
 | S1 | `CLAUDE.md` code style: a device capability is injected, never reached for — generalised from S1's `FetchLike` | core |
 | S1 | `po.md`: an AC checkable only on the device must be paired with one checkable at the desk (from S0's log, unimplemented until now); `architect.md`: `Scope:` in the ADR template, and this table kept live | core |
 | S7 | None edited yet. Logged: work that is not a story has no container (Spotted triage, method work); merge strategy is a kickoff decision; a third-candidate `pipefail` slip ([ADR-0011](adr/0011-one-gate-command-and-pipefail.md)) — see [log/S7.md](log/S7.md) | core |
+| Method gap (bootstrap, pre-task) | [ADR-0014](adr/0014-work-item-types.md): two work-item types, story and task; `CLAUDE.md` rules 1, 7, 9, 10 and Git workflow; `po.md` writes tasks and orders `## Backlog`; `qa.md` per completion criterion, read-only observation allow-list; DoD Task section; playbook task loop; `check-closeout.mjs` parses `## Tasks`; `closeout.md` Task closeout; backlog `## Tasks` and routed Spotted triage | core |
 
-Append a row per story. If three stories running add nothing, either the method
+Append a row per story, and per task that changes the method. If three stories running add nothing, either the method
 is finished or nobody is looking hard enough — `log/README.md` makes the same
 point about the fifth line.

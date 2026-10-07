@@ -1,7 +1,8 @@
 # Definition of Done
 
 A story is Done when **every** line below is true. No partial credit — "Done
-except..." means Doing.
+except..." means Doing. A task has its own, shorter list —
+[Task](#task) at the end ([ADR-0014](adr/0014-work-item-types.md)).
 
 ## Machine gate (CI enforces this; dev runs it locally first)
 - [ ] `npm run typecheck` passes
@@ -65,3 +66,25 @@ to watch for.
 attention is the scarce resource — spend it on whether the thing is *right*,
 not on whether it compiles. Coming from C/C++: this is `-Wall -Werror` plus a
 test run, wired so nobody can skip it.
+
+---
+
+## Task
+
+A task is Done when **every** line below is true. Same rule: "Done except..."
+means Doing.
+
+- [ ] Every completion criterion has a QA verdict: PASS / FAIL / UNVERIFIABLE HERE
+- [ ] Every *world-state* criterion carries its dated record — the observation
+      command or procedure and its result — in the task's block in `## Tasks`
+- [ ] Every criterion QA marked UNVERIFIABLE HERE was witnessed by Alex
+- [ ] No hunk in `git diff develop...HEAD` outside its criteria — and none under
+      `app/src/` or the app's dependencies, ever
+- [ ] Committed with the task ID in the message, e.g. `T1: ADR-0015 where each rule lives`
+- [ ] PR merged into `develop` by Alex, or by an agent on his explicit
+      instruction for that specific PR
+
+Not on this list, deliberately: no phone demo, no `main` move (a task reaches
+`main` only inside the next demoed fast-forward), no `method/log/` file — a task
+that changes the method records it as a row in [PORTING.md](PORTING.md)'s
+method-changes table instead.
