@@ -143,6 +143,11 @@ has in fact fired beyond recording the register's initial state.
 - [ ] CC6 — *diff* — The register's initial state records ADR-0007's trigger as fired (premise fell in S7), citing the S7 log, with no edit to ADR-0007 itself; any other already-fired trigger found while building the register is listed the same way.
 - [ ] CC7 — *diff* — `set -o pipefail; cd app && npm run gate` exits 0, and `method/check-closeout.mjs` (including its tests) passes against the branch.
 - [ ] CC8 — *world-state* — The CI check from CC4 runs on the task's PR and is green; the owning role records, dated under this criterion, the PR check result (e.g. `gh pr checks` output). QA re-runs it.
+  *Observed 2026-10-08 01:30 +0200 (architect), [PR #7](https://github.com/acardona123/agentic-dev-team/pull/7) at e64410a, `gh pr checks 7` (exit 0):*
+  `adr-register pass 6s …/actions/runs/37702643402/job/113069498506` ·
+  `closeout pass 7s …/actions/runs/37702643196/job/113069493485`.
+  The `adr-register` job log shows `# tests 8 / # pass 8 / # fail 0`, then
+  `adr-register: OK — 17 ADRs in method/adr/, 17 register lines, one each.`
 
 **Not in scope**
 - T5's CI check that a PR's branch names a work item present in `backlog.md`.
