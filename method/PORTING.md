@@ -26,7 +26,7 @@ the ADR), `.claude/agents/architect.md` (tag it, and add the row when it is
 `core`), and [closeout.md](closeout.md) beat 2 (the story's row, at the point
 the story closes).
 
-Current state, ADRs: **9 core, 6 project.**
+Current state, ADRs: **10 core, 6 project.**
 
 | Core — transfers | Project — does not |
 |---|---|
@@ -39,6 +39,7 @@ Current state, ADRs: **9 core, 6 project.**
 | [0012](adr/0012-ci-check-for-story-closeout-artifacts.md) closeout check | [0013](adr/0013-expo-sdk-follows-the-store-expo-go.md) SDK follows the store's Expo Go |
 | [0014](adr/0014-work-item-types.md) two work-item types, story and task | |
 | [0015](adr/0015-adr-lifecycle.md) ADR draft until `develop`, frozen after | |
+| [0016](adr/0016-contradictions-flagged-and-where-rules-live.md) contradictions flagged first; a rule leaves prose only for an observed failure | |
 
 ## What a new project copies
 
