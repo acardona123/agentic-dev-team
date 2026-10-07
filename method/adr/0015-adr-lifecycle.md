@@ -13,11 +13,10 @@ No ADR said when an ADR's text may change. Two practices grew without one:
   first draft was replaced. A reader had to replay the original and then the
   amendment to know what was in force, and other method files cited the
   amendment as if it were a separate decision.
-- **Edits to ADRs already on `develop`.** Some were header-only (304be16 added
-  the `Scope:` line to 0001–0012; a1d5207 marked 0007 superseded). Others
-  repointed a stale fact to its superseder (a1d5207, 0007's "How to verify" and
-  0009's "SDK 54" line). None changed a decision, but nothing said which edits
-  are allowed, so nothing would stop one that did.
+- **Edits to ADRs already on `develop`.** Some touched only header lines, such
+  as a `Scope:` line or a superseded status; others rewrote body text. Nothing
+  said which edits are allowed, so nothing would stop one that changed a
+  decision.
 
 Two goals decide it: correctness — a reader must not replay history to know
 what is in force — and portability, since the method is meant to be lifted into
@@ -49,12 +48,18 @@ The only edits allowed to an in-force ADR are:
   supersession links;
 - **repointing a reference** whose target was superseded, to its superseder.
 
-Anything else, however small, is a superseding ADR.
+Allowed, for example: `**Status:** Accepted` →
+`**Status:** Superseded by [0013](0013-expo-sdk-follows-the-store-expo-go.md)`;
+adding a `**Scope:**` line; changing a link to a superseded ADR so it points at
+its superseder. Forbidden: changing a value or a sentence in the body, such as
+a version number in a "How to verify" command. That, and anything else outside
+the two allowed kinds, however small, is a superseding ADR. Edits made before
+this rule are not re-judged.
 
 ### 3. Numbers are taken, not reserved
-An ADR takes the next free number on `develop` when its draft is written. No
-number is reserved ahead: a forward reference names the work item ("T1's ADR"),
-not a number.
+An ADR takes, when its draft is written, the number after the highest one
+taken on `develop` or on the branch in flight. No number is reserved ahead: a
+forward reference names the work item ("T1's ADR"), not a number.
 
 ### 4. The consolidation has its own QA check
 When an ADR is consolidated, QA compares the consolidated text against the

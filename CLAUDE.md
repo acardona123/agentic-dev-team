@@ -39,8 +39,9 @@ It is governed by this document instead. Its job:
 
 1. **No change without an approved work item.** If `app/backlog.md` *on the
    work item's own branch* has no Ready story or Ready task for what you're
-   about to do, stop and say so — the PO's draft of that item is the one write
-   that comes before it. `develop`'s `## Ready` stays empty: an item is drafted
+   about to do, stop and say so — the PO's draft of that item, always the
+   branch's first commit, and planning edits (`<ID>: backlog — …`) are the only
+   writes that come before it. `develop`'s `## Ready` stays empty: an item is drafted
    and approved on its own branch
    ([ADR-0014 §6](method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)). A story is
    app behaviour ending in a phone demo; a task is everything else
@@ -123,7 +124,7 @@ The two long-lived branches carry the project's two gates. Do not blur them:
 Supporting branches:
 
 - `story/S<n>-<slug>` — cut from `develop` when the story is drafted, PR targets
-  `develop`. Its first commit is the PO's draft, then Alex's `approved Ready`,
+  `develop`. Its first commit is always the PO's draft, then Alex's `approved Ready`,
   then the work
   ([ADR-0014 §6](method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).
   One story, one work branch, plus `story/S<n>-closeout` after the demo for its bookkeeping
@@ -142,9 +143,10 @@ Rules:
 - **Nothing reaches `develop` except through a merged `story/` or `task/` PR.**
   No direct commits, method edits and backlog edits included.
 - A planning edit that belongs to no item — a new `## Backlog` line, a reorder,
-  a `## Spotted` entry — rides the branch in flight as its own
-  `<ID>: backlog — …` commit, confined to those two sections. With nothing in
-  flight it opens the next item's branch, or is a task.
+  a `## Spotted` entry, whoever writes it — rides the branch in flight as its own
+  `<ID>: backlog — …` commit, confined to those two sections, never inside a
+  work commit. With nothing in flight it waits for the next item's branch and
+  is committed right after the PO's draft; if it cannot wait, it is a task.
 - **Agents never push to `main` or `develop`, and never merge a PR.** An agent
   pushes its own `story/` or `task/` branch and opens the PR. Merging is Alex's.
 - CI runs the machine gate on every PR touching `app/`. A red check means the

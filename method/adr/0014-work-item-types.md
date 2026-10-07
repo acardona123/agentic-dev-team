@@ -180,19 +180,20 @@ PR** — method edits, closeout bookkeeping (§2) and backlog writes included. T
 
 **The PO's writes land on the item's own branch, from its first commit.** Before
 the PO is dispatched, the session cuts `story/S<n>-<slug>` or
-`task/T<n>-<slug>` from `develop`. The PO's draft is its first commit
+`task/T<n>-<slug>` from `develop`. The PO's draft is always its first commit
 (`S<n>: story — …` / `T<n>: task — …`); Alex's approval is the Status → Ready
 commit (`<ID>: approved Ready`); the work follows on the same branch, and one PR
 carries spec and work. Rule 1's Ready item is therefore read on the item's own
 branch, and `develop`'s `## Ready` stays empty.
 
 **Planning edits ride the branch in flight.** A planning edit that belongs to no
-item — a new one-line `## Backlog` entry, a reorder, a `## Spotted` entry — is
-its own commit `<ID>: backlog — …` on the branch in flight, confined to
-`## Backlog` and `## Spotted`. With nothing in flight, it opens the next item's
-branch, or is a task. QA checks such a commit for confinement, not
-traceability, and checks the item's own block for criteria edited after the
-last `approved Ready` commit.
+item — a new one-line `## Backlog` entry, a reorder, a `## Spotted` entry,
+whoever writes it, dev included — is its own commit `<ID>: backlog — …` on the
+branch in flight, confined to `## Backlog` and `## Spotted`, never inside a work
+commit. With nothing in flight, it waits for the next item's branch and is
+committed right after the PO's draft; if it cannot wait, it is a task of its
+own. QA checks such a commit for confinement, not traceability, and checks the
+item's own block for criteria edited after the last `approved Ready` commit.
 
 **The session is the PO's clerk.** The PO has no Bash, so the session cuts the
 branch and commits the PO's writes and Alex's approval. A commit of someone
@@ -201,7 +202,9 @@ Alex's.
 
 Why this path: it costs no extra PR; QA sees the approved criteria and the work
 in one diff, and can see whether the criteria moved after the approval commit;
-and it is S7's practice, written down.
+it is S7's practice, written down, and the spec-driven-development shape — spec
+committed first, implementation after approval, same PR — with atomic commits,
+one logical change each.
 
 **Bootstrap exception.** The work that wrote this ADR could not be a task,
 because the type did not exist yet. It ran under the "Method gap" entry in

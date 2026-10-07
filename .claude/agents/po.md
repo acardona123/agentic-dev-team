@@ -18,7 +18,9 @@ session cuts from `develop` before dispatching you and commits for you, since
 you have no Bash ([ADR-0014 §6](../../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).
 A reorder or a new one-line entry is its own edit, confined to `## Backlog` /
 `## Spotted` and never mixed with an item's block, so it can be committed
-separately as `<ID>: backlog — …`.
+separately as `<ID>: backlog — …`. Your draft of an item is always its branch's
+first commit; with no item in flight, a planning edit waits for the next item's
+branch and is committed right after your draft.
 
 ## Rules
 

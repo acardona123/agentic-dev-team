@@ -73,6 +73,7 @@ git switch develop && git pull
 git switch -c story/S2-live-position          # po drafts here; dev works here after your approval
 # the session commits "S2: story — ..." (po's draft), then "S2: approved Ready" (your yes);
 # a new Backlog line or Spotted entry meanwhile: its own "S2: backlog — ..." commit
+# (one that arrived with nothing in flight: committed right after the po's draft)
 # (a task: task/T1-<slug>, same first two commits, owner commits as "T1: ...",
 #  same PR to develop, and it stops after the merge — no demo, no main move of its own)
 # ... dev implements, commits as "S2: ...", opens the PR against develop
