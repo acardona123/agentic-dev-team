@@ -504,3 +504,18 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   contradicts the order fixed in the DoD and ADR-0014 §2 (merge story PR → demo
   D → fast-forward `main` to D → closeout PR). The squash lines are T2's
   (merge style), so this belongs in T2's completion criteria.
+- **No status for a drafted, not-yet-approved work item** (session, T1 draft,
+  2026-10-07). [ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)
+  makes Alex's approval the Status → Ready commit, so the PO's draft (the
+  branch's first commit) needs a status before Ready. None exists: ADR-0014 §1's
+  table, the `po.md` templates (which write `**Status:** Ready` directly) and
+  `method/check-closeout.mjs` know only Ready / Doing / Review / Done. T1's
+  draft used `Draft`, and `node method/check-closeout.mjs` exits 1 on that
+  commit. Harmless for CI, which checks the PR head, but every draft commit is
+  red locally and nothing says how a draft is written.
+- **Nothing says when an item's one-line `## Backlog` entry is removed** (Alex,
+  T1 draft, 2026-10-07). Once an item is refined into its own block, does its
+  one-liner leave `## Backlog`, and at which commit (the PO's draft, the
+  `approved Ready` commit, or the merge)? S7 no longer appears there, but no
+  text records the practice. T1's one-liner is left in place until this is
+  decided.
