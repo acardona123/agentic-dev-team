@@ -1,5 +1,5 @@
 # 0017 — ADR revisit triggers live in one register, read by QA at every verdict and kept complete by CI
-**Status:** Proposed · **Date:** 2026-10-08  
+**Status:** Accepted · **Date:** 2026-10-08  
 **Scope:** core — binds to `method/adr/` as the ADR directory, to the QA
 verdict format in `.claude/agents/qa.md`, and to GitHub Actions as the CI host
 ([ADR-0016](0016-contradictions-flagged-and-where-rules-live.md) names the same
