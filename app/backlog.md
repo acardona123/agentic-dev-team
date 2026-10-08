@@ -161,17 +161,12 @@ works around it.
 - [ ] CC8 — *diff* — `.claude/agents/architect.md` gains (i) a writing rule: any uncertain premise in an ADR becomes a trigger ("assumes X; revisit if X is false"), and every trigger says where its evidence would appear (observable); and (ii) in its ADR template, a dedicated `## Revisit when` section (premises + triggers), applying to **new** ADRs only. For new ADRs, the register line states each trigger of that section together with where its evidence appears; premises are not repeated in the line, since the writing rule already turns each uncertain premise into a trigger. `qa.md` requires that, when a diff adds an ADR, QA checks its triggers are observable and its uncertain premises are triggers (CI can only check the section exists).
 - [ ] CC9 — *diff* — `set -o pipefail; cd app && npm run gate` exits 0, and `method/check-closeout.mjs` passes against the branch; `node --test method/check-adr-register.test.mjs` passes (T7's own test suite).
 - [ ] CC10 — *world-state* — The CI check from CC4 runs on the task's PR **at the new head** and is green; the owning role records, dated under this criterion, the PR check result (e.g. `gh pr checks` output) and the commit it was observed at. QA re-runs it. The earlier record (PR #7 at e64410a) is superseded by this one and removed or marked stale.
-  *Recorded 2026-10-08 by the architect, `gh pr checks task/T7-adr-revisit-triggers`* (the local `gh` 2.4.0 answers `gh pr checks 7` with "No checks reported on the 'develop' branch", so the branch name is used). At `d7a6a17`, the head after the rework:
+  *Recorded 2026-10-08 by the architect, `gh pr checks task/T7-adr-revisit-triggers`* (the local `gh` 2.4.0 answers `gh pr checks 7` with "No checks reported on the 'develop' branch", so the branch name is used). At `11fc515`, the head after QA's second BACK TO was fixed:
   ```
-  adr-register	pass	6s	https://github.com/acardona123/agentic-dev-team/actions/runs/37707741746/job/113086054783
-  closeout	pass	5s	https://github.com/acardona123/agentic-dev-team/actions/runs/37707741602/job/113086054135
+  adr-register	pass	5s	https://github.com/acardona123/agentic-dev-team/actions/runs/37709002833/job/113090174842
+  closeout	pass	7s	https://github.com/acardona123/agentic-dev-team/actions/runs/37709002842/job/113090174781
   ```
-  At `b3976a0`, the commit that first added this record:
-  ```
-  adr-register	pass	6s	https://github.com/acardona123/agentic-dev-team/actions/runs/37707788101/job/113086205974
-  closeout	pass	4s	https://github.com/acardona123/agentic-dev-team/actions/runs/37707788105/job/113086205871
-  ```
-  On `pull_request` the path filter is matched against the whole PR's files, so both checks re-run on every push, this record's own commits included; the head after this one is QA's to re-run. The earlier record at e64410a no longer exists in this block.
+  On `pull_request` the path filter is matched against the whole PR's files, so both checks re-run on every push, this record's own commit included; the head after this one is QA's to re-run. Earlier records (e64410a, d7a6a17, b3976a0) are superseded by this one.
 
 **Not in scope**
 - Editing `method/check-closeout.mjs` beyond what CC4/CC5 need, and adding tests for `check-closeout.mjs` itself: those belong to T8, which modifies that script.
