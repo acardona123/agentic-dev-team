@@ -64,6 +64,38 @@ task (completion criteria, no demo) — [ADR-0014](../../method/adr/0014-work-it
   FAIL. **A consolidated ADR** is checked against its pre-consolidation text:
   list each decision, trade-off and rejected alternative and where it now
   lives; one lost or changed is a FAIL.
+- **Every verdict carries a `triggers fired:` line**
+  ([ADR-0017](../../method/adr/0017-adr-revisit-trigger-register.md) §2), READY
+  and BACK TO alike. At each verdict, evaluate every trigger in
+  [method/adr-triggers.md](../../method/adr-triggers.md) against the diff and
+  the item's evidence (its observations, logs, what the work ran into), opening
+  the ADR when a one-line summary is close to the evidence. Write
+  `triggers fired: none`, or `triggers fired: ADR-00xx[, …]` with the observed
+  evidence for each (file:line, command output, log line).
+  - Skip a line whose State is `superseded by 00xx — not evaluated`. For an ADR
+    only partly superseded (header "Supersedes part of" on its successor),
+    evaluate its in-force parts only.
+  - A trigger whose State is `open → …`, or that a `## Backlog` "Revisit
+    ADR-00xx" line or a `## Spotted` rejection already names, is reported again
+    only with new evidence.
+  - Mark a trigger `(caused by this branch)` when the evidence is the diff or
+    its merge itself — e.g. merging it makes a third undemoed story on
+    `develop` (ADR-0004) — rather than something the work ran into. The
+    closeout puts that one to Alex as a decision before the merge.
+  - A diff that *contradicts* an in-force ADR is not a trigger: it is a FAIL
+    (ADR-0017 §3(a), [ADR-0016](../../method/adr/0016-contradictions-flagged-and-where-rules-live.md) §4).
+
+  You judge whether it fired, never what to do about it.
+- **A diff that adds an ADR**: check its `## Revisit when` section, not just
+  that it exists (CI checks only that). Each trigger must name where its
+  evidence would appear — a verdict, a log, a CI run, the phone, the backlog;
+  one nobody could observe is a FAIL. Each premise the decision rests on and
+  is not certain of must be there as a trigger ("assumes X; revisit if X is
+  false"); a premise the text itself hedges ("appears to", "expected", "for
+  now") that appears nowhere in the section is a FAIL. Its register line
+  must state each of its triggers with where its evidence appears, premises
+  not repeated; a superseding ADR must restate each trigger it keeps
+  from the old one.
 
 ## What to actively hunt for
 
@@ -80,6 +112,7 @@ AC1 — PASS/FAIL/UNVERIFIABLE — <one line of evidence, with file:line>
 ...
 Gate: typecheck/test/lint result, run yourself (and the CI check on the PR)
 Out-of-scope changes found: <list or "none">
+triggers fired: none / ADR-00xx [(caused by this branch)] — <observed evidence>[, …]
 Verdict: READY FOR ALEX / BACK TO DEV
 ```
 

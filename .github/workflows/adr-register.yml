@@ -1,0 +1,24 @@
+name: adr-register
+
+# Not the machine gate (gate.yml) and not the closeout check (closeout.yml).
+# This fails a PR where an ADR has no line in method/adr-triggers.md, a line
+# points to no ADR, or an ADR from 0017 on has no `## Revisit when` section —
+# so a red X here names that, and only that. See method/adr/0017. It proves the
+# register is complete, not that anyone read it.
+on:
+  pull_request:
+    paths: ['method/adr/**', 'method/adr-triggers.md', 'method/check-adr-register.mjs', 'method/check-adr-register.test.mjs', '.github/workflows/adr-register.yml']
+  push:
+    branches: [main, develop]
+    paths: ['method/adr/**', 'method/adr-triggers.md', 'method/check-adr-register.mjs', 'method/check-adr-register.test.mjs', '.github/workflows/adr-register.yml']
+
+jobs:
+  adr-register:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # No setup-node, no npm ci: script and tests use only node's built-ins.
+      - name: check tests
+        run: node --test method/check-adr-register.test.mjs
+      - name: every ADR has one register line; new ADRs have Revisit when
+        run: node method/check-adr-register.mjs

@@ -15,10 +15,27 @@ _(empty)_
 
 ## Backlog (not yet refined — the PO turns these into stories or tasks, one at a time, and owns this order: top is next)
 
-- **T1 — ADR: contradictions flagged at decision time, and where each rule lives.**
-  Points 7 and 8 of the "Method gap" entry in `## Spotted`. Owner: architect.
+- **T8 — Backlog structure and lifecycle, for human and AI reading at low token cost.**
+  Widened by Alex (2026-10-08) to a full review of the file's structure and
+  upkeep, not only the two gaps below. Observed: T1 is Done yet sits in `## Tasks`,
+  not `## Done` — `## Tasks` and stories should show items in progress only;
+  `## Doing` and `## Review` are present but empty; `## Spotted` mixes done,
+  pending and rejected entries in one list. Token economy is a criterion. Note
+  QA's finding that `check-closeout.mjs` ignores a `### T<n>` block outside
+  `## Tasks` — any move of Done blocks must carry the script along. Also
+  covers the Spotted entries "No status for a drafted, not-yet-approved work item"
+  and "Nothing says when an item's one-line `## Backlog` entry is removed" (verdict:
+  the one-liner stays while the item is Ready/Doing/Review and is removed only when
+  it is Done, in a task's Done commit; the `## Backlog` heading's "not yet refined"
+  wording changes accordingly). Owner: po (`po.md` templates, backlog header), plus
+  `method/check-closeout.mjs` accepting `Draft`, whose owner the task will name.
 - **T2 — Merge style as a kickoff decision; why `main` moves by fast-forward.**
   Points 5 and 6 of the "Method gap" entry. Owner: architect. Needed before S2's PR merges.
+  Also carries the verdict on "Agents merging and pushing `main` vs `CLAUDE.md`":
+  merging a PR is Alex's only, never an agent's, even on instruction (the DoD's "or by
+  an agent on Alex's explicit instruction" clauses go); fast-forwarding and pushing
+  `main` an agent may do on Alex's explicit one-shot consent given at that moment;
+  `CLAUDE.md`'s wording is nuanced accordingly.
 - **T3 — ADR: how the phone reaches the dev server, and the machine prerequisites.**
   The "Dev-loop networking and DevTools" entry in `## Spotted`; supersedes the
   relevant parts of ADR-0006. Owner: architect. Needed for S2's demo.
@@ -26,7 +43,6 @@ _(empty)_
   entry in `## Spotted`. Owner: architect.
 - **T5 — CI check: every PR's branch names a work item in `backlog.md`.** ADR-0016 §3(c). Owner: architect.
 - **T6 — Branch protection on `develop` and `main`.** ADR-0016 §3(d); after T5, whose job is the required check. Owner: architect specifies, Alex applies.
-- **T7 — Register of ADR revisit triggers, evaluated by QA at every verdict.** 11 of 16 ADRs carry a revisit signal that no step ever reads (ADR-0007's premise fell in S7 unread). One-line index pointing to each ADR; QA reports "triggers fired: none / ADR-00xx" in each verdict; CI checks the register is complete. Owner: architect (then `qa.md`, `closeout.md`). Alex rates it high priority, as a guard on every item; order is the PO's call.
 - **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
   **Blocked on an ADR (2026-08-25).** The PO was asked to refine this and stopped
   on `CLAUDE.md` rule 8: nothing in `method/adr/` decides how the app obtains the
@@ -68,6 +84,8 @@ _(empty)_
 > into the component, S5 means gutting S2. Hence the code-style rule in
 > `CLAUDE.md`: a device capability is taken as a parameter, never reached for.
 
+- **Revisit ADR-0011** — trigger "a third `pipefail` slip recorded in a log; escalate to a checked-in `method/gate.sh`" fired (QA on T7, 2026-10-08): `method/log/S7.md:40-43` logs the architect running an install through `| tail` without `pipefail`, the third after S0's log and ADR-0011's own Context (an install, not the gate). Owner: architect. Confirmed by Alex, 2026-10-08.
+
 ---
 
 ## Tasks
@@ -106,6 +124,60 @@ observed failure justifies".
 - The "Agents merging and pushing `main` vs `CLAUDE.md`" Spotted entry: not T1's to resolve. Note for the architect: any hook accepted under CC3(a) must not encode one reading of that disagreement silently; ADR-0016 names the entry as the open question it depends on.
 - Sprints, GitHub Issues, plugin packaging, role redesign (rejected or deferred in the "Method gap" entry).
 - Triaging Spotted entries, or editing any frozen ADR.
+
+### T7 — Register of ADR revisit triggers, evaluated by QA at every verdict
+**Status:** Done
+**Intent:** "A register of ADR revisit triggers, evaluated by QA at every verdict: 11 of 16 ADRs carry a revisit signal that no step ever reads (ADR-0007's premise fell in S7 unread)."
+**Owner:** architect (then `qa.md` and `closeout.md` edits as part of the same task)
+
+**Re-scope 2026-10-08 (Alex, after QA's READY FOR ALEX, on this same branch).**
+The intent quote above is kept verbatim but its figure was off: the verified
+count is **12 ADRs with a revisit signal** (11 in force, plus ADR-0007, now
+superseded), out of 17 files. The criteria below are the corrected, binding
+ones; the first build is rework, not discarded. ADR-0017 is still a draft not
+on `develop`, so it is consolidated in place
+([ADR-0015](../method/adr/0015-adr-lifecycle.md) §1), not superseded.
+
+**Second amendment 2026-10-08 (Alex, after QA's BACK TO architect).** Alex ruled to amend CC2 (0003/0004 example was backwards), CC8 (a new ADR's register line states each trigger and where its evidence appears; premises are not repeated, since the writing rule already turns each uncertain premise into a trigger) and CC9 (`check-closeout.mjs` has no tests; adding them is T8), and accepted the change in ADR-0017's first trade-off: the remedy "the register gains a premise field" is replaced by "supersede the ADR with a `## Revisit when` section, case by case", the old remedy to be recorded in ADR-0017 as a rejected alternative (architect's work).
+
+**Scope choice (PO).** T7 makes the revisit signals *read*. It does not
+re-evaluate any ADR, edit any frozen ADR (change only by supersession,
+[ADR-0015](../method/adr/0015-adr-lifecycle.md) §2), or decide whether any trigger
+has in fact fired beyond recording the register's initial state.
+
+**Recorded gap (not solved by T7).** The method has no "deprecated without
+successor" status; ADR-0015 only knows supersession. T7 neither adds one nor
+works around it.
+
+**Completion criteria**
+- [x] CC1 — *diff* — A register file exists (location chosen by the architect and justified in an ADR or in the file) with exactly one line per ADR file in `method/adr/`, each pointing to its ADR and giving its **State** (CC6) and its revisit trigger(s) in one line, or "none stated". The 12 ADRs that carry a revisit signal (11 in force + ADR-0007, superseded) each have a trigger line; the ADR-0014 line covers **all** its revisit/reopen conditions, including the three "Reopen" conditions under its Alternatives rejected (ADR-0014 ~lines 302, 306, 336).
+- [x] CC2 — *diff* — `qa.md` requires every QA verdict to include a line `triggers fired: none` or `triggers fired: ADR-00xx[, …]` with the observed evidence for each fired trigger, and says QA evaluates the register against the diff and the item's evidence at each verdict. QA does **not** evaluate a line whose State is `superseded by 00xx — not evaluated`; QA evaluates the still-in-force parts of a partially superseded ADR (e.g. 0003, partly superseded by 0004).
+- [x] CC3 — *diff* — `method/closeout.md` (including its task closeout part) reads that verdict line, so a fired trigger reaches Alex as a drafted item for him to confirm or reject, not something he must recall. Where the branch itself causes a trigger to fire (e.g. ADR-0004, "more than two undemoed stories on develop"), the closeout presents it as a decision for Alex **before the merge**, not as a backlog item.
+- [x] CC4 — *diff* — A CI check (or an extension of an existing one such as `method/check-closeout.mjs`) fails when an ADR in `method/adr/` has no register entry, or a register entry points to no ADR (invariant unchanged: one line per ADR file, superseded ones included). The architect justifies the mechanism choice per [ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md). If the architect judges it meaningful, the check also fails when a **new** ADR lacks a `## Revisit when` section; the architect states and justifies the cutoff (number > 0017, or 0017 onward). Frozen ADRs are never required to gain the section.
+- [x] CC5 — *diff* — Any logic added or extended in `method/check-closeout.mjs` or any other script has tests that fail when the logic is broken (e.g. an ADR missing from the register; the new-ADR section check if added). This includes the script's `main()` exit code: a test fails if `main` always exits 0. If tests are not meaningful for the chosen mechanism, the architect flags that, with the reason, **before producing**, and the criterion is then replaced by the stated alternative proof, with Alex's agreement.
+- [x] CC6 — *diff* — Each register line has a **State** field, short, overwritten and never appended: `not fired`, or `open → <item>`, or (for a fully superseded ADR) `superseded by 00xx — not evaluated`. No evidence and no history in the register; those live in the item and in git. Initial state: ADR-0007 → `superseded by 00xx — not evaluated` (00xx = the ADR that superseded it, no edit to ADR-0007 itself); ADR-0011 → `open →` its "Revisit ADR-0011" backlog line; ADR-0012 → `open → T8`; any other already-fired trigger found while building the register is listed the same way, and every other line is `not fired`. A superseding ADR must restate any trigger it keeps (stated in ADR-0017 or the register's header).
+- [x] CC7 — *diff* — ADR-0017 §3 states explicitly three distinct cases: (a) a diff that contradicts an in-force ADR never reaches `develop`: QA FAILs it ([ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md) §4, `CLAUDE.md` rule 8), and it is fixed on the branch, or a superseding ADR lands in the same item, or the work is rejected; (b) a fired trigger is evidence to re-examine an ADR, routed to the backlog, and does not block the merge; (c) when the branch itself causes a trigger to fire, Alex decides before the merge, and the closeout presents it as such (CC3).
+- [x] CC8 — *diff* — `.claude/agents/architect.md` gains (i) a writing rule: any uncertain premise in an ADR becomes a trigger ("assumes X; revisit if X is false"), and every trigger says where its evidence would appear (observable); and (ii) in its ADR template, a dedicated `## Revisit when` section (premises + triggers), applying to **new** ADRs only. For new ADRs, the register line states each trigger of that section together with where its evidence appears; premises are not repeated in the line, since the writing rule already turns each uncertain premise into a trigger. `qa.md` requires that, when a diff adds an ADR, QA checks its triggers are observable and its uncertain premises are triggers (CI can only check the section exists).
+- [x] CC9 — *diff* — `set -o pipefail; cd app && npm run gate` exits 0, and `method/check-closeout.mjs` passes against the branch; `node --test method/check-adr-register.test.mjs` passes (T7's own test suite).
+- [x] CC10 — *world-state* — The CI check from CC4 runs on the task's PR **at the new head** and is green; the owning role records, dated under this criterion, the PR check result (e.g. `gh pr checks` output) and the commit it was observed at. QA re-runs it. The earlier record (PR #7 at e64410a) is superseded by this one and removed or marked stale.
+  *Recorded 2026-10-08 by the architect, `gh pr checks task/T7-adr-revisit-triggers`* (the local `gh` 2.4.0 answers `gh pr checks 7` with "No checks reported on the 'develop' branch", so the branch name is used). At `11fc515`, the head after QA's second BACK TO was fixed:
+  ```
+  adr-register	pass	5s	https://github.com/acardona123/agentic-dev-team/actions/runs/37709002833/job/113090174842
+  closeout	pass	7s	https://github.com/acardona123/agentic-dev-team/actions/runs/37709002842/job/113090174781
+  ```
+  On `pull_request` the path filter is matched against the whole PR's files, so both checks re-run on every push, this record's own commit included; the head after this one is QA's to re-run. Earlier records (e64410a, d7a6a17, b3976a0) are superseded by this one.
+
+**Not in scope**
+- Editing `method/check-closeout.mjs` beyond what CC4/CC5 need, and adding tests for `check-closeout.mjs` itself: those belong to T8, which modifies that script.
+- Adding a `## Revisit when` section to, or otherwise normalising, any existing (frozen) ADR.
+- A "deprecated without successor" ADR status (recorded gap above).
+- Keeping evidence or history in the register (State is overwritten; evidence lives in the item and in git).
+- T5's CI check that a PR's branch names a work item present in `backlog.md`.
+- Merge-rule edits (T2).
+- Backlog-line lifecycle and the missing Draft status (a coming PO task).
+- The relation between task and story ADRs.
+- Acting on any fired trigger (e.g. superseding ADR-0007): each becomes its own work item.
+- Editing any frozen ADR to add or normalise a revisit line.
 
 ---
 
@@ -460,7 +532,8 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   and QA's A6/A7 fixes (playbook fast-forward fetch and pointer, log-line
   references named by field, `check-closeout.mjs` message).
   **(1) and (1b) Done** — PR #5, QA READY FOR ALEX on ff2b7c9 (2026-10-07).
-  Next: (2) T1.
+  **(2) T1 Done** (PR #6, 2026-10-08). Next, in order (Alex, 2026-10-08): T7
+  (his priority), T8, then T2–T6, then S2.
 
   **This entry is the work item for that work** — the one exception, since the
   task type it needs does not exist yet. It runs on branch `method/work-items`
@@ -478,7 +551,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
     today. **Trigger:** the day QA runs anywhere else, such criteria become
     Alex-witnessed — a future task, not now.
 
-  The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–7)
+  The tasks queued above (advisory re-triage; dev-loop networking ADR; points 5–6 and 7–8)
   are the first candidates for the new work-item type — do them as tracked tasks
   once it exists, not before.
 - **QA findings left out of the "Method gap" work item (QA on f3cfdfd,
@@ -490,12 +563,17 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   the preceding story block. (2) Spotted verdict wording: the dev-loop
   networking and SDK 57 advisories entries above do not yet carry the "becomes a
   task (T3/T4)" verdict that ADR-0014 §4 wants written into each entry, and the
-  "Method gap" entry's last paragraph still says "points 5–7" where T1/T2 split
-  them as 7–8 and 5–6. (3) `check-closeout.mjs` has no tests (QA on T1,
+  "Method gap" entry's last paragraph still said "points 5–7" where T1/T2 split
+  them as 7–8 and 5–6 (wording fixed 2026-10-08, T7 planning). (3) `check-closeout.mjs` has no tests (QA on T1,
   2026-10-08): T1's CC8 "(including its tests)" passed vacuously. T5 extends the
   script, so its completion criteria should require tests for it.
-- **Agents merging and pushing `main` vs `CLAUDE.md`** (QA, 2026-10-07; predates
-  the "Method gap" work item). `CLAUDE.md` `## Git workflow` says "Agents never
+- ~~**Agents merging and pushing `main` vs `CLAUDE.md`** (QA, 2026-10-07; predates
+  the "Method gap" work item).~~ **Triaged 2026-10-08 — becomes part of T2 (Alex's
+  decision).** Merging a PR is Alex's only, never an agent's, even on instruction,
+  so the DoD's "or by an agent on Alex's explicit instruction" clauses go. The
+  non-PR git operations of the closeout — fast-forwarding `main` and pushing it —
+  an agent may run on Alex's explicit, one-shot consent given at that moment;
+  `CLAUDE.md`'s wording is nuanced accordingly. Original finding: `CLAUDE.md` `## Git workflow` says "Agents never
   push to `main` or `develop`, and never merge a PR", but the
   [DoD](../method/definition-of-done.md) Human gate lets an agent merge on Alex's
   explicit instruction for that specific PR (the S1 exception, now extended to
@@ -509,8 +587,8 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   contradicts the order fixed in the DoD and ADR-0014 §2 (merge story PR → demo
   D → fast-forward `main` to D → closeout PR). The squash lines are T2's
   (merge style), so this belongs in T2's completion criteria.
-- **No status for a drafted, not-yet-approved work item** (session, T1 draft,
-  2026-10-07). [ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)
+- ~~**No status for a drafted, not-yet-approved work item** (session, T1 draft,
+  2026-10-07).~~ **Triaged 2026-10-08 — becomes task T8.** Original finding: [ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)
   makes Alex's approval the Status → Ready commit, so the PO's draft (the
   branch's first commit) needs a status before Ready. None exists: ADR-0014 §1's
   table, the `po.md` templates (which write `**Status:** Ready` directly) and
@@ -518,9 +596,30 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   draft used `Draft`, and `node method/check-closeout.mjs` exits 1 on that
   commit. Harmless for CI, which checks the PR head, but every draft commit is
   red locally and nothing says how a draft is written.
-- **Nothing says when an item's one-line `## Backlog` entry is removed** (Alex,
-  T1 draft, 2026-10-07). Once an item is refined into its own block, does its
+- ~~**Nothing says when an item's one-line `## Backlog` entry is removed** (Alex,
+  T1 draft, 2026-10-07).~~ **Triaged 2026-10-08 — becomes part of task T8 (Alex's
+  decision).** The one-liner stays in `## Backlog` while the item is
+  Ready/Doing/Review (it may be updated after Ready, and an item in progress
+  should be visible there, e.g. after a pause); it is removed only when the item is
+  Done — for a task, in its Done commit (the branch's last commit, ADR-0014 §3).
+  The `## Backlog` heading's "not yet refined" wording changes with it. Original
+  finding: once an item is refined into its own block, does its
   one-liner leave `## Backlog`, and at which commit (the PO's draft, the
   `approved Ready` commit, or the merge)? S7 no longer appears there, but no
   text records the practice. T1's one-liner is left in place until this is
   decided.
+- **Task/story relation for technical decisions** (Alex, 2026-10-08; not triaged).
+  `CLAUDE.md` rule 9's pipeline, `po → (architect) → dev`, puts the architect
+  *inside* a story, while [ADR-0014](../method/adr/0014-work-item-types.md) §1's
+  table classes "an ADR" as a task. Nothing says which wins, which precedes which,
+  or what happens when a technical decision arises mid-story. Until now technology
+  choices were made within stories. S2 is blocked on exactly this case (its ADR on
+  how the app obtains position). **To be settled before S2.** Raised during the T7
+  ordering; deliberately not acted on now — focus stays on the Method gap work.
+- **Re-approval after an amendment is unwritten** (session, 2026-10-08; not triaged;
+  candidate home T8). [ADR-0014](../method/adr/0014-work-item-types.md) §6 makes
+  Alex's approval "the Status → Ready commit", but says nothing of an item amended
+  after approval. In T7 the session had the PO set `Ready` inside both amendments
+  (f8814e6, 80e582e), leaving Alex's `T7: approved Ready` commits empty (41078bb,
+  acae7a1). The freeze point held; the record did not. Fix: an amendment leaves
+  Status unchanged, and Alex's re-approval commit is the one that moves it to `Ready`.

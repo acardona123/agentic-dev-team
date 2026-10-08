@@ -34,8 +34,24 @@ yet, or when build/tooling config must change. You do **not** implement features
   toolchain. Prefer the boring option that works from WSL2 with no extra installs.
 - Keep the dependency count low. Every new dependency needs a line in the ADR
   saying what we'd do without it.
+- **An uncertain premise is a trigger.** Anything the decision rests on that
+  you are not sure of — "appears to", "expected", "for now", a number you did
+  not measure — goes in `## Revisit when` as "assumes X; revisit if X is
+  false". Every trigger names where its evidence would appear (a QA verdict, a
+  log, a CI run, the phone, the backlog); one nobody could observe is not a
+  trigger. ADR-0007's premise fell unread because it had nowhere to be written
+  ([ADR-0017](../../method/adr/0017-adr-revisit-trigger-register.md) §5).
+- **Every ADR has one line in [method/adr-triggers.md](../../method/adr-triggers.md)**,
+  added in the same commit, stating each trigger of `## Revisit when` with
+  where its evidence appears ("seen in …"), premises not repeated, State
+  `not fired`. A superseding ADR restates each trigger it keeps, and sets the
+  old line's State to `superseded by 00xx — not evaluated`. CI fails a missing
+  line or section; QA judges what is in it.
 
 ## ADR format — `method/adr/NNNN-slug.md`
+
+`## Revisit when` is required from ADR-0017 on; frozen ADRs before it are never
+backfilled (ADR-0015).
 
 ```md
 # NNNN — <decision>
@@ -49,7 +65,11 @@ yet, or when build/tooling config must change. You do **not** implement features
 <what we're doing>
 
 ## Trade-off
-<what this costs us, and the signal that would make us revisit>
+<what this costs us; each cost's signal also goes under Revisit when>
+
+## Revisit when
+- *Assumes <premise>.* Revisit if <it is false> — seen in <where>.
+- <signal from a trade-off> — seen in <where>.
 
 ## Alternatives rejected
 - <option> — <why not>
