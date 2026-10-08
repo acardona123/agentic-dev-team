@@ -127,7 +127,7 @@ observed failure justifies".
 - Triaging Spotted entries, or editing any frozen ADR.
 
 ### T7 — Register of ADR revisit triggers, evaluated by QA at every verdict
-**Status:** Ready
+**Status:** Review
 **Intent:** "A register of ADR revisit triggers, evaluated by QA at every verdict: 11 of 16 ADRs carry a revisit signal that no step ever reads (ADR-0007's premise fell in S7 unread)."
 **Owner:** architect (then `qa.md` and `closeout.md` edits as part of the same task)
 
