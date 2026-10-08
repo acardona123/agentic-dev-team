@@ -127,31 +127,44 @@ observed failure justifies".
 - Triaging Spotted entries, or editing any frozen ADR.
 
 ### T7 — Register of ADR revisit triggers, evaluated by QA at every verdict
-**Status:** Review
+**Status:** Ready
 **Intent:** "A register of ADR revisit triggers, evaluated by QA at every verdict: 11 of 16 ADRs carry a revisit signal that no step ever reads (ADR-0007's premise fell in S7 unread)."
 **Owner:** architect (then `qa.md` and `closeout.md` edits as part of the same task)
 
+**Re-scope 2026-10-08 (Alex, after QA's READY FOR ALEX, on this same branch).**
+The intent quote above is kept verbatim but its figure was off: the verified
+count is **12 ADRs with a revisit signal** (11 in force, plus ADR-0007, now
+superseded), out of 17 files. The criteria below are the corrected, binding
+ones; the first build is rework, not discarded. ADR-0017 is still a draft not
+on `develop`, so it is consolidated in place
+([ADR-0015](../method/adr/0015-adr-lifecycle.md) §1), not superseded.
+
 **Scope choice (PO).** T7 makes the revisit signals *read*. It does not
 re-evaluate any ADR, edit any frozen ADR (change only by supersession,
-[ADR-0015](../method/adr/0015-adr-lifecycle.md)), or decide whether any trigger
+[ADR-0015](../method/adr/0015-adr-lifecycle.md) §2), or decide whether any trigger
 has in fact fired beyond recording the register's initial state.
 
+**Recorded gap (not solved by T7).** The method has no "deprecated without
+successor" status; ADR-0015 only knows supersession. T7 neither adds one nor
+works around it.
+
 **Completion criteria**
-- [ ] CC1 — *diff* — A register file exists (location chosen by the architect and justified in an ADR or in the file) with one line per ADR in `method/adr/`, each pointing to its ADR and stating its revisit trigger in one line, or "none stated". The 11 ADRs that carry a revisit signal each have a trigger line.
-- [ ] CC2 — *diff* — `qa.md` requires every QA verdict to include a line `triggers fired: none` or `triggers fired: ADR-00xx[, …]` with the observed evidence for each fired trigger, and says QA evaluates the register against the diff and the item's evidence at each verdict.
-- [ ] CC3 — *diff* — `method/closeout.md` (including its task closeout part) reads that verdict line, so a fired trigger reaches Alex as a drafted item for him to confirm or reject, not something he must recall.
-- [ ] CC4 — *diff* — A CI check (or an extension of an existing one such as `method/check-closeout.mjs`) fails when an ADR in `method/adr/` has no register entry, or a register entry points to no ADR. The architect justifies the mechanism choice per [ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md).
-- [ ] CC5 — *diff* — Any logic added or extended in `method/check-closeout.mjs` or any other script has tests that fail when the logic is broken (e.g. an ADR missing from the register). If tests are not meaningful for the chosen mechanism, the architect flags that, with the reason, **before producing**, and the criterion is then replaced by the stated alternative proof, with Alex's agreement.
-- [ ] CC6 — *diff* — The register's initial state records ADR-0007's trigger as fired (premise fell in S7), citing the S7 log, with no edit to ADR-0007 itself; any other already-fired trigger found while building the register is listed the same way.
-- [ ] CC7 — *diff* — `set -o pipefail; cd app && npm run gate` exits 0, and `method/check-closeout.mjs` (including its tests) passes against the branch.
-- [ ] CC8 — *world-state* — The CI check from CC4 runs on the task's PR and is green; the owning role records, dated under this criterion, the PR check result (e.g. `gh pr checks` output). QA re-runs it.
-  *Observed 2026-10-08 01:30 +0200 (architect), [PR #7](https://github.com/acardona123/agentic-dev-team/pull/7) at e64410a, `gh pr checks 7` (exit 0):*
-  `adr-register pass 6s …/actions/runs/37702643402/job/113069498506` ·
-  `closeout pass 7s …/actions/runs/37702643196/job/113069493485`.
-  The `adr-register` job log shows `# tests 8 / # pass 8 / # fail 0`, then
-  `adr-register: OK — 17 ADRs in method/adr/, 17 register lines, one each.`
+- [ ] CC1 — *diff* — A register file exists (location chosen by the architect and justified in an ADR or in the file) with exactly one line per ADR file in `method/adr/`, each pointing to its ADR and giving its **State** (CC6) and its revisit trigger(s) in one line, or "none stated". The 12 ADRs that carry a revisit signal (11 in force + ADR-0007, superseded) each have a trigger line; the ADR-0014 line covers **all** its revisit/reopen conditions, including the three "Reopen" conditions under its Alternatives rejected (ADR-0014 ~lines 302, 306, 336).
+- [ ] CC2 — *diff* — `qa.md` requires every QA verdict to include a line `triggers fired: none` or `triggers fired: ADR-00xx[, …]` with the observed evidence for each fired trigger, and says QA evaluates the register against the diff and the item's evidence at each verdict. QA does **not** evaluate a line whose State is `superseded by 00xx — not evaluated`; QA evaluates the still-in-force parts of a partially superseded ADR (e.g. 0004, partly by 0003).
+- [ ] CC3 — *diff* — `method/closeout.md` (including its task closeout part) reads that verdict line, so a fired trigger reaches Alex as a drafted item for him to confirm or reject, not something he must recall. Where the branch itself causes a trigger to fire (e.g. ADR-0004, "more than two undemoed stories on develop"), the closeout presents it as a decision for Alex **before the merge**, not as a backlog item.
+- [ ] CC4 — *diff* — A CI check (or an extension of an existing one such as `method/check-closeout.mjs`) fails when an ADR in `method/adr/` has no register entry, or a register entry points to no ADR (invariant unchanged: one line per ADR file, superseded ones included). The architect justifies the mechanism choice per [ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md). If the architect judges it meaningful, the check also fails when a **new** ADR lacks a `## Revisit when` section; the architect states and justifies the cutoff (number > 0017, or 0017 onward). Frozen ADRs are never required to gain the section.
+- [ ] CC5 — *diff* — Any logic added or extended in `method/check-closeout.mjs` or any other script has tests that fail when the logic is broken (e.g. an ADR missing from the register; the new-ADR section check if added). This includes the script's `main()` exit code: a test fails if `main` always exits 0. If tests are not meaningful for the chosen mechanism, the architect flags that, with the reason, **before producing**, and the criterion is then replaced by the stated alternative proof, with Alex's agreement.
+- [ ] CC6 — *diff* — Each register line has a **State** field, short, overwritten and never appended: `not fired`, or `open → <item>`, or (for a fully superseded ADR) `superseded by 00xx — not evaluated`. No evidence and no history in the register; those live in the item and in git. Initial state: ADR-0007 → `superseded by 00xx — not evaluated` (00xx = the ADR that superseded it, no edit to ADR-0007 itself); ADR-0011 → `open →` its "Revisit ADR-0011" backlog line; ADR-0012 → `open → T8`; any other already-fired trigger found while building the register is listed the same way, and every other line is `not fired`. A superseding ADR must restate any trigger it keeps (stated in ADR-0017 or the register's header).
+- [ ] CC7 — *diff* — ADR-0017 §3 states explicitly three distinct cases: (a) a diff that contradicts an in-force ADR never reaches `develop`: QA FAILs it ([ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md) §4, `CLAUDE.md` rule 8), and it is fixed on the branch, or a superseding ADR lands in the same item, or the work is rejected; (b) a fired trigger is evidence to re-examine an ADR, routed to the backlog, and does not block the merge; (c) when the branch itself causes a trigger to fire, Alex decides before the merge, and the closeout presents it as such (CC3).
+- [ ] CC8 — *diff* — `.claude/agents/architect.md` gains (i) a writing rule: any uncertain premise in an ADR becomes a trigger ("assumes X; revisit if X is false"), and every trigger says where its evidence would appear (observable); and (ii) in its ADR template, a dedicated `## Revisit when` section (premises + triggers), applying to **new** ADRs only. For new ADRs the register line copies that section. `qa.md` requires that, when a diff adds an ADR, QA checks its triggers are observable and its uncertain premises are triggers (CI can only check the section exists).
+- [ ] CC9 — *diff* — `set -o pipefail; cd app && npm run gate` exits 0, and `method/check-closeout.mjs` (including its tests) passes against the branch.
+- [ ] CC10 — *world-state* — The CI check from CC4 runs on the task's PR **at the new head** and is green; the owning role records, dated under this criterion, the PR check result (e.g. `gh pr checks` output) and the commit it was observed at. QA re-runs it. The earlier record (PR #7 at e64410a) is superseded by this one and removed or marked stale.
 
 **Not in scope**
+- Editing `method/check-closeout.mjs` beyond what CC4/CC5 need, and adding tests for `check-closeout.mjs` itself: those belong to T8, which modifies that script.
+- Adding a `## Revisit when` section to, or otherwise normalising, any existing (frozen) ADR.
+- A "deprecated without successor" ADR status (recorded gap above).
+- Keeping evidence or history in the register (State is overwritten; evidence lives in the item and in git).
 - T5's CI check that a PR's branch names a work item present in `backlog.md`.
 - Merge-rule edits (T2).
 - Backlog-line lifecycle and the missing Draft status (a coming PO task).
