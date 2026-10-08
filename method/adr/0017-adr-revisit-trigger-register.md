@@ -64,8 +64,9 @@ QA and the closeout read, rather than:
   written for another purpose.
 
 **Who writes it.** The architect. A new ADR adds its line in the commit that
-adds the ADR; for an ADR with a `## Revisit when` section (§5) the line's
-trigger copies that section. A trigger's text changes only when its ADR is
+adds the ADR; for an ADR with a `## Revisit when` section (§5) the line states
+each trigger of that section with where its evidence appears ("seen in …"), and
+does not repeat the premises, which §5 has already turned into triggers. A trigger's text changes only when its ADR is
 superseded. A State changes only in a work item's own diff: `open → <item>` and
 its later overwrite (`not fired` again if the revisit keeps the ADR as it is,
 `superseded by …` if it replaces it) are written by the item that handles the
@@ -167,7 +168,8 @@ with node.
 From this ADR on, every ADR has a `## Revisit when` section, after its
 trade-off: each uncertain premise written as a trigger ("assumes X; revisit if
 X is false"), and each trigger naming where its evidence would appear (a QA
-verdict, a log, a CI run, the phone, the backlog). The register line copies it.
+verdict, a log, a CI run, the phone, the backlog). The register line states
+each trigger with its "seen in"; premises are not repeated there.
 The rule lives in `.claude/agents/architect.md`, beside the ADR template.
 Frozen ADRs are not normalised to it.
 
@@ -258,6 +260,13 @@ summary is close to the evidence.
 - **Backfill a `## Revisit when` section into frozen ADRs.** ADR-0015 §2 freezes
   their bodies; a supersession per ADR is the only route, and none is justified
   until one is found wrong.
+- **A premise field in the register, filled by the architect** — the first
+  draft's answer to the unstated-premise gap. For frozen ADRs it would mean the
+  architect writing premises their authors never stated into a live file beside
+  a body that cannot change, so the field would be a second, unaccepted text of
+  the ADR; for new ADRs, §5 already writes each uncertain premise as a trigger,
+  which the register line carries. A frozen ADR found wrong by an unnamed
+  premise is superseded with a `## Revisit when` section, case by case.
 - **Start the section check at 0018.** It would exempt the ADR that makes the
   rule while it is still a draft, and the check would pass vacuously until the
   next ADR.

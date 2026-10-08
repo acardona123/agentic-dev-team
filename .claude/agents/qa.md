@@ -93,7 +93,8 @@ task (completion criteria, no demo) — [ADR-0014](../../method/adr/0014-work-it
   is not certain of must be there as a trigger ("assumes X; revisit if X is
   false"); a premise the text itself hedges ("appears to", "expected", "for
   now") that appears nowhere in the section is a FAIL. Its register line
-  must copy the section; a superseding ADR must restate each trigger it keeps
+  must state each of its triggers with where its evidence appears, premises
+  not repeated; a superseding ADR must restate each trigger it keeps
   from the old one.
 
 ## What to actively hunt for

@@ -42,7 +42,8 @@ yet, or when build/tooling config must change. You do **not** implement features
   trigger. ADR-0007's premise fell unread because it had nowhere to be written
   ([ADR-0017](../../method/adr/0017-adr-revisit-trigger-register.md) §5).
 - **Every ADR has one line in [method/adr-triggers.md](../../method/adr-triggers.md)**,
-  added in the same commit, its trigger copied from `## Revisit when`, State
+  added in the same commit, stating each trigger of `## Revisit when` with
+  where its evidence appears ("seen in …"), premises not repeated, State
   `not fired`. A superseding ADR restates each trigger it keeps, and sets the
   old line's State to `superseded by 00xx — not evaluated`. CI fails a missing
   line or section; QA judges what is in it.
