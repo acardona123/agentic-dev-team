@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 // Keeps method/adr-triggers.md complete — see method/adr/0017. QA reads the
 // register, not the directory, so an ADR without a line is an ADR whose revisit
-// trigger no step reads. It cannot check that a trigger line is accurate, or
-// that anyone read it.
+// trigger no step reads. It cannot check that a trigger line is accurate, that
+// a trigger is observable, or that anyone read it — those are QA's reading.
 //
 // Run from anywhere:  node method/check-adr-register.mjs
-// Exit 0 = every ADR has exactly one line and every line points to an ADR.
+// Exit 0 = every ADR has exactly one line, every line points to an ADR, and
+// every ADR from 0017 on has a non-empty `## Revisit when` section.
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -16,6 +17,9 @@ import { dirname, join } from 'node:path';
 const ADR_FILE = /^(\d{4})-.+\.md$/;
 // A register line is a list item that opens with a link to an ADR.
 const ENTRY = /^-\s+\[(\d{4})\]\(adr\/([^)]+)\)/;
+// ADRs below this are frozen (ADR-0015) and never gain the section; 0017 was
+// still a draft when it made the rule, so it carries it (ADR-0017 §4).
+export const REVISIT_SECTION_FROM = 17;
 
 // Pure: no filesystem, so the tests can hand it any directory and register.
 export function checkRegister(adrFileNames, registerText) {
@@ -52,26 +56,49 @@ export function checkRegister(adrFileNames, registerText) {
   return { adrCount: adrs.size, entryCount: seen.size, problems };
 }
 
-function main() {
-  const method = dirname(fileURLToPath(import.meta.url));
-  const registerPath = join(method, 'adr-triggers.md');
+// Pure. Returns a problem string, or null when the ADR is exempt or compliant.
+// "Empty" means no non-blank line before the next heading of level 1 or 2.
+export function checkRevisitSection(fileName, text) {
+  const m = ADR_FILE.exec(fileName);
+  if (!m || Number(m[1]) < REVISIT_SECTION_FROM) return null;
+  const lines = text.split('\n');
+  const start = lines.findIndex((l) => /^##\s+Revisit when\s*$/.test(l));
+  if (start === -1) {
+    return `${m[1]}: method/adr/${fileName} has no "## Revisit when" section — required from ${String(REVISIT_SECTION_FROM).padStart(4, '0')} on`;
+  }
+  for (const l of lines.slice(start + 1)) {
+    if (/^#{1,2}\s/.test(l)) break;
+    if (l.trim() !== '') return null;
+  }
+  return `${m[1]}: method/adr/${fileName} has an empty "## Revisit when" section — write its premises and triggers`;
+}
+
+// Returns the exit code rather than exiting, so the CLI line below is the only
+// place that touches the process; the tests run that line as a child process.
+export function main(methodDir) {
+  const registerPath = join(methodDir, 'adr-triggers.md');
   if (!existsSync(registerPath)) {
     console.error('adr-register: method/adr-triggers.md not found — every ADR needs a line there (method/adr/0017).');
-    process.exit(1);
+    return 1;
   }
-  const { adrCount, entryCount, problems } = checkRegister(
-    readdirSync(join(method, 'adr')),
-    readFileSync(registerPath, 'utf8'),
-  );
+  const adrDir = join(methodDir, 'adr');
+  const names = readdirSync(adrDir);
+  const { adrCount, entryCount, problems } = checkRegister(names, readFileSync(registerPath, 'utf8'));
+  for (const name of names) {
+    const p = checkRevisitSection(name, ADR_FILE.test(name) ? readFileSync(join(adrDir, name), 'utf8') : '');
+    if (p) problems.push(p);
+  }
   if (problems.length === 0) {
     // The counts are printed so "0 ADRs" reads as wrong rather than as green.
     console.log(`adr-register: OK — ${adrCount} ADRs in method/adr/, ${entryCount} register lines, one each.`);
-    process.exit(0);
+    return 0;
   }
   console.error(`adr-register: ${problems.length} problem${problems.length > 1 ? 's' : ''}:\n`);
   for (const p of problems) console.error(`  ${p}`);
   console.error('\nSee method/adr/0017. Run locally with: node method/check-adr-register.mjs');
-  process.exit(1);
+  return 1;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  process.exit(main(dirname(fileURLToPath(import.meta.url))));
+}
