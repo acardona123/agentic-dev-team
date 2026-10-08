@@ -40,7 +40,7 @@ Current state, ADRs: **11 core, 6 project.**
 | [0014](adr/0014-work-item-types.md) two work-item types, story and task | |
 | [0015](adr/0015-adr-lifecycle.md) ADR draft until `develop`, frozen after | |
 | [0016](adr/0016-contradictions-flagged-and-where-rules-live.md) contradictions flagged first; a rule leaves prose only for an observed failure | |
-| [0017](adr/0017-adr-revisit-trigger-register.md) revisit-trigger register, read by QA at every verdict, kept complete by CI | |
+| [0017](adr/0017-adr-revisit-trigger-register.md) revisit-trigger register, read by QA at every verdict, kept complete by CI; new ADRs write uncertain premises as triggers under `## Revisit when` | |
 
 ## What a new project copies
 
