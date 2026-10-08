@@ -159,6 +159,12 @@ works around it.
 - [ ] CC8 — *diff* — `.claude/agents/architect.md` gains (i) a writing rule: any uncertain premise in an ADR becomes a trigger ("assumes X; revisit if X is false"), and every trigger says where its evidence would appear (observable); and (ii) in its ADR template, a dedicated `## Revisit when` section (premises + triggers), applying to **new** ADRs only. For new ADRs the register line copies that section. `qa.md` requires that, when a diff adds an ADR, QA checks its triggers are observable and its uncertain premises are triggers (CI can only check the section exists).
 - [ ] CC9 — *diff* — `set -o pipefail; cd app && npm run gate` exits 0, and `method/check-closeout.mjs` (including its tests) passes against the branch.
 - [ ] CC10 — *world-state* — The CI check from CC4 runs on the task's PR **at the new head** and is green; the owning role records, dated under this criterion, the PR check result (e.g. `gh pr checks` output) and the commit it was observed at. QA re-runs it. The earlier record (PR #7 at e64410a) is superseded by this one and removed or marked stale.
+  *Recorded 2026-10-08 by the architect, observed at `d7a6a17` (PR #7 head after the rework), `gh pr checks task/T7-adr-revisit-triggers`* — the local `gh` 2.4.0 answers `gh pr checks 7` with "No checks reported on the 'develop' branch", so the branch name is used:
+  ```
+  adr-register	pass	6s	https://github.com/acardona123/agentic-dev-team/actions/runs/37707741746/job/113086054783
+  closeout	pass	5s	https://github.com/acardona123/agentic-dev-team/actions/runs/37707741602/job/113086054135
+  ```
+  The commit that adds this record touches only `app/backlog.md`, so on it `adr-register` does not run (path filter) and `closeout` does. The earlier record at e64410a no longer exists in this block.
 
 **Not in scope**
 - Editing `method/check-closeout.mjs` beyond what CC4/CC5 need, and adding tests for `check-closeout.mjs` itself: those belong to T8, which modifies that script.
