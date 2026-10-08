@@ -85,6 +85,17 @@ _(empty)_
 > `CLAUDE.md`: a device capability is taken as a parameter, never reached for.
 
 - **Revisit ADR-0011** — trigger "a third `pipefail` slip recorded in a log; escalate to a checked-in `method/gate.sh`" fired (QA on T7, 2026-10-08): `method/log/S7.md:40-43` logs the architect running an install through `| tail` without `pipefail`, the third after S0's log and ADR-0011's own Context (an install, not the gate). Owner: architect. Confirmed by Alex, 2026-10-08.
+- **T9 — Resuming after a break, from the repo alone.** A QA verdict
+  lives only in the conversation: after a pause, a READY FOR ALEX
+  given before the Done commit is lost and QA must be re-run
+  (observed in T7's closeout, 2026-10-08). Persist each verdict where
+  a later session can read it (e.g. a PR comment), and write the
+  resume procedure as `method/resume.md`, read on demand like
+  `closeout.md` — prose per ADR-0016 §2, a skill only after an
+  observed failure as in §3(e). When it lands, Alex deletes his interim personal command
+  `~/.claude/commands/reprise.md`, which checks for this file and
+  says so itself. Owner: architect, then `qa.md` and
+  `closeout.md`. Raised by the session, accepted by Alex, 2026-10-08.
 
 ---
 
