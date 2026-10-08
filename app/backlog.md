@@ -179,6 +179,41 @@ works around it.
 - Acting on any fired trigger (e.g. superseding ADR-0007): each becomes its own work item.
 - Editing any frozen ADR to add or normalise a revisit line.
 
+### T8 — Backlog structure and lifecycle, for human and AI reading at low token cost
+**Status:** Draft
+**Intent:** "Backlog structure and lifecycle, for human and AI reading at low token cost." (Alex, 2026-10-08: a full review of the file's structure and upkeep, not only the cited gaps; token economy is a criterion.)
+**Owner:** architect (superseding ADR, `method/check-closeout.mjs` and its tests, `closeout.md` pointer) and po (`app/backlog.md`, `po.md`). Order on the branch: the architect's ADR fixes the rules first; the PO then applies them to the file and the templates.
+
+**Scope choice (PO).** T8 settles what a work item's Status line may say, when
+its one-line `## Backlog` entry leaves, where finished items go, and how a reader
+finds the item in progress cheaply. [ADR-0014](../method/adr/0014-work-item-types.md)
+is on `develop`, so it is frozen ([ADR-0015](../method/adr/0015-adr-lifecycle.md)
+§2: only header lines and repointed references may change). Every rule below
+that ADR-0014 states differently (§1's status list and `## Tasks` row, §3's Done
+edit, §5's "`## Backlog` holds unrefined entries", §6's approval) therefore
+lands in a **new superseding ADR**, not in an edit to ADR-0014's body.
+
+**Completion criteria**
+- [ ] CC1 — *diff* — A new ADR (next free number, `**Scope:** core`, with a `## Revisit when` section per ADR-0017) supersedes the relevant parts of ADR-0014 (§1 Backlog row and status list, §3, §5, §6) and states, as decisions: (a) `Draft` is a legitimate Status, held from the PO's draft commit until Alex's `approved Ready`; (b) the one-line `## Backlog` entry stays while the item is Ready/Doing/Review and is removed only when the item is Done (a task: in its Done commit; a story: in its closeout commit); (c) where Done blocks of both types live; (d) how to read the item in progress (CC8). ADR-0014's header Status line is updated to point at it, and nothing else in ADR-0014 is touched.
+- [ ] CC2 — *diff* — The same ADR states the **re-approval rule**: an amendment to an approved item is committed by the PO without Alex's approval, and Alex's re-approval commit is the one that sets Status to `Ready`, so the record of approval is never an empty commit. It must also say what happens when the item's Status already *is* `Ready` at the time of the amendment (a "leave Status unchanged" amendment would make Alex's commit empty again), e.g. the amendment sets `Draft` — this is the open question flagged in the PO's report; the architect resolves it and Alex confirms at his gate.
+- [ ] CC3 — *diff* — `method/check-closeout.mjs` accepts `Draft` as a Status for a task and for a story, in the place the PO writes it, so that the PO's draft commit passes `node method/check-closeout.mjs` locally; `Draft` under `## Done`, or a Done item whose Status is `Draft`, still fails. The CI check named `closeout` still runs on this PR and passes (CC11).
+- [ ] CC4 — *diff* — `method/check-closeout.mjs` no longer ignores or mis-attributes a `### T<n>` block: a task block is checked wherever the file now allows it (CC7) and fails with a message naming the block when it sits anywhere else; a `### T<n>` block under a story section no longer has its checkboxes or Status counted against the preceding story block.
+- [ ] CC5 — *diff* — `method/check-closeout.mjs` has a test file, run by the gate or by an existing/extended CI job (the architect justifies which, per [ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md)), whose tests fail when each rule is broken: story Status vs section, unticked checkbox under Done, missing `method/log/S<n>.md`, missing `**Method change:**` line, task Status not in the accepted set, `Draft` accepted where allowed and rejected under Done, a misplaced `### T<n>` block (CC4), and the script's `main()` exit code (a test fails if it always exits 0). This resolves the "QA findings left out of the Method gap work item" Spotted entry, item 3: the tests are T8's, not T5's; the entry's sentence "T5 extends the script, so its completion criteria should require tests for it" is corrected accordingly.
+- [ ] CC6 — *diff* — [ADR-0012](../method/adr/0012-ci-check-for-story-closeout-artifacts.md)'s revisit trigger ("it fires on a state we conclude is legitimate") is the occasion for CC3: the register line for ADR-0012 in `method/adr-triggers.md` changes State from `open → T8` to `not fired` in this diff, and the new ADR records that the response was to widen the accepted set rather than delete the rule (ADR-0012 says "delete that rule"; if the architect finds the difference matters, they say so). ADR-0012's body is not edited. The register line for the new ADR is added, and the ADR register check passes.
+- [ ] CC7 — *diff* — `app/backlog.md` follows the structure CC1 decides: finished items (T1 and T7 now, S0/S1/S7 already) all sit in one place that is not part of the in-progress view; `## Tasks` and the story sections hold only items not Done; `## Doing` and `## Review` are either removed or each states why it exists; `## Spotted` separates open entries from closed ones (struck-through, triaged, or whose verdict is already carried out), the closed ones moved out of the in-progress view with their verdicts intact ([ADR-0014](../method/adr/0014-work-item-types.md) §4); the entries now carried out by T8 ("No status for a drafted…", "Nothing says when an item's one-line…", "Re-approval after an amendment…") are marked triaged with the verdict "T8".
+- [ ] CC8 — *diff* — Token economy is testable. The file's header names one **read recipe** for the item in progress (a heading range or a short `sed -n`/`grep` command) that returns every non-Done item block, `## Backlog` and the open `## Spotted` entries and nothing else. The owner records, under this criterion, the line count of the whole file at `develop` (626 lines at `b4c77c4`) and the line count the recipe returns after the change; the recipe must return at most half of the pre-T8 file (313 lines or fewer). QA re-runs the recipe.
+- [ ] CC9 — *diff* — `.claude/agents/po.md`: both templates carry `**Status:** Draft` (the PO never writes `Ready`; Alex's approval commit does, ADR-0014 §6), the amendment rule of CC2 is stated, and the PO's duty to keep the `## Backlog` one-liner current while the item is in progress is stated. `method/closeout.md`'s task-closeout part names what the task's Done commit now contains (block moved, one-liner removed). No other rule in either file is reworded.
+- [ ] CC10 — *diff* — The `## Backlog` heading and the file's header describe the new lifecycle (entries stay until Done, in priority order, top is next; "not yet refined" is gone) in wording that also fits a one-line entry for an item not yet drafted, such as the T9 line the session adds after this branch's draft ("Resuming after a break, from the repo alone"). T8 does not write that T9 line.
+- [ ] CC11 — *world-state* — The `closeout` and ADR-register CI checks run on the task's PR **at its final head** and are green; the owning role records, dated under this criterion, the `gh pr checks task/T8-backlog-structure` output and the commit observed, as in T7's CC10. QA re-runs it. Together with `set -o pipefail; cd app && npm run gate` exiting 0, `node method/check-closeout.mjs` exiting 0 on the branch, and the new test file passing.
+
+**Not in scope**
+- Editing the body of ADR-0012, ADR-0014 or any other frozen ADR (supersession only, ADR-0015 §2).
+- Item 2 of the "QA findings left out" Spotted entry (verdict wording for the T3/T4 entries): not T8's.
+- The "Task/story relation for technical decisions" Spotted entry; merge style and fast-forward text (T2); T5's CI check that a PR's branch names a work item; branch protection (T6).
+- Writing the T9 line, or reordering `## Backlog` beyond removing/updating entries per CC1(b).
+- Changing any app code, any story's ACs, or the content of a Done item beyond relocating its block.
+- Any hook, skill or tooling to enforce the read recipe; it is prose, justified by the measured line count.
+
 ---
 
 ## Doing
