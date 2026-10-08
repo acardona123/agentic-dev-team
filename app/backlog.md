@@ -617,3 +617,10 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   choices were made within stories. S2 is blocked on exactly this case (its ADR on
   how the app obtains position). **To be settled before S2.** Raised during the T7
   ordering; deliberately not acted on now — focus stays on the Method gap work.
+- **Re-approval after an amendment is unwritten** (session, 2026-10-08; not triaged;
+  candidate home T8). [ADR-0014](../method/adr/0014-work-item-types.md) §6 makes
+  Alex's approval "the Status → Ready commit", but says nothing of an item amended
+  after approval. In T7 the session had the PO set `Ready` inside both amendments
+  (f8814e6, 80e582e), leaving Alex's `T7: approved Ready` commits empty (41078bb,
+  acae7a1). The freeze point held; the record did not. Fix: an amendment leaves
+  Status unchanged, and Alex's re-approval commit is the one that moves it to `Ready`.
