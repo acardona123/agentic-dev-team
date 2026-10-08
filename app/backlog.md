@@ -85,6 +85,8 @@ _(empty)_
 > into the component, S5 means gutting S2. Hence the code-style rule in
 > `CLAUDE.md`: a device capability is taken as a parameter, never reached for.
 
+- **Revisit ADR-0011** — trigger "a third `pipefail` slip recorded in a log; escalate to a checked-in `method/gate.sh`" fired (QA on T7, 2026-10-08): `method/log/S7.md:40-43` logs the architect running an install through `| tail` without `pipefail`, the third after S0's log and ADR-0011's own Context (an install, not the gate). Owner: architect. Confirmed by Alex, 2026-10-08.
+
 ---
 
 ## Tasks
