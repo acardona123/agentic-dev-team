@@ -3,7 +3,7 @@
 Single source of truth. A work item moves: **Backlog → Ready → Doing → Review → Done**.
 Only Alex moves a work item to **Done** — a story only after seeing it work on his
 phone, a task after reading its deliverable
-([ADR-0014](../method/adr/0014-work-item-types.md)).
+([ADR-0014](../../method/adr/0014-work-item-types.md)).
 
 ---
 
@@ -53,7 +53,7 @@ _(empty)_
   shape of the injectable seam — which per the S5 note below is what decides
   whether the fake-position harness is cheap or a rewrite.
   **Next step:** architect writes that ADR, same shape as
-  [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md) was for geocoding.
+  [ADR-0009](../../method/adr/0009-geocoding-via-nominatim.md) was for geocoding.
   Then the PO writes S2 from the same one-sentence intent: *"I want to see how
   far I am from the address I picked, updating as I move."*
 - **S3 — Arm/disarm + radius.** Choose 200/500/1000 m, arm the alarm, armed state is unmistakable.
@@ -62,7 +62,7 @@ _(empty)_
 - **S6 — Recent searches.** Show previously found addresses as you type, so a
   repeated journey is one tap instead of retyping. Raised by Alex after the S1
   demo. **Note for whoever refines this:** offering *local* history on keystroke
-  is **not** a breach of [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md)
+  is **not** a breach of [ADR-0009](../../method/adr/0009-geocoding-via-nominatim.md)
   obligation 2 — nothing goes over the wire. The obvious implementation drifts
   into live autocomplete, which the policy prohibits in as many words. The line
   is the network call, not the dropdown.
@@ -105,7 +105,7 @@ _Refined tasks live here as `### T<n> — title` blocks with a
 `**Status:**` line: Ready / Doing / Review / Done._
 
 ### T1 — Contradictions flagged at decision time, and where each rule lives
-**Status:** Done · confirmed by Alex 2026-10-08 · [PR #6](https://github.com/acardona123/agentic-dev-team/pull/6) · [ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md)
+**Status:** Done · confirmed by Alex 2026-10-08 · [PR #6](https://github.com/acardona123/agentic-dev-team/pull/6) · [ADR-0016](../../../method/adr/0016-contradictions-flagged-and-where-rules-live.md)
 **Intent:** "Write down that a decision contradicting an ADR is flagged when it is proposed, never after, and decide where each rule of the method lives — prose, hook, CI, skill or plugin."
 **Owner:** architect
 
@@ -118,11 +118,11 @@ ADR-0016 needs. Basis: the research verdict's principle, "fix only what an
 observed failure justifies".
 
 **Completion criteria**
-- [x] CC1 — *diff* — `method/adr/0016-*.md` exists, tagged `**Scope:** core`, status Proposed (draft, consolidated per [ADR-0015](../method/adr/0015-adr-lifecycle.md)), and states the rule of point 7: whoever sees a proposed decision contradict an ADR or method text says so **before it is acted on**, citing the text; if Alex validates it, it takes effect only together with the superseding ADR, in the same tracked work item.
+- [x] CC1 — *diff* — `method/adr/0016-*.md` exists, tagged `**Scope:** core`, status Proposed (draft, consolidated per [ADR-0015](../../../method/adr/0015-adr-lifecycle.md)), and states the rule of point 7: whoever sees a proposed decision contradict an ADR or method text says so **before it is acted on**, citing the text; if Alex validates it, it takes effect only together with the superseding ADR, in the same tracked work item.
 - [x] CC2 — *diff* — `CLAUDE.md` rule 8 is extended with that rule (or a rule beside it that rule 8 points to), in prose short enough not to grow the file noticeably, citing ADR-0016 rather than restating it; no other rule is reworded.
-- [x] CC3 — *diff* — ADR-0016 has one entry for each candidate mechanism of point 8 — (a) block agent commits/pushes on `develop`/`main`; (b) make QA read-only; (c) CI check that each PR names a work item present in `backlog.md`; (d) branch protection on GitHub; (e) `closeout.md` as a `/closeout` skill; (f) a slimmer `CLAUDE.md`; (g) packaging the method as a plugin — and for each states: where the rule lives (prose, hook, agent frontmatter, CI, GitHub setting, skill, plugin), **the observed failure that justifies it**, citing the log, story or Spotted entry, or **"no observed failure — not now"** with the trigger that would reopen it. (g) is expected to read "not now, at porting time" ([PORTING.md](../method/PORTING.md)).
+- [x] CC3 — *diff* — ADR-0016 has one entry for each candidate mechanism of point 8 — (a) block agent commits/pushes on `develop`/`main`; (b) make QA read-only; (c) CI check that each PR names a work item present in `backlog.md`; (d) branch protection on GitHub; (e) `closeout.md` as a `/closeout` skill; (f) a slimmer `CLAUDE.md`; (g) packaging the method as a plugin — and for each states: where the rule lives (prose, hook, agent frontmatter, CI, GitHub setting, skill, plugin), **the observed failure that justifies it**, citing the log, story or Spotted entry, or **"no observed failure — not now"** with the trigger that would reopen it. (g) is expected to read "not now, at porting time" ([PORTING.md](../../../method/PORTING.md)).
 - [x] CC4 — *diff* — ADR-0016 states, for the mechanical check named in point 7's last sentence ("behaviour or config that contradicts an accepted ADR"), whether it is feasible and by whom; if not feasible now, says so and why, rather than leaving it silent.
-- [x] CC5 — *diff* — ADR-0016 records whether [ADR-0010](../method/adr/0010-no-orchestrator-agent.md)'s "Revisit" condition (second slip after prose) is now met, citing the S7 rule-8 slip, and does not edit ADR-0010 (frozen; change only by supersession per ADR-0015).
+- [x] CC5 — *diff* — ADR-0016 records whether [ADR-0010](../../../method/adr/0010-no-orchestrator-agent.md)'s "Revisit" condition (second slip after prose) is now met, citing the S7 rule-8 slip, and does not edit ADR-0010 (frozen; change only by supersession per ADR-0015).
 - [x] CC6 — *diff* — If ADR-0016 accepts a QA read-only mechanism, it states the allowed command set and that this set is the same as the "read-only observation commands" QA's Bash allow-list in `qa.md` permits (the allow-list item raised while drafting ADR-0014); if it accepts none, it says the two stay consistent by default.
 - [x] CC7 — *diff* — For every mechanism ADR-0016 accepts, `app/backlog.md` `## Backlog` gains one one-line follow-up entry (next free T-number, owner named), added as a separate `T1: backlog — …` commit confined to that section; none of them is implemented in this branch.
 - [x] CC8 — *diff* — `set -o pipefail; cd app && npm run gate` exits 0, and `method/check-closeout.mjs` (including its tests) passes against the branch.
@@ -147,13 +147,13 @@ count is **12 ADRs with a revisit signal** (11 in force, plus ADR-0007, now
 superseded), out of 17 files. The criteria below are the corrected, binding
 ones; the first build is rework, not discarded. ADR-0017 is still a draft not
 on `develop`, so it is consolidated in place
-([ADR-0015](../method/adr/0015-adr-lifecycle.md) §1), not superseded.
+([ADR-0015](../../../method/adr/0015-adr-lifecycle.md) §1), not superseded.
 
 **Second amendment 2026-10-08 (Alex, after QA's BACK TO architect).** Alex ruled to amend CC2 (0003/0004 example was backwards), CC8 (a new ADR's register line states each trigger and where its evidence appears; premises are not repeated, since the writing rule already turns each uncertain premise into a trigger) and CC9 (`check-closeout.mjs` has no tests; adding them is T8), and accepted the change in ADR-0017's first trade-off: the remedy "the register gains a premise field" is replaced by "supersede the ADR with a `## Revisit when` section, case by case", the old remedy to be recorded in ADR-0017 as a rejected alternative (architect's work).
 
 **Scope choice (PO).** T7 makes the revisit signals *read*. It does not
 re-evaluate any ADR, edit any frozen ADR (change only by supersession,
-[ADR-0015](../method/adr/0015-adr-lifecycle.md) §2), or decide whether any trigger
+[ADR-0015](../../../method/adr/0015-adr-lifecycle.md) §2), or decide whether any trigger
 has in fact fired beyond recording the register's initial state.
 
 **Recorded gap (not solved by T7).** The method has no "deprecated without
@@ -164,10 +164,10 @@ works around it.
 - [x] CC1 — *diff* — A register file exists (location chosen by the architect and justified in an ADR or in the file) with exactly one line per ADR file in `method/adr/`, each pointing to its ADR and giving its **State** (CC6) and its revisit trigger(s) in one line, or "none stated". The 12 ADRs that carry a revisit signal (11 in force + ADR-0007, superseded) each have a trigger line; the ADR-0014 line covers **all** its revisit/reopen conditions, including the three "Reopen" conditions under its Alternatives rejected (ADR-0014 ~lines 302, 306, 336).
 - [x] CC2 — *diff* — `qa.md` requires every QA verdict to include a line `triggers fired: none` or `triggers fired: ADR-00xx[, …]` with the observed evidence for each fired trigger, and says QA evaluates the register against the diff and the item's evidence at each verdict. QA does **not** evaluate a line whose State is `superseded by 00xx — not evaluated`; QA evaluates the still-in-force parts of a partially superseded ADR (e.g. 0003, partly superseded by 0004).
 - [x] CC3 — *diff* — `method/closeout.md` (including its task closeout part) reads that verdict line, so a fired trigger reaches Alex as a drafted item for him to confirm or reject, not something he must recall. Where the branch itself causes a trigger to fire (e.g. ADR-0004, "more than two undemoed stories on develop"), the closeout presents it as a decision for Alex **before the merge**, not as a backlog item.
-- [x] CC4 — *diff* — A CI check (or an extension of an existing one such as `method/check-closeout.mjs`) fails when an ADR in `method/adr/` has no register entry, or a register entry points to no ADR (invariant unchanged: one line per ADR file, superseded ones included). The architect justifies the mechanism choice per [ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md). If the architect judges it meaningful, the check also fails when a **new** ADR lacks a `## Revisit when` section; the architect states and justifies the cutoff (number > 0017, or 0017 onward). Frozen ADRs are never required to gain the section.
+- [x] CC4 — *diff* — A CI check (or an extension of an existing one such as `method/check-closeout.mjs`) fails when an ADR in `method/adr/` has no register entry, or a register entry points to no ADR (invariant unchanged: one line per ADR file, superseded ones included). The architect justifies the mechanism choice per [ADR-0016](../../../method/adr/0016-contradictions-flagged-and-where-rules-live.md). If the architect judges it meaningful, the check also fails when a **new** ADR lacks a `## Revisit when` section; the architect states and justifies the cutoff (number > 0017, or 0017 onward). Frozen ADRs are never required to gain the section.
 - [x] CC5 — *diff* — Any logic added or extended in `method/check-closeout.mjs` or any other script has tests that fail when the logic is broken (e.g. an ADR missing from the register; the new-ADR section check if added). This includes the script's `main()` exit code: a test fails if `main` always exits 0. If tests are not meaningful for the chosen mechanism, the architect flags that, with the reason, **before producing**, and the criterion is then replaced by the stated alternative proof, with Alex's agreement.
 - [x] CC6 — *diff* — Each register line has a **State** field, short, overwritten and never appended: `not fired`, or `open → <item>`, or (for a fully superseded ADR) `superseded by 00xx — not evaluated`. No evidence and no history in the register; those live in the item and in git. Initial state: ADR-0007 → `superseded by 00xx — not evaluated` (00xx = the ADR that superseded it, no edit to ADR-0007 itself); ADR-0011 → `open →` its "Revisit ADR-0011" backlog line; ADR-0012 → `open → T8`; any other already-fired trigger found while building the register is listed the same way, and every other line is `not fired`. A superseding ADR must restate any trigger it keeps (stated in ADR-0017 or the register's header).
-- [x] CC7 — *diff* — ADR-0017 §3 states explicitly three distinct cases: (a) a diff that contradicts an in-force ADR never reaches `develop`: QA FAILs it ([ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md) §4, `CLAUDE.md` rule 8), and it is fixed on the branch, or a superseding ADR lands in the same item, or the work is rejected; (b) a fired trigger is evidence to re-examine an ADR, routed to the backlog, and does not block the merge; (c) when the branch itself causes a trigger to fire, Alex decides before the merge, and the closeout presents it as such (CC3).
+- [x] CC7 — *diff* — ADR-0017 §3 states explicitly three distinct cases: (a) a diff that contradicts an in-force ADR never reaches `develop`: QA FAILs it ([ADR-0016](../../../method/adr/0016-contradictions-flagged-and-where-rules-live.md) §4, `CLAUDE.md` rule 8), and it is fixed on the branch, or a superseding ADR lands in the same item, or the work is rejected; (b) a fired trigger is evidence to re-examine an ADR, routed to the backlog, and does not block the merge; (c) when the branch itself causes a trigger to fire, Alex decides before the merge, and the closeout presents it as such (CC3).
 - [x] CC8 — *diff* — `.claude/agents/architect.md` gains (i) a writing rule: any uncertain premise in an ADR becomes a trigger ("assumes X; revisit if X is false"), and every trigger says where its evidence would appear (observable); and (ii) in its ADR template, a dedicated `## Revisit when` section (premises + triggers), applying to **new** ADRs only. For new ADRs, the register line states each trigger of that section together with where its evidence appears; premises are not repeated in the line, since the writing rule already turns each uncertain premise into a trigger. `qa.md` requires that, when a diff adds an ADR, QA checks its triggers are observable and its uncertain premises are triggers (CI can only check the section exists).
 - [x] CC9 — *diff* — `set -o pipefail; cd app && npm run gate` exits 0, and `method/check-closeout.mjs` passes against the branch; `node --test method/check-adr-register.test.mjs` passes (T7's own test suite).
 - [x] CC10 — *world-state* — The CI check from CC4 runs on the task's PR **at the new head** and is green; the owning role records, dated under this criterion, the PR check result (e.g. `gh pr checks` output) and the commit it was observed at. QA re-runs it. The earlier record (PR #7 at e64410a) is superseded by this one and removed or marked stale.
@@ -197,30 +197,30 @@ works around it.
 
 **Amendment 2026-11-05 (Alex, before approval).** Alex decided the open question flagged in CC2: an amendment to an approved item sets Status back to `Draft`, and only his `<ID>: approved Ready` commit moves it to `Ready`, every time, so no approval commit is ever empty. CC1(a), CC2, CC3 and CC9 are adjusted to match. Alex also confirmed T8 stays one task (not split) and goes before S2.
 
-**Amendment 2026-11-05 (Alex, second, before approval).** Two further decisions. (1) CC8 is rewritten around completeness with no numeric threshold: measurement showed an honest open/closed split leaves about 375 live lines, so the former 313-line cap could be met only by misclassifying a partly-open entry (e.g. "Method gap", 128 lines, parts still pending T2–T6) or by condensing text, hiding needed information. (2) The single-file form of the backlog is not justified by any ADR: [ADR-0014](../method/adr/0014-work-item-types.md) decided only "in the repo, not GitHub Issues", and its rejected alternatives never compared one file against other in-repo forms. Alex's priority is the most effective and autonomous agent team, following good industry practice, and he is open to restructuring. So the new ADR must decide the storage shape (CC1(e)); CC3, CC4, CC5, CC7, CC9, CC10 and CC11 are made structure-neutral; CC12 covers migration and references. *Written method this touches:* ADR-0014 §1/§3/§5/§6 (already superseded in part by CC1), and every rule text that names `app/backlog.md` or its headings (`CLAUDE.md` rules 1, Git workflow; `.claude/agents/*.md`; `method/*.md`; workflows) — frozen ADR bodies keep their references (ADR-0015 §2). Moving the backlog out of one file at `app/backlog.md` contradicts nothing written as a decision, only ADR-0014's unexamined assumption; the superseding ADR is in this same work item (ADR-0016).
+**Amendment 2026-11-05 (Alex, second, before approval).** Two further decisions. (1) CC8 is rewritten around completeness with no numeric threshold: measurement showed an honest open/closed split leaves about 375 live lines, so the former 313-line cap could be met only by misclassifying a partly-open entry (e.g. "Method gap", 128 lines, parts still pending T2–T6) or by condensing text, hiding needed information. (2) The single-file form of the backlog is not justified by any ADR: [ADR-0014](../../method/adr/0014-work-item-types.md) decided only "in the repo, not GitHub Issues", and its rejected alternatives never compared one file against other in-repo forms. Alex's priority is the most effective and autonomous agent team, following good industry practice, and he is open to restructuring. So the new ADR must decide the storage shape (CC1(e)); CC3, CC4, CC5, CC7, CC9, CC10 and CC11 are made structure-neutral; CC12 covers migration and references. *Written method this touches:* ADR-0014 §1/§3/§5/§6 (already superseded in part by CC1), and every rule text that names `app/backlog.md` or its headings (`CLAUDE.md` rules 1, Git workflow; `.claude/agents/*.md`; `method/*.md`; workflows) — frozen ADR bodies keep their references (ADR-0015 §2). Moving the backlog out of one file at `app/backlog.md` contradicts nothing written as a decision, only ADR-0014's unexamined assumption; the superseding ADR is in this same work item (ADR-0016).
 
 **Scope choice (PO).** T8 settles what a work item's Status line may say, when
 its one-line `## Backlog` entry leaves, where finished items go, and how a reader
-finds the item in progress cheaply. [ADR-0014](../method/adr/0014-work-item-types.md)
-is on `develop`, so it is frozen ([ADR-0015](../method/adr/0015-adr-lifecycle.md)
+finds the item in progress cheaply. [ADR-0014](../../method/adr/0014-work-item-types.md)
+is on `develop`, so it is frozen ([ADR-0015](../../method/adr/0015-adr-lifecycle.md)
 §2: only header lines and repointed references may change). Every rule below
 that ADR-0014 states differently (§1's status list and `## Tasks` row, §3's Done
 edit, §5's "`## Backlog` holds unrefined entries", §6's approval) therefore
 lands in a **new superseding ADR**, not in an edit to ADR-0014's body.
 
 **Completion criteria**
-- [ ] CC1 — *diff* — A new ADR (next free number, `**Scope:** core`, with a `## Revisit when` section per ADR-0017) supersedes the relevant parts of ADR-0014 (§1 Backlog row and status list, §3, §5, §6) and states, as decisions: (a) `Draft` is a legitimate Status, held from the PO's draft commit until Alex's `approved Ready`, and re-entered by any amendment to an approved item (CC2); (b) the one-line `## Backlog` entry stays while the item is Ready/Doing/Review and is removed only when the item is Done (a task: in its Done commit; a story: in its closeout commit); (c) where Done blocks of both types live; (d) how to read the item in progress (CC8); (e) the **storage shape** of the backlog, decided by comparison of at least (i) one file with live and archive sections, (ii) a live file plus a separate archive file, (iii) an ordered index file (one line per item, top is next) plus one file per work item, with a statement of how Spotted entries are held in each. The criteria for the comparison are stated in the ADR: token cost for an agent finding and reading the item in progress, completeness (CC8), merge conflicts between branches (planning commits ride branches in flight), per-item git history, CI checkability, and porting (`core` scope, [PORTING.md](../method/PORTING.md)). The architect decides and justifies; Alex confirms at his gate. ADR-0014's header Status line is updated to point at it, and nothing else in ADR-0014 is touched.
+- [ ] CC1 — *diff* — A new ADR (next free number, `**Scope:** core`, with a `## Revisit when` section per ADR-0017) supersedes the relevant parts of ADR-0014 (§1 Backlog row and status list, §3, §5, §6) and states, as decisions: (a) `Draft` is a legitimate Status, held from the PO's draft commit until Alex's `approved Ready`, and re-entered by any amendment to an approved item (CC2); (b) the one-line `## Backlog` entry stays while the item is Ready/Doing/Review and is removed only when the item is Done (a task: in its Done commit; a story: in its closeout commit); (c) where Done blocks of both types live; (d) how to read the item in progress (CC8); (e) the **storage shape** of the backlog, decided by comparison of at least (i) one file with live and archive sections, (ii) a live file plus a separate archive file, (iii) an ordered index file (one line per item, top is next) plus one file per work item, with a statement of how Spotted entries are held in each. The criteria for the comparison are stated in the ADR: token cost for an agent finding and reading the item in progress, completeness (CC8), merge conflicts between branches (planning commits ride branches in flight), per-item git history, CI checkability, and porting (`core` scope, [PORTING.md](../../method/PORTING.md)). The architect decides and justifies; Alex confirms at his gate. ADR-0014's header Status line is updated to point at it, and nothing else in ADR-0014 is touched.
 - [ ] CC2 — *diff* — The same ADR records the **re-approval rule**, decided by Alex on 2026-11-05 (not an open question for the architect): an amendment to an approved item sets its Status back to `Draft`, in the PO's amendment commit; only Alex's approval commit (`<ID>: approved Ready`) moves it to `Ready`, every time, first approval and re-approval alike. Hence no approval commit is ever empty. The ADR states the rule for stories and tasks, and that the amendment commit itself needs no approval from Alex.
 - [ ] CC3 — *diff* — `method/check-closeout.mjs` (or its successor, if the ADR moves it) enforces the shape CC1(e) chose and accepts `Draft` as a Status for a task and for a story, wherever the ADR places live items, so that the PO's draft commit, and an amendment commit that sets an already-approved item back to `Draft` (CC2), pass `node method/check-closeout.mjs` locally (the script reads Status only, not history, so it need not tell a first draft from an amended one); `Draft` among the Done items (wherever the ADR places them), or a Done item whose Status is `Draft`, still fails. The CI check named `closeout` still runs on this PR and passes (CC11).
 - [ ] CC4 — *diff* — The closeout check no longer ignores or mis-attributes a work item: every item (story or task) is checked in the place the ADR allows for its state (CC7) and fails with a message naming the item when it sits anywhere else; in whatever shape the ADR picks, one item's checkboxes or Status are never counted against another item (the generalisation of today's `### T<n>` block counted against the preceding story block).
-- [ ] CC5 — *diff* — `method/check-closeout.mjs` has a test file, run by the gate or by an existing/extended CI job (the architect justifies which, per [ADR-0016](../method/adr/0016-contradictions-flagged-and-where-rules-live.md)), whose tests fail when each rule is broken: story Status vs section, unticked checkbox under Done, missing `method/log/S<n>.md`, missing `**Method change:**` line, task Status not in the accepted set, `Draft` accepted where allowed and rejected among Done items, a misplaced or mis-attributed item in the chosen shape (CC4), and the script's `main()` exit code (a test fails if it always exits 0). This resolves the "QA findings left out of the Method gap work item" Spotted entry, item 3: the tests are T8's, not T5's; the entry's sentence "T5 extends the script, so its completion criteria should require tests for it" is corrected accordingly.
-- [ ] CC6 — *diff* — [ADR-0012](../method/adr/0012-ci-check-for-story-closeout-artifacts.md)'s revisit trigger ("it fires on a state we conclude is legitimate") is the occasion for CC3: the register line for ADR-0012 in `method/adr-triggers.md` changes State from `open → T8` to `not fired` in this diff, and the new ADR records that the response was to widen the accepted set rather than delete the rule (ADR-0012 says "delete that rule"; if the architect finds the difference matters, they say so). ADR-0012's body is not edited. The register line for the new ADR is added, and the ADR register check passes.
-- [ ] CC7 — *diff* — The backlog follows the shape CC1(e) decides: finished items (T1 and T7 now, S0/S1/S7 already) all sit where the ADR places Done items, outside the live view; the places for live items hold only items not Done; any `Doing`/`Review` holder is either removed or states why it exists; open and closed Spotted entries are held where the ADR places them (closed = per CC8(b)), the closed ones outside the live view with their verdicts intact ([ADR-0014](../method/adr/0014-work-item-types.md) §4); the entries now carried out by T8 ("No status for a drafted…", "Nothing says when an item's one-line…", "Re-approval after an amendment…") are marked triaged with the verdict "T8".
+- [ ] CC5 — *diff* — `method/check-closeout.mjs` has a test file, run by the gate or by an existing/extended CI job (the architect justifies which, per [ADR-0016](../../method/adr/0016-contradictions-flagged-and-where-rules-live.md)), whose tests fail when each rule is broken: story Status vs section, unticked checkbox under Done, missing `method/log/S<n>.md`, missing `**Method change:**` line, task Status not in the accepted set, `Draft` accepted where allowed and rejected among Done items, a misplaced or mis-attributed item in the chosen shape (CC4), and the script's `main()` exit code (a test fails if it always exits 0). This resolves the "QA findings left out of the Method gap work item" Spotted entry, item 3: the tests are T8's, not T5's; the entry's sentence "T5 extends the script, so its completion criteria should require tests for it" is corrected accordingly.
+- [ ] CC6 — *diff* — [ADR-0012](../../method/adr/0012-ci-check-for-story-closeout-artifacts.md)'s revisit trigger ("it fires on a state we conclude is legitimate") is the occasion for CC3: the register line for ADR-0012 in `method/adr-triggers.md` changes State from `open → T8` to `not fired` in this diff, and the new ADR records that the response was to widen the accepted set rather than delete the rule (ADR-0012 says "delete that rule"; if the architect finds the difference matters, they say so). ADR-0012's body is not edited. The register line for the new ADR is added, and the ADR register check passes.
+- [ ] CC7 — *diff* — The backlog follows the shape CC1(e) decides: finished items (T1 and T7 now, S0/S1/S7 already) all sit where the ADR places Done items, outside the live view; the places for live items hold only items not Done; any `Doing`/`Review` holder is either removed or states why it exists; open and closed Spotted entries are held where the ADR places them (closed = per CC8(b)), the closed ones outside the live view with their verdicts intact ([ADR-0014](../../method/adr/0014-work-item-types.md) §4); the entries now carried out by T8 ("No status for a drafted…", "Nothing says when an item's one-line…", "Re-approval after an amendment…") are marked triaged with the verdict "T8".
 - [ ] CC8 — *diff* — Token economy without hiding anything. (a) The backlog's entry point names one **read recipe for live work** (the order of items, every non-Done item, the open Spotted entries), anchored on headings or paths and never on line numbers, with no `head` or other limit: it returns whole sections or whole files, so completeness holds by construction as content grows. (b) The open/closed rule for Spotted entries (and Done for items) is written in the new ADR before any measurement: an entry is closed only when its verdict is fully carried out; a partly carried-out entry stays open, or is split with the open part kept verbatim in the live view. (c) Relocation never rewords: moved text is byte-identical to its source, and QA checks that in the diff. (d) The archive stays in the repo, readable by a second named recipe, and any live text that cites a closed entry or Done item can reach it by title or path. (e) There is no numeric threshold: under this criterion the owner records the before (the line count the old whole-file read cost at the parent state of `5cec249`, 673 lines; measure it) and the after line count of what the live recipe returns, each with the command used, and Alex judges the gain at his gate. QA re-runs both recipes.
 - [ ] CC9 — *diff* — `.claude/agents/po.md`: both templates carry `**Status:** Draft` (the PO never writes `Ready`; Alex's approval commit does, ADR-0014 §6), the amendment rule of CC2 is stated (an amendment to an approved item sets Status back to `Draft`; only Alex's approval commit sets `Ready`), and the PO's duty to keep the backlog's one-line entry current while the item is in progress is stated, and the templates and every path/heading `po.md` names match the chosen shape. `method/closeout.md`'s task-closeout part names what the task's Done commit now contains (item moved to where Done items live, one-liner removed). No other rule in either file is reworded, beyond the reference updates of CC12.
 - [ ] CC10 — *diff* — The backlog's order section (heading, or index file header) and the entry point's header describe the new lifecycle (entries stay until Done, in priority order, top is next; "not yet refined" is gone) in wording that also fits a one-line entry for an item not yet drafted, such as the T9 line the session adds after this branch's draft ("Resuming after a break, from the repo alone"). T8 does not write that T9 line.
 - [ ] CC11 — *world-state* — The `closeout` and ADR-register CI checks (the closeout check under whatever name and path the ADR gives it, workflow updated if needed) run on the task's PR **at its final head** and are green; the owning role records, dated under this criterion, the `gh pr checks task/T8-backlog-structure` output and the commit observed, as in T7's CC10. QA re-runs it. Together with `set -o pipefail; cd app && npm run gate` exiting 0, the closeout check exiting 0 on the branch, and the new test file passing.
-- [ ] CC12 — *diff* — If the ADR picks a multi-file shape (anything but option (i)), the migration of every existing item is part of T8: S0, S1, S7, T1, T7, T8 itself, the Backlog lines and every Spotted entry, each relocated byte-identically (CC8(c)); and every in-repo reference to `app/backlog.md` that the change breaks (`CLAUDE.md`, `.claude/agents/*.md`, `method/*.md`, workflows) is updated, frozen ADR bodies excepted ([ADR-0015](../method/adr/0015-adr-lifecycle.md) §2). `grep -rn "backlog.md"` outside frozen ADRs shows no reference that points at a path or heading that no longer exists; QA re-runs it. The architect owns the ADR, check, tests and workflow; the PO owns the migration and `po.md`.
+- [ ] CC12 — *diff* — If the ADR picks a multi-file shape (anything but option (i)), the migration of every existing item is part of T8: S0, S1, S7, T1, T7, T8 itself, the Backlog lines and every Spotted entry, each relocated byte-identically (CC8(c)); and every in-repo reference to `app/backlog.md` that the change breaks (`CLAUDE.md`, `.claude/agents/*.md`, `method/*.md`, workflows) is updated, frozen ADR bodies excepted ([ADR-0015](../../method/adr/0015-adr-lifecycle.md) §2). `grep -rn "backlog.md"` outside frozen ADRs shows no reference that points at a path or heading that no longer exists; QA re-runs it. The architect owns the ADR, check, tests and workflow; the PO owns the migration and `po.md`.
 
 **Not in scope**
 - Editing the body of ADR-0012, ADR-0014 or any other frozen ADR (supersession only, ADR-0015 §2).
@@ -249,14 +249,14 @@ _(empty)_
 ## Done
 
 ### S7 — Move the project to the SDK the phone's Expo Go now speaks
-**Status:** Done · demoed on Alex's phone 2026-09-30 · merged in [PR #4](https://github.com/acardona123/agentic-dev-team/pull/4) · [ADR-0013](../method/adr/0013-expo-sdk-follows-the-store-expo-go.md)
+**Status:** Done · demoed on Alex's phone 2026-09-30 · merged in [PR #4](https://github.com/acardona123/agentic-dev-team/pull/4) · [ADR-0013](../../../method/adr/0013-expo-sdk-follows-the-store-expo-go.md)
 **Intent:** "I want the app to open on my phone again, now that Expo Go on it has moved to SDK 57."
 
 *Why this story exists (decided by Alex, 2026-09-30):* the Play Store auto-updated
 Expo Go on his phone to SDK 57, and opening the project now shows "Project is
 incompatible with this version of Expo Go — The installed version of Expo Go is for
 SDK 57. The project you opened uses SDK 54." The principle of
-[ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md) still holds (the SDK is
+[ADR-0007](../../../method/adr/0007-expo-sdk-pinned-to-expo-go.md) still holds (the SDK is
 whatever Expo Go on the phone speaks); its premise (the Play Store build is capped at
 54) has been falsified, so the architect must supersede it. Alex decided to move the
 project up to the phone's SDK. **Rejected alternative:** sideloading an SDK 54 Expo Go
@@ -294,7 +294,7 @@ three SDK steps, gate green at each, no app source touched, QA found no defect.
 What it exposed was in the method. Work that is not a phone-demoable story has
 nowhere to live: the advisory re-triage was correctly out of scope here and had
 no other home, so every participant deferred it to Alex. See
-[method/log/S7.md](../method/log/S7.md).
+[method/log/S7.md](../../../method/log/S7.md).
 
 ---
 
@@ -303,9 +303,9 @@ no other home, so every participant deferred it to Alex. See
 **Intent:** "I want to type an address, see matching results, pick one, and have the app hold on to its coordinates."
 
 **Acceptance criteria**
-- [x] AC1 — Given the app is open, when Alex types an address (e.g. "10 Downing Street London") and submits it, then a list of matching results is shown on screen, each with a human-readable label, and the text "© OpenStreetMap contributors" is visible on the same screen (geocoding provider and its licensing obligation: [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md))
+- [x] AC1 — Given the app is open, when Alex types an address (e.g. "10 Downing Street London") and submits it, then a list of matching results is shown on screen, each with a human-readable label, and the text "© OpenStreetMap contributors" is visible on the same screen (geocoding provider and its licensing obligation: [ADR-0009](../../../method/adr/0009-geocoding-via-nominatim.md))
 - [x] AC2 — Given a list of results is shown, when Alex taps one, then the list closes and the app shows the chosen address's label on screen, confirming it is now the selected target
-- [x] AC3 — Given Alex types but does not submit, when he changes characters, then no request is fired per keystroke — a request is only made on an explicit submit action (e.g. tapping search / pressing done). Given Alex submits the exact same query text a second time without changing it, when he submits, then no new network request is made and the previous results are shown again. (Both are usage-policy obligations, not a performance nicety — see [ADR-0009](../method/adr/0009-geocoding-via-nominatim.md).)
+- [x] AC3 — Given Alex types but does not submit, when he changes characters, then no request is fired per keystroke — a request is only made on an explicit submit action (e.g. tapping search / pressing done). Given Alex submits the exact same query text a second time without changing it, when he submits, then no new network request is made and the previous results are shown again. (Both are usage-policy obligations, not a performance nicety — see [ADR-0009](../../../method/adr/0009-geocoding-via-nominatim.md).)
 - [x] AC4 — Given Alex submits a query that matches nothing, when the response comes back, then the app shows a plain "no results found" message instead of an empty or broken list
 - [x] AC5 — Given Alex submits a query while the phone has no network, or the geocoding service responds with a rate-limit or server error, when the request fails, then the app shows the same plain error message instead of crashing or hanging silently
 - [x] AC6 — Given the module that builds the geocoding request and turns its response into "candidate" objects (label + lat/lon), when it is unit tested in `app/src/lib/`, then tests verify: the outgoing request carries an identifying `User-Agent` header rather than a library default, a successful response maps to a list of candidates, and an empty response maps to no candidates — with no React or Expo imports in that module
@@ -328,7 +328,7 @@ address he picked as the held selection.
 *Why this shape: the riskiest assumption isn't in these ACs at all — it's
 whether Nominatim's literal, structured matching ("10 Downing Street London")
 is good enough for the addresses Alex actually types on a bus. It is not a
-fuzzy intent matcher ([ADR-0009](../method/adr/0009-geocoding-via-nominatim.md)).
+fuzzy intent matcher ([ADR-0009](../../../method/adr/0009-geocoding-via-nominatim.md)).
 We find that out from real use after this story ships, not by building smarter
 matching in advance.*
 
@@ -345,8 +345,8 @@ The more expensive defect was in the method, not the app. The dispatching sessio
 proposed the phone demo *before* QA had reviewed — an ordering already fixed in
 three places, none of which it had read. That produced `CLAUDE.md` rule 9, a
 widened rule 8, a reordered Human gate, and
-[ADR-0010](../method/adr/0010-no-orchestrator-agent.md). See
-[method/log/S1.md](../method/log/S1.md).
+[ADR-0010](../../../method/adr/0010-no-orchestrator-agent.md). See
+[method/log/S1.md](../../../method/log/S1.md).
 
 ---
 
@@ -372,9 +372,9 @@ We prove it in an hour instead of discovering it after three days of features.*
 
 **What it cost, and why that was the point:** two blocking defects surfaced that had
 nothing to do with the feature and everything to do with the toolchain —
-Expo Go on the phone is SDK 54 while the scaffold defaulted to SDK 57 ([ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md)),
+Expo Go on the phone is SDK 54 while the scaffold defaulted to SDK 57 ([ADR-0007](../../../method/adr/0007-expo-sdk-pinned-to-expo-go.md)),
 and the repo sat on `/mnt/c`, where 9p delivers no inotify events, so Metro never
-saw a save and Fast Refresh never fired ([ADR-0008](../method/adr/0008-repo-lives-on-wsl-ext4.md)).
+saw a save and Fast Refresh never fired ([ADR-0008](../../../method/adr/0008-repo-lives-on-wsl-ext4.md)).
 Both would have been attributed to feature code had they first appeared during S1.
 
 ---
@@ -385,7 +385,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
 - ~~`npm install` on Expo SDK 54 reports 18 advisories (9 moderate, 9 high).~~
   **Triaged 2026-08-25 — accepted, no action.** All 18 are transitive through the
   SDK's own tree, and 16 report `fixAvailable` only by upgrading `expo` itself,
-  which [ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md) forbids: the
+  which [ADR-0007](../../method/adr/0007-expo-sdk-pinned-to-expo-go.md) forbids: the
   SDK is pinned to what Expo Go on the phone speaks. Every *high* is build-time
   tooling that never runs on the device (`metro*`, `@expo/cli`, `postcss`, `xcode`,
   `image-size`, `prebuild-config`) — it processes our own source on our own
@@ -408,7 +408,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   exist to exclude — with no error, just the folders quietly becoming tracked at
   the next prebuild. Keeping two files also means `app/.gitignore` stays exactly
   as the Expo template ships it, so an SDK upgrade diffs cleanly instead of
-  fighting our hand-edits ([ADR-0007](../method/adr/0007-expo-sdk-pinned-to-expo-go.md)).
+  fighting our hand-edits ([ADR-0007](../../../method/adr/0007-expo-sdk-pinned-to-expo-go.md)).
   What was done instead: the root file was reduced to repo-wide, unanchored
   patterns only (`node_modules/`, `*.log`, `.DS_Store`), with `.expo/` and `dist/`
   dropped as already-covered app concerns, and a comment noting `app/.gitignore`
@@ -425,7 +425,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   let the "no request on keystroke / no re-request for an unchanged query" rule (AC3,
   ADR-0009 obligation 3) be caught by the gate instead of by inspection. Needs a story
   and a decision on whether we take on `@testing-library/react-native` under the SDK
-  pin ([ADR-0013](../method/adr/0013-expo-sdk-follows-the-store-expo-go.md); was 54, now 57).
+  pin ([ADR-0013](../../method/adr/0013-expo-sdk-follows-the-store-expo-go.md); was 54, now 57).
 - ADR-0009 obligation 1 notes a browser silently strips `User-Agent`, so `npm run web`
   is not a valid target for the geocoding path. Nothing in the repo says so where a
   future session would look — `package.json` still exposes a `web` script.
@@ -450,13 +450,13 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   `flexShrink` to 0, unlike CSS. The whole of the AC1 layout fix rests on
   `flexShrink: 1` on `list`. Recorded so a later reader does not mistake the
   redundant property for a deliberate second line of defence: keeping the
-  attribution on screen ([ADR-0009](../method/adr/0009-geocoding-via-nominatim.md)
+  attribution on screen ([ADR-0009](../../method/adr/0009-geocoding-via-nominatim.md)
   obligation 4) depends on one property, not two.
 - Double-tapping Search can fire two requests. The `if (searching …) return` guard
   (`App.tsx:41`) reads a state value rather than a ref, so two taps landing inside
   one commit both observe `searching === false` and both dispatch. Low probability,
   but it lands on Nominatim's rate policy
-  ([ADR-0009](../method/adr/0009-geocoding-via-nominatim.md) obligation 2), not
+  ([ADR-0009](../../method/adr/0009-geocoding-via-nominatim.md) obligation 2), not
   just on UX.
 - **Dev-loop networking and DevTools — fixed by Alex on the machine, not yet in an
   ADR.** `npx expo start --tunnel` failed on 2026-09-30 (`CommandError: TypeError:
@@ -470,7 +470,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
     and DevTools now opens;
   - installed **`libasound2`** (`libasound2t64` on Ubuntu ≥ 24.04).
 
-  Both contradict [ADR-0006](../method/adr/0006-test-and-lint-toolchain.md), which
+  Both contradict [ADR-0006](../../method/adr/0006-test-and-lint-toolchain.md), which
   records libasound as absent and the ngrok tunnel as the way the phone connects,
   and neither is written anywhere a fresh machine would find it (rules 5 and 8).
   **Owner: the architect** — an ADR "how the phone reaches the dev server, and the
@@ -510,7 +510,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
      truth" — and would bind a core method to one host. The one real need, "every
      PR references a work item", is checked by CI against `backlog.md` itself, by
      extending `method/check-closeout.mjs`
-     ([ADR-0012](../method/adr/0012-ci-check-for-story-closeout-artifacts.md)).
+     ([ADR-0012](../../method/adr/0012-ci-check-for-story-closeout-artifacts.md)).
      Recorded as an alternative rejected in ADR-0014.
   5. *Kickoff decisions* — merge strategy is a per-project choice made at project
      start; the architect should guide a new project through such choices. For this
@@ -524,7 +524,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
      it, not fill a void. (Rule 8, broken by the dispatching session — the S1
      failure again.)
   6. *Why `main` is promoted by fast-forward, not by PR* — decided in
-     [ADR-0004](../method/adr/0004-git-flow-branching.md), `CLAUDE.md` and the DoD,
+     [ADR-0004](../../method/adr/0004-git-flow-branching.md), `CLAUDE.md` and the DoD,
      but the reason is written nowhere: a fast-forward keeps `main` on the exact
      commit Alex demoed, while any GitHub PR merge (merge, squash or rebase) mints
      a new commit nobody demoed, and GitHub's UI offers no pure fast-forward.
@@ -535,7 +535,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
      la suite". Twice in S7's closeout the dispatching session saw a decision
      contradict written method and only filed it in Spotted afterwards: Alex's
      machine fix (WSL2 mirrored networking, libasound2) against
-     [ADR-0006](../method/adr/0006-test-and-lint-toolchain.md), and the session's
+     [ADR-0006](../../method/adr/0006-test-and-lint-toolchain.md), and the session's
      own `--merge` recommendation against the playbook's squash. Rule to write
      (core, extends `CLAUDE.md` rule 8 — likely a rule edit plus an ADR): whoever
      sees a proposed decision contradict an ADR or method text says so **before it
@@ -547,14 +547,14 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
      from the research below. `CLAUDE.md` is advisory: the model reads it and may
      not follow it. Hooks in `.claude/settings.json` and tool limits in agent
      frontmatter are enforced by the harness; the repo has neither. The second
-     slip foreseen by [ADR-0010](../method/adr/0010-no-orchestrator-agent.md)'s
+     slip foreseen by [ADR-0010](../../method/adr/0010-no-orchestrator-agent.md)'s
      "Revisit" has happened (S7, rule 8 — point 5's correction), so by its own
      condition a mechanical fix is due. Candidates, each tied to an observed
      failure: block agent commits/pushes on `develop`/`main`; make QA truly
      read-only; CI checks each PR names a work item present in `backlog.md`;
      branch protection on GitHub (Alex's action); `closeout.md` as a `/closeout`
      skill; a slimmer `CLAUDE.md`. Packaging the method as a plugin: decide "not
-     now, at porting time" ([PORTING.md](../method/PORTING.md)). Becomes T1's ADR,
+     now, at porting time" ([PORTING.md](../../method/PORTING.md)). Becomes T1's ADR,
      done as the first task once the task type exists.
 
   **Research verdict (session of 2026-10-07).** Sources: Claude Code documentation
@@ -578,10 +578,10 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   ADR is a draft, consolidated, until it reaches `develop`, and frozen after,
   changed only by supersession — and ADR-0014 consolidated under it, its QA
   checking that no decision was lost or changed. **Accepted at Alex's gate
-  (2026-10-07):** [ADR-0015](../method/adr/0015-adr-lifecycle.md) as drafted,
+  (2026-10-07):** [ADR-0015](../../method/adr/0015-adr-lifecycle.md) as drafted,
   taking number 0015 (T1's ADR takes the next free one); the PO's backlog
   writes land on the item's own branch from its first commit
-  ([ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop));
+  ([ADR-0014 §6](../../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop));
   and QA's A6/A7 fixes (playbook fast-forward fetch and pointer, log-line
   references named by field, `check-closeout.mjs` message).
   **(1) and (1b) Done** — PR #5, QA READY FOR ALEX on ff2b7c9 (2026-10-07).
@@ -628,9 +628,9 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   an agent may run on Alex's explicit, one-shot consent given at that moment;
   `CLAUDE.md`'s wording is nuanced accordingly. Original finding: `CLAUDE.md` `## Git workflow` says "Agents never
   push to `main` or `develop`, and never merge a PR", but the
-  [DoD](../method/definition-of-done.md) Human gate lets an agent merge on Alex's
+  [DoD](../../method/definition-of-done.md) Human gate lets an agent merge on Alex's
   explicit instruction for that specific PR (the S1 exception, now extended to
-  the closeout PR and task PRs), and [closeout.md](../method/closeout.md) Beat 2
+  the closeout PR and task PRs), and [closeout.md](../../method/closeout.md) Beat 2
   says "He may tell you to do all of it. Do it", which covers `git push` of
   `main`. The two texts disagree on whether an agent may ever merge or push
   `main`.
@@ -641,7 +641,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   D → fast-forward `main` to D → closeout PR). The squash lines are T2's
   (merge style), so this belongs in T2's completion criteria.
 - ~~**No status for a drafted, not-yet-approved work item** (session, T1 draft,
-  2026-10-07).~~ **Triaged 2026-10-08 — becomes task T8.** Original finding: [ADR-0014 §6](../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)
+  2026-10-07).~~ **Triaged 2026-10-08 — becomes task T8.** Original finding: [ADR-0014 §6](../../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)
   makes Alex's approval the Status → Ready commit, so the PO's draft (the
   branch's first commit) needs a status before Ready. None exists: ADR-0014 §1's
   table, the `po.md` templates (which write `**Status:** Ready` directly) and
@@ -663,14 +663,14 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   decided.
 - **Task/story relation for technical decisions** (Alex, 2026-10-08; not triaged).
   `CLAUDE.md` rule 9's pipeline, `po → (architect) → dev`, puts the architect
-  *inside* a story, while [ADR-0014](../method/adr/0014-work-item-types.md) §1's
+  *inside* a story, while [ADR-0014](../../method/adr/0014-work-item-types.md) §1's
   table classes "an ADR" as a task. Nothing says which wins, which precedes which,
   or what happens when a technical decision arises mid-story. Until now technology
   choices were made within stories. S2 is blocked on exactly this case (its ADR on
   how the app obtains position). **To be settled before S2.** Raised during the T7
   ordering; deliberately not acted on now — focus stays on the Method gap work.
 - **Re-approval after an amendment is unwritten** (session, 2026-10-08; not triaged;
-  candidate home T8). [ADR-0014](../method/adr/0014-work-item-types.md) §6 makes
+  candidate home T8). [ADR-0014](../../method/adr/0014-work-item-types.md) §6 makes
   Alex's approval "the Status → Ready commit", but says nothing of an item amended
   after approval. In T7 the session had the PO set `Ready` inside both amendments
   (f8814e6, 80e582e), leaving Alex's `T7: approved Ready` commits empty (41078bb,
