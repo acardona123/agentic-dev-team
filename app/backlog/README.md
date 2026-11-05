@@ -28,20 +28,6 @@ or by an entry's title, found with `grep -n "<title>" app/backlog/archive/spotte
 
 ## Backlog (every item not Done, in priority order — top is next; the PO owns this order. An entry stays until its item is Done; it may be a one-line item not yet drafted)
 
-- **T8 — Backlog structure and lifecycle, for human and AI reading at low token cost.**
-  Widened by Alex (2026-10-08) to a full review of the file's structure and
-  upkeep, not only the two gaps below. Observed: T1 is Done yet sits in `## Tasks`,
-  not `## Done` — `## Tasks` and stories should show items in progress only;
-  `## Doing` and `## Review` are present but empty; `## Spotted` mixes done,
-  pending and rejected entries in one list. Token economy is a criterion. Note
-  QA's finding that `check-closeout.mjs` ignores a `### T<n>` block outside
-  `## Tasks` — any move of Done blocks must carry the script along. Also
-  covers the Spotted entries "No status for a drafted, not-yet-approved work item"
-  and "Nothing says when an item's one-line `## Backlog` entry is removed" (verdict:
-  the one-liner stays while the item is Ready/Doing/Review and is removed only when
-  it is Done, in a task's Done commit; the `## Backlog` heading's "not yet refined"
-  wording changes accordingly). Owner: po (`po.md` templates, backlog header), plus
-  `method/check-closeout.mjs` accepting `Draft`, whose owner the task will name.
 - **T2 — Merge style as a kickoff decision; why `main` moves by fast-forward.**
   Points 5 and 6 of the "Method gap" entry. Owner: architect. Needed before S2's PR merges.
   Also carries the verdict on "Agents merging and pushing `main` vs `CLAUDE.md`":
