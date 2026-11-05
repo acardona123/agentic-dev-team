@@ -93,7 +93,9 @@ export function checkBacklog({ files, logs, legacyExists }) {
 
     const statusLine = lines.map((l) => /^\*\*Status:\*\*\s*(\w+)/.exec(l)).find(Boolean);
     const status = statusLine ? statusLine[1] : null;
-    const known = status && [...LIVE_STATUSES, DONE].find((s) => s.toLowerCase() === status.toLowerCase());
+    // Exact spelling: ADR-0018 §2 names the values, and a reader grepping for
+    // `**Status:** Ready` must find every Ready item.
+    const known = status && [...LIVE_STATUSES, DONE].find((s) => s === status);
     if (!status) {
       fail(it.id, `${where} has no "**Status:**" line`,
         `add one: ${isLive ? LIVE_STATUSES.join('/') : DONE} (method/adr/0018 §2)`);
@@ -112,9 +114,11 @@ export function checkBacklog({ files, logs, legacyExists }) {
       if (archived.has(it.id)) {
         fail(it.id, `is both app/backlog/${it.id}.md and app/backlog/archive/${it.id}.md`, 'keep one');
       }
-      if (!entries.has(it.id)) {
-        fail(it.id, 'is not Done but has no `## Backlog` entry in README.md',
-          'its one-line entry stays in the order until it is Done (method/adr/0018 §4)');
+      // A Draft may precede its entry: the draft commit holds only the item's
+      // file, and the new entry is its own planning commit (ADR-0018 §4).
+      if (!entries.has(it.id) && known !== 'Draft') {
+        fail(it.id, `is ${known ?? 'not Done'} but has no \`## Backlog\` entry in README.md`,
+          'its one-line entry is in the order from Ready until it is Done (method/adr/0018 §4)');
       }
       continue;
     }

@@ -134,6 +134,25 @@ test('a live item with no Backlog entry fails', () => {
   only(run((s) => { s.files['README.md'] = readme(entry('S2')); }), /^T8: .*no `## Backlog` entry/);
 });
 
+test('a brand-new Draft with no Backlog entry yet passes: its entry is the next, planning, commit', () => {
+  assert.deepEqual(run((s) => {
+    s.files['README.md'] = readme(entry('T8'), entry('S2'));
+    s.files['T9.md'] = item('T9', 'Draft', '- [ ] CC1 — x');
+    s.files['S3.md'] = item('S3', 'Draft', '- [ ] AC1 — x');
+  }).problems, []);
+});
+
+test('from Ready on, an item with no Backlog entry fails', () => {
+  for (const st of ['Ready', 'Doing', 'Review']) {
+    only(run((s) => { s.files['T9.md'] = item('T9', st); }), new RegExp(`^T9: is ${st} but has no \`## Backlog\` entry`));
+  }
+});
+
+test('a Status spelt in another case fails', () => {
+  only(run((s) => { s.files['T8.md'] = item('T8', 'doing'); }), /^T8: "\*\*Status:\*\* doing" is not one of/);
+  only(run((s) => { s.files['archive/T1.md'] = item('T1', 'DONE'); }), /^T1: "\*\*Status:\*\* DONE" is not one of/);
+});
+
 test('a Done item still listed in Backlog fails', () => {
   only(run((s) => { s.files['README.md'] = readme(entry('T8'), entry('S2'), entry('T1')); }), /^T1: is Done but still has/);
 });
@@ -192,6 +211,13 @@ test('the CLI exits 0 on a clean layout', () => {
   const r = runCli({ files, logs });
   assert.equal(r.status, 0, r.stderr);
   assert.match(r.stdout, /OK — 2 live items .* 2 Done items/);
+});
+
+test('the CLI exits 0 on a draft commit that adds only a new item file (QA F1)', () => {
+  const { files, logs } = base();
+  const r = runCli({ files: { ...files, 'T9.md': item('T9', 'Draft', '- [ ] CC1 — x') }, logs });
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /OK — 3 live items/);
 });
 
 test('the CLI exits 1 when a Done story has no log', () => {

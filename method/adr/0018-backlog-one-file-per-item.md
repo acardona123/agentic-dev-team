@@ -40,7 +40,7 @@ the open Spotted entries.
 
 | Criterion | (i) one file, live + archive sections | (ii) live file + archive file | (iii) index + one file per item |
 |---|---|---|---|
-| Tokens to read the item in progress | whole live part (~375 lines, T8's measurement) or a heading search | same | its own file (T8: 44 lines) |
+| Tokens to read the item in progress | whole live part (~375 lines, T8's measurement) or a heading search | same | its own file (T8: 44 lines at its approval) |
 | Tokens to read all live work | live part, cut at a heading by `awk`; a role without Bash (the PO) cuts only by line numbers it first greps | whole live file | whole top-level files |
 | Completeness by construction | only if the archive heading stays last; a misplaced block is read or missed silently | yes, whole file | yes, whole files; a misplaced file is a check failure (§6) |
 | Merge conflicts between branches | every edit in one file | every live edit in one file | item bodies apart; the order list is still one file |
@@ -88,7 +88,7 @@ have no Status for a check to read.
 
 ### 2. Status, and `Draft`
 A work item's `**Status:**` line, story or task, is one of `Draft`, `Ready`,
-`Doing`, `Review`, `Done`, and it is the only place the state is written.
+`Doing`, `Review`, `Done`, spelt exactly so, and it is the only place the state is written.
 There are no `## Ready` / `## Doing` / `## Review` / `## Done` / `## Tasks`
 headings any more. **`Draft`** is held from the PO's draft commit
 (`<ID>: story — …` / `<ID>: task — …`) until Alex's `<ID>: approved Ready`.
@@ -107,7 +107,13 @@ diffs against.
 `## Backlog` in `README.md` is the order of every item not Done, top is next:
 items not yet drafted and items Draft through Review alike. An item's one-line
 entry stays while it is Draft, Ready, Doing or Review, and the PO keeps it
-current. It is removed only when the item is Done: a task's in its Done commit
+current. A brand-new item's entry may arrive one commit after its draft: the
+PO's draft commit holds only the item's file (`po.md`; ADR-0014 §6, "the PO's
+draft is always its first commit"), and a new entry is a planning edit in its
+own `<ID>: backlog — …` commit (`CLAUDE.md` Git workflow). So a `Draft` item
+may lack an entry; from `Ready` on it must have one, and since Alex's approval
+commit only sets Status, the entry is in place before it. It is removed only
+when the item is Done: a task's in its Done commit
 (the branch's last, ADR-0014 §3), a story's in its closeout commit (ADR-0014
 §2). The Done commit also moves the item's file into `archive/` (`git mv`, so
 history follows by rename) besides what ADR-0014 §3 lists; the story closeout
@@ -157,7 +163,7 @@ naming the item or file, when:
 - an item has no `**Status:**` line, or a Status outside §2's set;
 - a top-level item is `Done`, or an archived one is anything but `Done`;
 - one ID sits both top-level and in `archive/`;
-- a top-level item has no `## Backlog` entry, an archived one still has one,
+- a top-level item past `Draft` has no `## Backlog` entry (§4), an archived one still has one,
   or an ID has two entries (an entry is a top-level bullet opening `- **<ID>`;
   an entry for an ID with no file is an item not yet drafted, and passes);
 - an archived item has an unticked box; an archived story has no
