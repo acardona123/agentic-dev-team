@@ -1,134 +1,188 @@
 #!/usr/bin/env node
-// Guards the *artifacts* of the DoD's human gate — see method/adr/0012.
-// It can prove method/log/S<n>.md exists; it can never prove the demo happened.
-// Tasks (method/adr/0014) are checked for a valid status and, once Done, for no
-// unticked completion criterion. They have no log, so no log rule applies.
+// Guards the *artifacts* of the DoD's human gate (method/adr/0012) in the
+// backlog layout of method/adr/0018. It can prove method/log/S<n>.md exists; it
+// can never prove the demo happened.
 //
 // Run from anywhere:  node method/check-closeout.mjs
-// Exit 0 = clean, 1 = a work item was closed out with bookkeeping missing.
+// Exit 0 = clean, 1 = a work item sits in the wrong place or was closed out
+// with bookkeeping missing.
 
-import { readFileSync, existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { dirname, join, relative, sep } from 'node:path';
 
-const repo = join(dirname(fileURLToPath(import.meta.url)), '..');
-const backlogPath = join(repo, 'app', 'backlog.md');
+export const LIVE_STATUSES = ['Draft', 'Ready', 'Doing', 'Review'];
+export const DONE = 'Done';
+const ITEM_FILE = /^([ST]\d+)\.md$/;
+// Any heading naming an item, at any level: a second one in a file is another
+// item's text being counted against this one.
+const ITEM_HEADING = /^#{1,6}\s+([ST]\d+)\b/;
+const ENTRY = /^-\s+\*\*([ST]\d+)\b/;
+const plural = (n, one, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
-// Sections that hold `### S<n>` story blocks. `## Backlog` and `## Spotted` are
-// bullet lists, not stories, and are deliberately not parsed.
-const STORY_SECTIONS = ['Ready', 'Doing', 'Review', 'Done'];
-// Tasks all live in one section and carry their state on the Status line alone,
-// so for them the status is checked against this set rather than a section name.
-const TASK_SECTION = 'Tasks';
-const TASK_STATUSES = STORY_SECTIONS;
+// Pure: `files` maps paths relative to app/backlog/ (forward slashes) to text;
+// `logs` maps a story ID to its log text, absent when the log does not exist;
+// `legacyExists` says whether app/backlog.md is still there.
+export function checkBacklog({ files, logs, legacyExists }) {
+  const problems = [];
+  const fail = (who, missing, fix) => problems.push({ who, missing, fix });
 
-const problems = [];
-const fail = (story, missing, fix) => problems.push({ story, missing, fix });
+  if (legacyExists) {
+    fail('app/backlog.md', 'the single-file backlog still exists beside app/backlog/',
+      'move its content into app/backlog/ and delete it (method/adr/0018 §1)');
+  }
+  const readme = files['README.md'];
+  if (readme === undefined) {
+    fail('app/backlog/README.md', 'missing — it holds the order (`## Backlog`) and the read recipes',
+      'create it (method/adr/0018 §1)');
+  }
 
-if (!existsSync(backlogPath)) {
-  console.error('closeout: app/backlog.md not found — nothing to check.');
-  process.exit(1);
+  const live = new Map();
+  const archived = new Map();
+  for (const [path, text] of Object.entries(files)) {
+    if (path === 'README.md' || path === 'spotted.md' || path === 'archive/spotted.md') continue;
+    const parts = path.split('/');
+    const m = ITEM_FILE.exec(parts[parts.length - 1]);
+    if (m && parts.length === 1) live.set(m[1], { id: m[1], path, text });
+    else if (m && parts.length === 2 && parts[0] === 'archive') archived.set(m[1], { id: m[1], path, text });
+    else {
+      fail(`app/backlog/${path}`, 'is not a place method/adr/0018 §1 allows, so neither read recipe reads it',
+        'a live item is app/backlog/<ID>.md, a Done one app/backlog/archive/<ID>.md; Spotted entries go in spotted.md or archive/spotted.md');
+    }
+  }
+
+  // The order: top-level bullets of `## Backlog` that name an item.
+  const entries = new Map();
+  if (readme !== undefined) {
+    let inBacklog = false;
+    let sawHeading = false;
+    readme.split('\n').forEach((line, i) => {
+      if (/^##\s/.test(line)) {
+        inBacklog = /^##\s+Backlog\b/.test(line);
+        sawHeading ||= inBacklog;
+        return;
+      }
+      const e = inBacklog && ENTRY.exec(line);
+      if (!e) return;
+      if (entries.has(e[1])) {
+        fail(e[1], `two \`## Backlog\` entries (README.md lines ${entries.get(e[1])} and ${i + 1})`, 'keep one');
+      } else entries.set(e[1], i + 1);
+    });
+    if (!sawHeading) {
+      fail('app/backlog/README.md', 'has no `## Backlog` heading, so the order has nowhere to be',
+        'add it (method/adr/0018 §4)');
+    }
+  }
+
+  const items = [...live.values(), ...archived.values()];
+  for (const it of items) {
+    const isLive = live.has(it.id) && live.get(it.id) === it;
+    const where = `app/backlog/${it.path}`;
+    const lines = it.text.split('\n');
+
+    const headings = lines.map((l) => ITEM_HEADING.exec(l)).filter(Boolean).map((h) => h[1]);
+    if (headings.length === 0) {
+      fail(it.id, `${where} has no "### ${it.id} — title" heading`, 'the item\'s block starts with its heading');
+    } else if (headings[0] !== it.id) {
+      fail(it.id, `${where} is headed ${headings[0]}`, `the file name and the heading must name the same item`);
+    }
+    if (headings.length > 1) {
+      fail(it.id, `${where} also holds ${headings.slice(1).join(', ')} — another item's lines would be counted as ${it.id}'s`,
+        'one item per file: move it to its own file');
+    }
+
+    const statusLine = lines.map((l) => /^\*\*Status:\*\*\s*(\w+)/.exec(l)).find(Boolean);
+    const status = statusLine ? statusLine[1] : null;
+    const known = status && [...LIVE_STATUSES, DONE].find((s) => s.toLowerCase() === status.toLowerCase());
+    if (!status) {
+      fail(it.id, `${where} has no "**Status:**" line`,
+        `add one: ${isLive ? LIVE_STATUSES.join('/') : DONE} (method/adr/0018 §2)`);
+    } else if (!known) {
+      fail(it.id, `"**Status:** ${status}" is not one of ${[...LIVE_STATUSES, DONE].join('/')}`,
+        'method/adr/0018 §2');
+    } else if (isLive && known === DONE) {
+      fail(it.id, `"**Status:** Done" but it sits in app/backlog/, the live view`,
+        `half-finished close: git mv ${where} app/backlog/archive/${it.id}.md and remove its \`## Backlog\` entry, or set its status back`);
+    } else if (!isLive && known !== DONE) {
+      fail(it.id, `"**Status:** ${known}" but it sits in app/backlog/archive/, where only Done items go`,
+        `git mv ${where} app/backlog/${it.id}.md, or finish closing it`);
+    }
+
+    if (isLive) {
+      if (archived.has(it.id)) {
+        fail(it.id, `is both app/backlog/${it.id}.md and app/backlog/archive/${it.id}.md`, 'keep one');
+      }
+      if (!entries.has(it.id)) {
+        fail(it.id, 'is not Done but has no `## Backlog` entry in README.md',
+          'its one-line entry stays in the order until it is Done (method/adr/0018 §4)');
+      }
+      continue;
+    }
+
+    if (entries.has(it.id)) {
+      fail(it.id, `is Done but still has a \`## Backlog\` entry (README.md line ${entries.get(it.id)})`,
+        'remove it in the Done or closeout commit (method/adr/0018 §4)');
+    }
+    const unticked = lines.filter((l) => /^\s*-\s*\[ \]/.test(l)).length;
+    if (unticked > 0) {
+      fail(it.id, `${plural(unticked, 'unticked checkbox', 'unticked checkboxes')} while archived as Done`,
+        'tick them, or move it back to Doing — "Done except..." means Doing (method/definition-of-done.md)');
+    }
+    if (it.id.startsWith('S')) {
+      const rel = `method/log/${it.id}.md`;
+      const log = logs[it.id];
+      if (log === undefined) {
+        fail(it.id, `${rel} is missing`, 'write it before closing out — format in method/log/README.md');
+      } else if (!/^\*\*Method change:\*\*/m.test(log)) {
+        fail(it.id, `${rel} has no "**Method change:**" line`,
+          'add it — "none" is a valid answer, an absent line is not (method/log/README.md)');
+      }
+    }
+  }
+
+  return { live: live.size, archived: archived.size, entries: entries.size, problems };
 }
 
-const lines = readFileSync(backlogPath, 'utf8').split('\n');
-
-// One pass: track the current `## Section` and the current `### S<n>` story or
-// `### T<n>` task (`story` holds whichever block is open).
-let section = null;
-let story = null;
-const stories = [];
-const tasks = [];
-
-for (const line of lines) {
-  const h2 = /^##\s+(\S+)/.exec(line);
-  if (h2) {
-    section = h2[1];
-    story = null;
-    continue;
+function walk(dir, root = dir, out = {}) {
+  for (const name of readdirSync(dir)) {
+    const full = join(dir, name);
+    if (statSync(full).isDirectory()) walk(full, root, out);
+    else if (name.endsWith('.md')) out[relative(root, full).split(sep).join('/')] = readFileSync(full, 'utf8');
   }
-  const h3 = /^###\s+(S\d+)\b\s*[-—–]?\s*(.*)$/.exec(line);
-  if (h3 && STORY_SECTIONS.includes(section)) {
-    story = { id: h3[1], title: h3[2].trim(), section, status: null, unticked: 0 };
-    stories.push(story);
-    continue;
-  }
-  const h3t = /^###\s+(T\d+)\b\s*[-—–]?\s*(.*)$/.exec(line);
-  if (h3t && section === TASK_SECTION) {
-    story = { id: h3t[1], title: h3t[2].trim(), section, status: null, unticked: 0 };
-    tasks.push(story);
-    continue;
-  }
-  if (!story) continue;
-
-  const status = /^\*\*Status:\*\*\s*(\w+)/.exec(line);
-  if (status && story.status === null) story.status = status[1];
-  if (/^\s*-\s*\[ \]/.test(line)) story.unticked += 1;
+  return out;
 }
 
-for (const s of stories) {
-  // 3. Status line agrees with the section the story sits in.
-  if (s.status === null) {
-    fail(s.id, `no "**Status:**" line (it sits under "## ${s.section}")`,
-      `add "**Status:** ${s.section}" under the "### ${s.id}" heading in app/backlog.md`);
-  } else if (s.status.toLowerCase() !== s.section.toLowerCase()) {
-    fail(s.id, `"**Status:** ${s.status}" but it sits under "## ${s.section}"`,
-      `half-finished move: either put ${s.id} back under "## ${s.status}" or set its status to ${s.section}`);
+// Returns the exit code rather than exiting, so the CLI line below is the only
+// place that touches the process; the tests run that line as a child process.
+export function main(repo) {
+  const backlogDir = join(repo, 'app', 'backlog');
+  const legacyExists = existsSync(join(repo, 'app', 'backlog.md'));
+  const files = existsSync(backlogDir) ? walk(backlogDir) : {};
+  const logs = {};
+  const logDir = join(repo, 'method', 'log');
+  if (existsSync(logDir)) {
+    for (const name of readdirSync(logDir)) {
+      const m = /^(S\d+)\.md$/.exec(name);
+      if (m) logs[m[1]] = readFileSync(join(logDir, name), 'utf8');
+    }
   }
 
-  if (s.section !== 'Done') continue;
-
-  // 2. Done means every acceptance criterion is ticked.
-  if (s.unticked > 0) {
-    fail(s.id, `${s.unticked} unticked checkbox${s.unticked > 1 ? 'es' : ''} while under "## Done"`,
-      'tick them, or move the story back to Doing — "Done except..." means Doing (method/definition-of-done.md)');
+  const { live, archived, entries, problems } = checkBacklog({ files, logs, legacyExists });
+  if (problems.length === 0) {
+    // Counts printed so "0 items" reads as wrong rather than as green.
+    console.log(`closeout: OK — ${plural(live, 'live item')} in app/backlog/, ${plural(archived, 'Done item')} in app/backlog/archive/, ${plural(entries, '`## Backlog` entry', '`## Backlog` entries')} naming an item; all closeout artifacts present.`);
+    return 0;
   }
-
-  // 1. Done means the per-story log exists...
-  const rel = `method/log/${s.id}.md`;
-  const logPath = join(repo, 'method', 'log', `${s.id}.md`);
-  if (!existsSync(logPath)) {
-    fail(s.id, `${rel} is missing`,
-      `write it before closing out — format in method/log/README.md`);
-    continue;
+  console.error(`closeout: ${plural(problems.length, 'problem')} — a work item is misplaced or was closed out with bookkeeping skipped.\n`);
+  for (const p of problems) {
+    console.error(`  ${p.who}: ${p.missing}`);
+    console.error(`      fix: ${p.fix}\n`);
   }
-
-  // ...and used the template, whose point is the last line.
-  if (!/^\*\*Method change:\*\*/m.test(readFileSync(logPath, 'utf8'))) {
-    fail(s.id, `${rel} has no "**Method change:**" line`,
-      `add it — "none" is a valid answer, an absent line is not (method/log/README.md)`);
-  }
+  console.error('This checks the artifacts of the human gate in method/definition-of-done.md,');
+  console.error('not the gate itself. Layout: method/adr/0018. Run locally with: node method/check-closeout.mjs');
+  return 1;
 }
 
-for (const t of tasks) {
-  if (t.status === null) {
-    fail(t.id, `no "**Status:**" line (it sits under "## ${TASK_SECTION}")`,
-      `add "**Status:** Ready" (or Doing/Review/Done) under the "### ${t.id}" heading in app/backlog.md`);
-    continue;
-  }
-  const known = TASK_STATUSES.find((v) => v.toLowerCase() === t.status.toLowerCase());
-  if (!known) {
-    fail(t.id, `"**Status:** ${t.status}" is not one of ${TASK_STATUSES.join('/')}`,
-      `set it to one of ${TASK_STATUSES.join(', ')} (method/adr/0014-work-item-types.md)`);
-    continue;
-  }
-  if (known === 'Done' && t.unticked > 0) {
-    fail(t.id, `${t.unticked} unticked checkbox${t.unticked > 1 ? 'es' : ''} while "**Status:** Done"`,
-      'tick them, or set the task back to Doing — "Done except..." means Doing (method/definition-of-done.md)');
-  }
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  process.exit(main(join(dirname(fileURLToPath(import.meta.url)), '..')));
 }
-
-if (problems.length === 0) {
-  const done = stories.filter((s) => s.section === 'Done').length;
-  const tasksDone = tasks.filter((t) => t.status.toLowerCase() === 'done').length;
-  console.log(`closeout: OK — ${stories.length} stor${stories.length === 1 ? 'y' : 'ies'} in app/backlog.md, ${done} under "## Done"; ${tasks.length} task${tasks.length === 1 ? '' : 's'}, ${tasksDone} Done; all closeout artifacts present.`);
-  process.exit(0);
-}
-
-console.error(`closeout: ${problems.length} problem${problems.length > 1 ? 's' : ''} — a work item was closed out with bookkeeping skipped.\n`);
-for (const p of problems) {
-  console.error(`  ${p.story}: ${p.missing}`);
-  console.error(`      fix: ${p.fix}\n`);
-}
-console.error('This checks the artifacts of the human gate in method/definition-of-done.md,');
-console.error('not the gate itself. Run locally with: node method/check-closeout.mjs');
-process.exit(1);
