@@ -85,13 +85,19 @@ restarts when it comes back green.
    2. **Once he has confirmed the drafts in items 1 and 3 — the closeout PR.**
       Marking the story Done and writing the log are not separate steps any
       more; both are this one commit, holding only the bookkeeping: the story's
-      block (Status → Done, ACs ticked, PR recorded), `method/log/S<n>.md`, the
-      PORTING row, and any `## Spotted` / `## Backlog` entries from the demo.
+      file (Status → Done, ACs ticked, PR recorded) moved to
+      `app/backlog/archive/` and its `## Backlog` entry removed, any Spotted entry
+      the story fully carried out moved byte-identically to
+      `app/backlog/archive/spotted.md`
+      ([ADR-0018 §4–5](adr/0018-backlog-one-file-per-item.md)),
+      `method/log/S<n>.md`, the PORTING row, and any `## Spotted` /
+      `## Backlog` entries from the demo.
       ```bash
       git switch develop && git pull --ff-only
       git switch -c story/S<n>-closeout
       # write the confirmed drafts, then:
-      git add app/backlog.md method/log/S<n>.md method/PORTING.md
+      git mv app/backlog/S<n>.md app/backlog/archive/S<n>.md
+      git add app/backlog/ method/log/S<n>.md method/PORTING.md
       git commit -m "S<n>: closeout"
       git push -u origin story/S<n>-closeout
       gh pr create --base develop --title "S<n>: closeout" --body "Bookkeeping for S<n>; demonstrated commit <D>."
@@ -104,7 +110,7 @@ restarts when it comes back green.
 3. **The bookkeeping that has no line on the gate** but is always there:
    observations he made during the demo that belong in `## Spotted` or as a new
    unrefined backlog item; whether any decision taken during the story still
-   lacks an ADR (rules 5 and 8); whether `## Review` is now empty; and the
+   lacks an ADR (rules 5 and 8); whether any other item in `app/backlog/` still reads `Review`; and the
    story's row in [PORTING.md](PORTING.md)'s method-changes table, tagged
    `core` or `project` — that table is only useful if it is appended per
    story rather than reconstructed later.
@@ -129,10 +135,14 @@ and no log. When QA returns READY FOR ALEX on a task, Beat 1 only, adapted:
    command; every other one a drafted `## Backlog` or `## Spotted` line for
    him to confirm or reject, whose `T<n>: backlog — …` commit lands before the
    Done commit, which stays the branch's last.
-3. **The merge command**, ready to paste. Marking the task Done (status line,
-   ticked boxes in its `## Tasks` block, his witness note under any
-   UNVERIFIABLE criterion) is Alex's call (rule 7); once he makes it, the edit
-   is the task branch's last commit, and it becomes true at the merge — Done is
+3. **The merge command**, ready to paste. Marking the task Done is Alex's call
+   (rule 7). The Done commit holds: the status line and ticked boxes in the
+   task's file, his witness note under any UNVERIFIABLE criterion, that file
+   moved with `git mv app/backlog/T<n>.md app/backlog/archive/T<n>.md`, its
+   one-line `## Backlog` entry removed, and any Spotted entry the task fully
+   carried out moved byte-identically to `app/backlog/archive/spotted.md`
+   ([ADR-0018 §4–5](adr/0018-backlog-one-file-per-item.md)).
+   Once he makes the call, that commit is the task branch's last, and it becomes true at the merge — Done is
    a claim about `develop`, so `develop` never shows the task Done while its PR
    is unmerged ([ADR-0014 §3](adr/0014-work-item-types.md#3-closing-a-task)).
 4. **Anything still unpushed**, named — and, if the task changed the method, its
@@ -150,7 +160,8 @@ arrive *already done or already drafted*, so the failure mode is him rejecting
 something rather than him forgetting it.
 
 The closeout check in CI backstops the parts of this that leave artifacts in the
-repo — a story under `## Done` with no log file, or with unticked criteria. It cannot see the demo, and this file cannot either.
+repo — a story in `app/backlog/archive/` with no log file, an item with unticked
+criteria there, or an item left in the wrong place. It cannot see the demo, and this file cannot either.
 Between them they cover the human gate as well as it can be covered; what remains
 uncovered is exactly the part that requires a human holding a phone, which is the
 whole reason the gate exists.

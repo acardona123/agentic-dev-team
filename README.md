@@ -91,7 +91,7 @@ It has to pass before a story is reported done ([method/definition-of-done.md](m
 | [method/token-budget.md](method/token-budget.md) | Where the money actually goes, and what not to economise on |
 | [method/adr/](method/adr/) | Why the choices were made, and what they cost |
 | [method/log/](method/log/) | Per-story notes: what was asked, what came back, what changed in the method |
-| [app/backlog.md](app/backlog.md) | The app's stories |
+| [app/backlog/](app/backlog/) | The app's stories |
 
 ## 📊 Status
 

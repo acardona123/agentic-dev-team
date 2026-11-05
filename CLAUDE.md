@@ -37,13 +37,14 @@ It is governed by this document instead. Its job:
 
 ## Standing rules — every agent, and the session that dispatches them
 
-1. **No change without an approved work item.** If `app/backlog.md` *on the
-   work item's own branch* has no Ready story or Ready task for what you're
+1. **No change without an approved work item.** If the item's file in `app/backlog/` *on
+   the work item's own branch* is not a Ready story or Ready task for what you're
    about to do, stop and say so — the PO's draft of that item, always the
    branch's first commit, and planning edits (`<ID>: backlog — …`) are the only
-   writes that come before it. `develop`'s `## Ready` stays empty: an item is drafted
+   writes that come before it. `develop` never shows an item `Draft` or `Ready`: an item is drafted
    and approved on its own branch
-   ([ADR-0014 §6](method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)). A story is
+   ([ADR-0014 §6](method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop),
+   [ADR-0018](method/adr/0018-backlog-one-file-per-item.md)). A story is
    app behaviour ending in a phone demo; a task is everything else
    ([ADR-0014](method/adr/0014-work-item-types.md)).
 2. **One story at a time.** Never implement ahead. Scope creep is the failure
