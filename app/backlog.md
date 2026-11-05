@@ -191,7 +191,7 @@ works around it.
 - Editing any frozen ADR to add or normalise a revisit line.
 
 ### T8 — Backlog structure and lifecycle, for human and AI reading at low token cost
-**Status:** Draft
+**Status:** Ready
 **Intent:** "Backlog structure and lifecycle, for human and AI reading at low token cost." (Alex, 2026-10-08: a full review of the file's structure and upkeep, not only the cited gaps; token economy is a criterion.)
 **Owner:** architect (superseding ADR, `method/check-closeout.mjs` and its tests, `closeout.md` pointer) and po (`app/backlog.md`, `po.md`). Order on the branch: the architect's ADR fixes the rules first; the PO then applies them to the file and the templates.
 
