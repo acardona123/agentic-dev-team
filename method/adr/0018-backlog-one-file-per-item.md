@@ -1,5 +1,5 @@
 # 0018 — The backlog is a directory: an ordered index, one file per live item, an archive
-**Status:** Accepted · **Date:** 2026-11-05 · **Supersedes part of** [0014](0014-work-item-types.md) (§1's Backlog row, status list and world-state record location; §3's Done edit; §5's "unrefined entries"; §6's approval commit) and [0012](0012-ci-check-for-story-closeout-artifacts.md) (the file it parses; its rule 3, Status ↔ section)  
+**Status:** Accepted · **Date:** 2026-11-05 · **Supersedes part of** [0014](0014-work-item-types.md) (§1's Backlog row, status list and world-state record location; §2's closeout-commit contents and §3's Done edit; §5's "unrefined entries"; §6's approval commit) and [0012](0012-ci-check-for-story-closeout-artifacts.md) (the file it parses; its rule 3, Status ↔ section)  
 **Scope:** core — binds to `app/backlog/` as the backlog's place and to
 `method/log/S<n>.md` as the story log ([PORTING.md](../PORTING.md)
 substitution table).
