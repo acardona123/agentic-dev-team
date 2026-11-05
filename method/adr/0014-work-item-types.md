@@ -1,5 +1,5 @@
 # 0014 — Two work-item types: story and task
-**Status:** Accepted · **Date:** 2026-10-07  
+**Status:** Accepted, partly superseded by [0018](0018-backlog-one-file-per-item.md) (§1 Backlog row and status list, §2 closeout-commit contents, §3 Done edit, §5, §6 approval commit) · **Date:** 2026-10-07  
 **Scope:** core — binds to `app/backlog.md` (where items live) and to what
 "demo" means for a story ([PORTING.md](../PORTING.md) substitution table).
 

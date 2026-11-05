@@ -1,5 +1,5 @@
 # 0012 — A CI check for story-closeout artifacts
-**Status:** Accepted · **Date:** 2026-08-25  
+**Status:** Accepted, partly superseded by [0018](0018-backlog-one-file-per-item.md) (the file parsed; rule 3) · **Date:** 2026-08-25  
 **Scope:** core — binds to the backlog and log paths in `check-closeout.mjs`.
 
 ## Context

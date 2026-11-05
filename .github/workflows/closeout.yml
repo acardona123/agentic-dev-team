@@ -2,24 +2,30 @@ name: closeout
 
 # Not the machine gate. That is .github/workflows/gate.yml, and it watches app
 # code. This watches the *bookkeeping artifacts* of the human gate in
-# method/definition-of-done.md — the log file a Done story must leave behind —
-# so a red X here names a different kind of failure. See method/adr/0012.
+# method/definition-of-done.md — where each work item sits in app/backlog/, and
+# the log file a Done story must leave behind — so a red X here names a
+# different kind of failure. See method/adr/0012 and method/adr/0018.
 #
 # It cannot check the human gate itself: nothing in CI can know whether Alex
 # held the phone.
+#
+# `app/backlog.md` stays in the filter after the move to app/backlog/: a PR that
+# recreates the old file must still trigger the check that fails it.
 on:
   pull_request:
-    paths: ['app/backlog.md', 'method/log/**', 'method/check-closeout.mjs', '.github/workflows/closeout.yml']
+    paths: ['app/backlog/**', 'app/backlog.md', 'method/log/**', 'method/check-closeout.mjs', 'method/check-closeout.test.mjs', '.github/workflows/closeout.yml']
   push:
     branches: [main, develop]
-    paths: ['app/backlog.md', 'method/log/**', 'method/check-closeout.mjs', '.github/workflows/closeout.yml']
+    paths: ['app/backlog/**', 'app/backlog.md', 'method/log/**', 'method/check-closeout.mjs', 'method/check-closeout.test.mjs', '.github/workflows/closeout.yml']
 
 jobs:
   closeout:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # No setup-node, no npm ci: the script has no dependencies and runs on the
-      # node the runner already ships.
+      # No setup-node, no npm ci: script and tests use only node's built-ins and
+      # run on the node the runner already ships.
+      - name: check tests
+        run: node --test method/check-closeout.test.mjs
       - name: story closeout artifacts
         run: node method/check-closeout.mjs

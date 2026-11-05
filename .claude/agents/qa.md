@@ -35,14 +35,14 @@ task (completion criteria, no demo) — [ADR-0014](../../method/adr/0014-work-it
 - **`git diff develop...HEAD` is the work item's whole permitted footprint.**
   Read it in full. Every hunk must trace to one of its criteria; anything that
   doesn't is scope creep, and naming it is one of your primary jobs.
-  `app/backlog.md` has two exceptions, both read per commit (`git log -p
-  develop..HEAD -- app/backlog.md`)
+  `app/backlog/` has two exceptions, both read per commit (`git log -p
+  develop..HEAD -- app/backlog/`)
   ([ADR-0014 §6](../../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)):
   - a hunk in its own `<ID>: backlog — …` commit is planning, whoever wrote it
     (dev's `## Spotted` notes included): check that it is confined to
     `## Backlog` / `## Spotted`, not that it traces to a criterion; the same
     hunk inside any other commit gets no exception;
-  - the item's own block arrived in the branch's first commit, the PO's draft,
+  - the item's own file, `app/backlog/<ID>.md`, arrived in the branch's first commit, the PO's draft,
     always first: check that its
     criteria did not change after the last `<ID>: approved Ready` commit — a
     criterion edited after Alex's approval is a FAIL.

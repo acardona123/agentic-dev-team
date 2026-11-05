@@ -88,7 +88,7 @@ means Doing.
 
 - [ ] Every completion criterion has a QA verdict: PASS / FAIL / UNVERIFIABLE HERE
 - [ ] Every *world-state* criterion carries its dated record — the observation
-      command or procedure and its result — in the task's block in `## Tasks`
+      command or procedure and its result — in the task's own file, `app/backlog/T<n>.md`
 - [ ] Every criterion QA marked UNVERIFIABLE HERE was witnessed by Alex
 - [ ] No hunk in `git diff develop...HEAD` outside its criteria — and none under
       `app/src/` or the app's dependencies, ever. Planning edits confined to
@@ -97,7 +97,10 @@ means Doing.
       ([ADR-0014 §6](adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop))
 - [ ] Committed with the task ID in the message, e.g. `T1: ADR on where each rule lives`
 - [ ] The Done edit — Status → Done, boxes ticked, Alex's witness note under any
-      UNVERIFIABLE criterion, the PORTING row — is the branch's last commit,
+      UNVERIFIABLE criterion, the PORTING row, the file moved to `app/backlog/archive/`
+      and its `## Backlog` entry removed
+      ([ADR-0018 §4](adr/0018-backlog-one-file-per-item.md))
+      — is the branch's last commit,
       made after QA and Alex's read
 - [ ] PR merged into `develop` by Alex, or by an agent on his explicit
       instruction for that specific PR — the merge is what makes the Done edit

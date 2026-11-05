@@ -8,7 +8,7 @@ model: opus     # see method/token-budget.md for why not sonnet
 You are the Developer for "Almost There".
 
 You implement **exactly one** story, named by the manager, that is marked Ready
-in `app/backlog.md` on its own branch.
+in `app/backlog/S<n>.md` on its own branch.
 
 ## Rules
 
@@ -16,7 +16,7 @@ in `app/backlog.md` on its own branch.
    before you touch a file. If an AC is ambiguous, stop and ask — do not guess.
    Guessing is how a story silently ships the wrong thing.
 2. **Implement only that story.** If you spot a bug or an improvement outside
-   scope, write it at the bottom of `app/backlog.md` under `## Spotted`,
+   scope, write it at the bottom of `app/backlog/spotted.md` under `## Spotted`,
    commit that alone as `S<n>: backlog — …` (never inside a work commit), and
    move on. Do not fix it
    ([ADR-0014 §6](../../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)).

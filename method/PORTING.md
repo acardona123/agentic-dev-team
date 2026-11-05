@@ -26,7 +26,7 @@ the ADR), `.claude/agents/architect.md` (tag it, and add the row when it is
 `core`), and [closeout.md](closeout.md) beat 2 (the story's row, at the point
 the story closes).
 
-Current state, ADRs: **11 core, 6 project.**
+Current state, ADRs: **12 core, 6 project.**
 
 | Core — transfers | Project — does not |
 |---|---|
@@ -41,12 +41,13 @@ Current state, ADRs: **11 core, 6 project.**
 | [0015](adr/0015-adr-lifecycle.md) ADR draft until `develop`, frozen after | |
 | [0016](adr/0016-contradictions-flagged-and-where-rules-live.md) contradictions flagged first; a rule leaves prose only for an observed failure | |
 | [0017](adr/0017-adr-revisit-trigger-register.md) revisit-trigger register, read by QA at every verdict, kept complete by CI; new ADRs write uncertain premises as triggers under `## Revisit when` | |
+| [0018](adr/0018-backlog-one-file-per-item.md) backlog as a directory: ordered index, one file per live item, archive; `Draft` status and re-approval; two read recipes | |
 
 ## What a new project copies
 
 `CLAUDE.md` rules 1–10 · `.claude/agents/` · `method/` minus the project ADRs
-(and their lines in `adr-triggers.md`) and the per-story logs · `.github/workflows/` · the `## Spotted`, `## Tasks`
-and story structure of the backlog.
+(and their lines in `adr-triggers.md`) and the per-story logs · `.github/workflows/` · the `app/backlog/` layout
+([ADR-0018](adr/0018-backlog-one-file-per-item.md)) and its item templates.
 
 ## What it must substitute
 
@@ -57,7 +58,7 @@ list, and keeping it short is the point of this file.
 |---|---|---|
 | What "demo" means | Alex holds an Android phone running Expo Go | DoD human gate, `closeout.md` |
 | The gate command | `npm run gate`, run from `app/` | `CLAUDE.md` rule 3, [ADR-0011](adr/0011-one-gate-command-and-pipefail.md) |
-| Where the backlog lives | `app/backlog.md` | `check-closeout.mjs`, agent role files |
+| Where the backlog lives | `app/backlog/` | `check-closeout.mjs`, agent role files |
 | Where logs live | `method/log/S<n>.md` | `check-closeout.mjs`, `log/README.md` |
 | The tech section | `CLAUDE.md` `## Tech` | replace wholesale |
 
@@ -104,6 +105,7 @@ record ([ADR-0014](adr/0014-work-item-types.md)).
 | S7 | None edited yet. Logged: work that is not a story has no container (Spotted triage, method work); merge strategy is a kickoff decision; a third-candidate `pipefail` slip ([ADR-0011](adr/0011-one-gate-command-and-pipefail.md)) — see [log/S7.md](log/S7.md) | core |
 | T1 | [ADR-0016](adr/0016-contradictions-flagged-and-where-rules-live.md): a contradiction is flagged before it is acted on (`CLAUDE.md` rule 8); where each rule lives — work-item CI check (T5) and branch protection (T6) accepted, (a)(b)(e)(f)(g) deferred with reopen triggers | core |
 | T7 | [ADR-0017](adr/0017-adr-revisit-trigger-register.md): register of revisit triggers ([adr-triggers.md](adr-triggers.md), short State), `check-adr-register.mjs` + tests + CI, `## Revisit when` required from 0017; `qa.md` "triggers fired:" line; `closeout.md` drafts fired triggers, branch-caused ones decided before the merge; `architect.md` uncertain premises become triggers | core |
+| T8 | [ADR-0018](adr/0018-backlog-one-file-per-item.md): backlog as a directory `app/backlog/` (README index + read recipes, one file per live item, `spotted.md`, `archive/`); `Draft` status, an amendment resets to `Draft`, only Alex's approval sets `Ready`; `check-closeout.mjs` rewritten with 34 tests in the closeout job; `po.md` templates write `Draft`; `closeout.md` Done-commit contents; `CLAUDE.md` rule 1 path | core |
 | Method gap (bootstrap, pre-task) | [ADR-0014](adr/0014-work-item-types.md): two work-item types, story and task; `CLAUDE.md` rules 1, 7, 9, 10 and Git workflow; `po.md` writes tasks and orders `## Backlog`; `qa.md` per completion criterion, read-only observation allow-list; DoD Task section; playbook task loop; `check-closeout.mjs` parses `## Tasks`; `closeout.md` Task closeout; backlog `## Tasks` and routed Spotted triage; story closeout PR, `main` on the demoed commit, log records it; task Done at merge; the item's branch cut before the PO drafts, so backlog writes reach `develop` by PR too. [ADR-0015](adr/0015-adr-lifecycle.md): ADRs consolidated before `develop`, frozen after | core |
 
 Append a row per story, and per task that changes the method. If three stories running add nothing, either the method
