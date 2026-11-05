@@ -285,12 +285,12 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   copies of `check-closeout.mjs` in the session scratchpad; no repo, git or GitHub
   state changed. Read literally, (b)'s reopen condition "QA is recorded making any
   write (a file edit, a commit, a `gh` write)" fires, and `method/adr-triggers.md`
-  would then flip to fired. **Proposed verdict (session, delegated by Alex; Alex to
-  confirm): no action.** A write outside the repo and its hosted state is not a
+  would then flip to fired. **Verdict (proposed by the session, confirmed by Alex
+  2026-11-05): no action.** A write outside the repo and its hosted state is not a
   write under (b), because (b) protects the reviewed state. Next time `qa.md` is
-  edited, its allow-list should say this explicitly. Per
-  [ADR-0018](../../method/adr/0018-backlog-one-file-per-item.md) §5 the verdict is
-  carried out only when Alex confirms it.
+  edited, its allow-list should say this explicitly. The entry
+  stays open until that `qa.md` line exists
+  ([ADR-0018](../../method/adr/0018-backlog-one-file-per-item.md) §5).
 - **The session executed content changes as clerk** (session, T8 closeout,
   2026-11-05; not triaged). In T8 the session ran the link-prefix repoint (7d70c5d),
   the relocation following the PO's map (3c8b2af) and the CC8(e) record (3e53d37);
