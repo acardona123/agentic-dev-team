@@ -243,7 +243,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   D → fast-forward `main` to D → closeout PR). The squash lines are T2's
   (merge style), so this belongs in T2's completion criteria.
 - ~~**No status for a drafted, not-yet-approved work item** (session, T1 draft,
-  2026-10-07).~~ **Triaged 2026-10-08 — becomes task T8.** Original finding: [ADR-0014 §6](../../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)
+  2026-10-07).~~ **Triaged 2026-10-08 — becomes task T8.** Original finding: [ADR-0014 §6](../../../method/adr/0014-work-item-types.md#6-only-a-merged-pr-reaches-develop)
   makes Alex's approval the Status → Ready commit, so the PO's draft (the
   branch's first commit) needs a status before Ready. None exists: ADR-0014 §1's
   table, the `po.md` templates (which write `**Status:** Ready` directly) and
@@ -274,7 +274,7 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
 - ~~**Re-approval after an amendment is unwritten** (session, 2026-10-08).~~
   **Triaged 2026-11-05 — becomes part of task T8 (Alex's decision).** An amendment
   to an approved item sets its Status back to `Draft`; only Alex's `approved Ready`
-  commit moves it to `Ready`, every time. Original finding: [ADR-0014](../../method/adr/0014-work-item-types.md) §6 makes
+  commit moves it to `Ready`, every time. Original finding: [ADR-0014](../../../method/adr/0014-work-item-types.md) §6 makes
   Alex's approval "the Status → Ready commit", but says nothing of an item amended
   after approval. In T7 the session had the PO set `Ready` inside both amendments
   (f8814e6, 80e582e), leaving Alex's `T7: approved Ready` commits empty (41078bb,
