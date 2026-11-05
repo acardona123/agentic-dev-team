@@ -26,7 +26,7 @@ the ADR), `.claude/agents/architect.md` (tag it, and add the row when it is
 `core`), and [closeout.md](closeout.md) beat 2 (the story's row, at the point
 the story closes).
 
-Current state, ADRs: **11 core, 6 project.**
+Current state, ADRs: **12 core, 6 project.**
 
 | Core — transfers | Project — does not |
 |---|---|
@@ -41,12 +41,13 @@ Current state, ADRs: **11 core, 6 project.**
 | [0015](adr/0015-adr-lifecycle.md) ADR draft until `develop`, frozen after | |
 | [0016](adr/0016-contradictions-flagged-and-where-rules-live.md) contradictions flagged first; a rule leaves prose only for an observed failure | |
 | [0017](adr/0017-adr-revisit-trigger-register.md) revisit-trigger register, read by QA at every verdict, kept complete by CI; new ADRs write uncertain premises as triggers under `## Revisit when` | |
+| [0018](adr/0018-backlog-one-file-per-item.md) backlog as a directory: ordered index, one file per live item, archive; `Draft` status and re-approval; two read recipes | |
 
 ## What a new project copies
 
 `CLAUDE.md` rules 1–10 · `.claude/agents/` · `method/` minus the project ADRs
-(and their lines in `adr-triggers.md`) and the per-story logs · `.github/workflows/` · the `## Spotted`, `## Tasks`
-and story structure of the backlog.
+(and their lines in `adr-triggers.md`) and the per-story logs · `.github/workflows/` · the `app/backlog/` layout
+([ADR-0018](adr/0018-backlog-one-file-per-item.md)) and its item templates.
 
 ## What it must substitute
 
@@ -57,7 +58,7 @@ list, and keeping it short is the point of this file.
 |---|---|---|
 | What "demo" means | Alex holds an Android phone running Expo Go | DoD human gate, `closeout.md` |
 | The gate command | `npm run gate`, run from `app/` | `CLAUDE.md` rule 3, [ADR-0011](adr/0011-one-gate-command-and-pipefail.md) |
-| Where the backlog lives | `app/backlog.md` | `check-closeout.mjs`, agent role files |
+| Where the backlog lives | `app/backlog/` | `check-closeout.mjs`, agent role files |
 | Where logs live | `method/log/S<n>.md` | `check-closeout.mjs`, `log/README.md` |
 | The tech section | `CLAUDE.md` `## Tech` | replace wholesale |
 
