@@ -1,11 +1,32 @@
 # Backlog — Almost There
 
-Single source of truth. A work item moves: **Backlog → Ready → Doing → Review → Done**.
-Only Alex moves a work item to **Done** — a story only after seeing it work on his
-phone, a task after reading its deliverable
+Single source of truth, as a directory ([ADR-0018](../../method/adr/0018-backlog-one-file-per-item.md)).
+A work item's `**Status:**` moves **Draft → Ready → Doing → Review → Done**; Alex's
+`<ID>: approved Ready` commit alone moves it to Ready, and an amendment sets it back
+to Draft. Only Alex moves a work item to **Done** — a story only after seeing it work
+on his phone, a task after reading its deliverable
 ([ADR-0014](../../method/adr/0014-work-item-types.md)).
 
-## Backlog (not yet refined — the PO turns these into stories or tasks, one at a time, and owns this order: top is next)
+Layout: this file (the order and the recipes), `spotted.md` (open Spotted entries),
+`<ID>.md` (one per item not Done), `archive/<ID>.md` (Done items), `archive/spotted.md`
+(closed entries).
+
+**Read the live work** (the order, every item not Done, the open Spotted entries):
+
+    cat app/backlog/*.md
+
+With the Read tool: Glob `app/backlog/*.md`, then Read every file it returns,
+whole. **The item in progress** is `app/backlog/<ID>.md`, its ID taken from the
+branch name; dev and QA read that file, not the recipe.
+
+**Read the archive**, for anything that cites a Done item or a closed entry:
+
+    cat app/backlog/archive/*.md
+
+A citation reaches its target by ID, as the path `app/backlog/archive/<ID>.md`,
+or by an entry's title, found with `grep -n "<title>" app/backlog/archive/spotted.md`.
+
+## Backlog (every item not Done, in priority order — top is next; the PO owns this order. An entry stays until its item is Done; it may be a one-line item not yet drafted)
 
 - **T8 — Backlog structure and lifecycle, for human and AI reading at low token cost.**
   Widened by Alex (2026-10-08) to a full review of the file's structure and

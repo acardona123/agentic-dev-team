@@ -1,3 +1,6 @@
+## Spotted — closed
+_Entries whose verdict is fully carried out, kept with their verdicts intact. Open entries live in `../spotted.md`._
+
 - ~~`.gitignore` now exists at both the repo root and in `app/`, with overlapping rules.
   Harmless, but worth collapsing to one file at some point.~~
   **Triaged 2026-08-25 — resolved, not as proposed (`b573729`).** The suggestion to

@@ -220,8 +220,8 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   task (T3/T4)" verdict that ADR-0014 §4 wants written into each entry, and the
   "Method gap" entry's last paragraph still said "points 5–7" where T1/T2 split
   them as 7–8 and 5–6 (wording fixed 2026-10-08, T7 planning). (3) `check-closeout.mjs` has no tests (QA on T1,
-  2026-10-08): T1's CC8 "(including its tests)" passed vacuously. T5 extends the
-  script, so its completion criteria should require tests for it.
+  2026-10-08): T1's CC8 "(including its tests)" passed vacuously. The tests
+  are T8's, which modifies the script, not T5's.
 - ~~**Agents merging and pushing `main` vs `CLAUDE.md`** (QA, 2026-10-07; predates
   the "Method gap" work item).~~ **Triaged 2026-10-08 — becomes part of T2 (Alex's
   decision).** Merging a PR is Alex's only, never an agent's, even on instruction,
@@ -271,8 +271,10 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   choices were made within stories. S2 is blocked on exactly this case (its ADR on
   how the app obtains position). **To be settled before S2.** Raised during the T7
   ordering; deliberately not acted on now — focus stays on the Method gap work.
-- **Re-approval after an amendment is unwritten** (session, 2026-10-08; not triaged;
-  candidate home T8). [ADR-0014](../../method/adr/0014-work-item-types.md) §6 makes
+- ~~**Re-approval after an amendment is unwritten** (session, 2026-10-08).~~
+  **Triaged 2026-11-05 — becomes part of task T8 (Alex's decision).** An amendment
+  to an approved item sets its Status back to `Draft`; only Alex's `approved Ready`
+  commit moves it to `Ready`, every time. Original finding: [ADR-0014](../../method/adr/0014-work-item-types.md) §6 makes
   Alex's approval "the Status → Ready commit", but says nothing of an item amended
   after approval. In T7 the session had the PO set `Ready` inside both amendments
   (f8814e6, 80e582e), leaving Alex's `T7: approved Ready` commits empty (41078bb,
