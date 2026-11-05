@@ -280,3 +280,32 @@ _Things agents noticed but were not allowed to fix. The session routes each entr
   (f8814e6, 80e582e), leaving Alex's `T7: approved Ready` commits empty (41078bb,
   acae7a1). The freeze point held; the record did not. Fix: an amendment leaves
   Status unchanged, and Alex's re-approval commit is the one that moves it to `Ready`.
+- **QA's scratchpad writes and [ADR-0016](../../method/adr/0016-contradictions-flagged-and-where-rules-live.md)
+  (b)** (QA on T8, 2026-11-05; open). QA's mutation tests wrote and deleted temp
+  copies of `check-closeout.mjs` in the session scratchpad; no repo, git or GitHub
+  state changed. Read literally, (b)'s reopen condition "QA is recorded making any
+  write (a file edit, a commit, a `gh` write)" fires, and `method/adr-triggers.md`
+  would then flip to fired. **Proposed verdict (session, delegated by Alex; Alex to
+  confirm): no action.** A write outside the repo and its hosted state is not a
+  write under (b), because (b) protects the reviewed state. Next time `qa.md` is
+  edited, its allow-list should say this explicitly. Per
+  [ADR-0018](../../method/adr/0018-backlog-one-file-per-item.md) §5 the verdict is
+  carried out only when Alex confirms it.
+- **The session executed content changes as clerk** (session, T8 closeout,
+  2026-11-05; not triaged). In T8 the session ran the link-prefix repoint (7d70c5d),
+  the relocation following the PO's map (3c8b2af) and the CC8(e) record (3e53d37);
+  QA verified all of it byte-identical. `CLAUDE.md`'s section "The session Alex is
+  typing at" (clerk for the PO) covers committing someone else's text, not
+  executing content changes. Related, from the same migration: QA read the
+  link-prefix repoint inside approved criteria text, with the same targets, as a
+  reference repoint and not a criteria edit. Nothing written says so, and
+  [ADR-0018](../../method/adr/0018-backlog-one-file-per-item.md) §5 lists only
+  Status, ticks and witness notes as edits allowed on an item after approval.
+  **Interim practice:** mechanical execution goes to a role with Bash, the
+  architect, and the session only commits. **Candidate home:** a task that writes
+  both rules down. No verdict yet.
+- **Nothing checks that `develop` shows no `Draft` or `Ready` item** (QA on T8,
+  2026-11-05; predates T8; not triaged).
+  [ADR-0018](../../method/adr/0018-backlog-one-file-per-item.md) §2 states it in
+  prose only. **Candidate home:** T5, the CI check that a PR names a work item; its
+  completion criteria should cover this.

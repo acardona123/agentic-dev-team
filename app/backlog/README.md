@@ -54,7 +54,7 @@ or by an entry's title, found with `grep -n "<title>" app/backlog/archive/spotte
   relevant parts of ADR-0006. Owner: architect. Needed for S2's demo.
 - **T4 — Re-triage the SDK 57 `npm install` advisories.** The re-opened advisories
   entry in `## Spotted`. Owner: architect.
-- **T5 — CI check: every PR's branch names a work item in `backlog.md`.** ADR-0016 §3(c). Owner: architect.
+- **T5 — CI check: every PR's branch names a work item in `app/backlog/`.** ADR-0016 §3(c). Owner: architect.
 - **T6 — Branch protection on `develop` and `main`.** ADR-0016 §3(d); after T5, whose job is the required check. Owner: architect specifies, Alex applies.
 - **S2 — Live position.** Ask location permission, stream position, show live distance to the target.
   **Blocked on an ADR (2026-08-25).** The PO was asked to refine this and stopped
